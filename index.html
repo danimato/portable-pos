@@ -4,52 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>pos ni dani</title>
-    <style>
-
-body {
-    margin: 0;
-    padding: 0;
-}
-        /* Style the tab */
-.tab {
-  overflow: hidden;
-  background-color: #f1f1f1;
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-}
-
-/* Style the buttons that are used to open the tab content */
-.tab button {
-  background-color: inherit;
-  float: left;
-  border: none;
-  outline: none;
-  cursor: pointer;
-  padding: 14px 16px;
-  transition: 0.3s;
-}
-
-/* Change background color of buttons on hover */
-.tab button:hover {
-  background-color: #ddd;
-}
-
-/* Create an active/current tablink class */
-.tab button.active {
-  background-color: #ccc;
-}
-
-/* Style the tab content */
-.tabcontent {
-  display: none;
-  padding: none;
-  margin: none;
-  border: 1px solid #ccc;
-  border-top: none;
-}
-    </style>
+    <title>QuickTrack</title>
+    <link rel="manifest" href="./manifest.json">
+    <link rel="stylesheet" href="style.css">
+    <meta name="application-name" content="Temperature converter">
 </head>
 
 <body>
@@ -64,7 +22,12 @@ body {
 
 <div id="home" class="tabcontent">
   <h3>Home</h3>
-  <p>London is the capital city of England.</p>
+  <p>todo</p>
+  <ul>
+    <li>total sales</li>
+    <li>miniactivity</li>
+    <li>top performers</li>
+  </ul>
 </div>
 
 
@@ -73,6 +36,10 @@ body {
 <div id="qr" class="tabcontent">
   <h3>QR</h3>
   <p>Paris is the capital of France.</p>
+  <div style="width: 100%" id="reader"></div>
+  <ul>
+    <li>items scanned</li>
+  </ul>
 </div>
 
 
@@ -80,7 +47,18 @@ body {
 
 <div id="inventory" class="tabcontent">
   <h3>Inventory</h3>
-  <p>Tokyo is the capital of Japan.</p>
+  <ul>
+    <li>title bar</li>
+    <li>add button</li>
+    <li>list implementation</li>
+    <li>integration to qr</li>
+    <li>integration to db</li>
+    <li>error handling</li>
+    <li>stock count</li>
+    <li>stock delete</li>
+    <li>stock cost</li>
+    <li>stock edit/sku edit</li>
+  </ul>
 </div>
 
 
@@ -88,7 +66,10 @@ body {
 
 <div id="activity" class="tabcontent">
   <h3>Activity</h3>
-  <p>Tokyo is the capital of Japan.</p>
+  <li>
+    <ul>list of each transactions</ul>
+    <ul>db integration</ul>
+  </li>
 </div>
 
 
@@ -96,44 +77,42 @@ body {
 
 <div id="settings" class="tabcontent">
   <h3>Settings</h3>
-  <p>Tokyo is the capital of Japan.</p>
+  <ul>
+    <li>currency</li>
+    <li>language</li>
+    <li>behavior after scanning</li>
+    <li></li>
+  </ul>
 </div>
 
-
-
-
-    <script>
-    openTab(event, 'home'); // Open default tab
-    function openTab(evt, cityName) {
-        // Declare all variables
-        var i, tabcontent, tablinks;
-
-        // Get all elements with class="tabcontent" and hide them
-        tabcontent = document.getElementsByClassName("tabcontent");
-        for (i = 0; i < tabcontent.length; i++) {
-            tabcontent[i].style.display = "none";
-        }
-
-        // Get all elements with class="tablinks" and remove the class "active"
-        tablinks = document.getElementsByClassName("tablinks");
-        for (i = 0; i < tablinks.length; i++) {
-            tablinks[i].className = tablinks[i].className.replace(" active", "");
-        }
-
-        // Show the current tab, and add an "active" class to the button that opened the tab
-        document.getElementById(cityName).style.display = "block";
-        evt.currentTarget.className += " active";
-    }
-    </script>
     <div class="tab">
     <button class="tablinks" onclick="openTab(event, 'home')">Home</button>
-    <button class="tablinks" osnclick="openTab(event, 'inventory')">Inventory</button>
+    <button class="tablinks" onclick="openTab(event, 'inventory')">Inventory</button>
     <button class="tablinks" onclick="openTab(event, 'qr')">QR</button>
     <button class="tablinks" onclick="openTab(event, 'activity')">Activity</button>
     <button class="tablinks" onclick="openTab(event, 'settings')">Settings</button>
     </div>
     <script src="scripts/db.js"></script>
+    <script src="scripts/html5-qrcode.min.js"></script>
+    <script src="scripts/tab-navigation.js"></script>
 
+    
+    <script>
+      function onScanSuccess(decodedText, decodedResult) {
+          // Handle on success condition with the decoded text or result.
+          console.log(`Scan result: ${decodedText}`, decodedResult);
+      }
+
+      var html5QrcodeScanner = new Html5QrcodeScanner("reader", { fps: 10 });
+      html5QrcodeScanner.render(onScanSuccess);
+    </script>
+
+
+    <script>
+      if('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('./sw.js', { scope: './' });
+      }
+    </script>
 </body>
 
-</html>
+</html> 

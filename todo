@@ -1,0 +1,5 @@
+# TODO List
+
+- [ ] Implement QR code scanning route
+- [ ] Implement barcode generation per item
+- [ ] Implement layout for barcode printing
