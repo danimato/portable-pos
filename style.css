@@ -63,3 +63,15 @@ h3 {
   padding: 16px;
   margin: 0;
 }
+
+#inventoryList {
+  margin: 0; padding: 0;
+  width: 100%;
+}
+#inventoryList td, #inventoryList th {
+  padding: 6px 0;
+}
+
+.inventoryCheckbox {
+  display: none;
+}

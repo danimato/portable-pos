@@ -47,6 +47,29 @@
 
 <div id="inventory" class="tabcontent">
   <h3>Inventory</h3>
+  <button id="inventoryAdd">+</button>
+  <button id="inventoryBarcode">Print Barcode</button>
+  <button id="inventoryEdit">Edit</button>
+  <table id="inventoryList">
+    <tr>
+      <th class="inventoryCheckbox"><!--Select--></th>
+      <th>Item Name</th>
+      <th>Stock</th>
+      <th>Cost</th>
+    </tr>
+    <tr>
+      <td class="inventoryCheckbox"><input type="checkbox" id="item1" name="item1" value="item1"></td>
+      <td>Sample Item 1</td>
+      <td>10</td>
+      <td>$5.00</td>
+    </tr>
+    <tr>
+      <td class="inventoryCheckbox"><input type="checkbox" id="item2" name="item2" value="item2"></td>
+      <td>Sample Item 2</td>
+      <td>20</td>
+      <td>$15.00</td>
+    </tr>
+  </table>
   <ul>
     <li>add button</li>
     <li>list implementation</li>
