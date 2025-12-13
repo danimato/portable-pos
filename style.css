@@ -41,7 +41,6 @@ body {
   display: none;
   padding: none;
   margin: none;
-  border: 1px solid #ccc;
   border-top: none;
 }
 
@@ -54,4 +53,13 @@ body {
   font-optical-sizing: auto;
   font-weight: 400;
   font-style: normal;  
+}
+
+/* gonna take some creative liberty here */
+h3 {
+  color: white;
+  text-align: center;
+  background-color: blue;
+  padding: 16px;
+  margin: 0;
 }
