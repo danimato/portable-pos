@@ -62,6 +62,10 @@ h3 {
   background-color: blue;
   padding: 16px;
   margin: 0;
+
+  position: -webkit-sticky; /* For Safari support */
+  position: sticky;
+  top: 0; /* Sticks to the very top of the viewport */
 }
 
 #inventoryList {
