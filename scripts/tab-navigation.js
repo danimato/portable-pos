@@ -26,6 +26,9 @@ function openTab(evt, tabName) {
     evt.currentTarget.classList.add("active");
 
     if (tabName === 'inventory') {
+        // yes we are aware of the bug that causes double rendering here
+        // but this is the simplest non working fix for now
+        clearInventoryListRender();
         refreshInventoryList();
     }
 }
