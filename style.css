@@ -1,4 +1,7 @@
 
+
+@import url('https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@100..900&display=swap');
+
 body {
     margin: 0;
     padding: 0;
@@ -38,6 +41,41 @@ body {
   display: none;
   padding: none;
   margin: none;
-  border: 1px solid #ccc;
   border-top: none;
+}
+
+body {
+  overflow-x: hidden;
+}
+
+* {
+  font-family: "Lexend Deca", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;  
+}
+
+/* gonna take some creative liberty here */
+h3 {
+  color: white;
+  text-align: center;
+  background-color: blue;
+  padding: 16px;
+  margin: 0;
+
+  position: -webkit-sticky; /* For Safari support */
+  position: sticky;
+  top: 0; /* Sticks to the very top of the viewport */
+}
+
+#inventoryList {
+  margin: 0; padding: 0;
+  width: 100%;
+}
+#inventoryList td, #inventoryList th {
+  padding: 6px 0;
+}
+
+.inventoryCheckbox {
+  width:min-content;
 }

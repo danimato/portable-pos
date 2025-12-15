@@ -1,86 +1,107 @@
-
 const DB_NAME = 'EcommerceDB';
 const DB_VERSION = 1;
 
-// Initialize IndexedDB
-function initDB() {
-    return new Promise((resolve, reject) => {
-        const request = indexedDB.open(DB_NAME, DB_VERSION);
+class EcommerceDB {
+    constructor() {
+        this.db = null;
+    }
 
-        request.onerror = () => reject(request.error);
-        request.onsuccess = () => resolve(request.result);
+    async init() {
+        if (this.db) return this.db;
 
-        request.onupgradeneeded = (e) => {
-            const db = e.target.result;
+        return new Promise((resolve, reject) => {
+            const request = indexedDB.open(DB_NAME, DB_VERSION);
 
-            // Products store
-            if (!db.objectStoreNames.contains('products')) {
-                const productsStore = db.createObjectStore('products', {
-                    keyPath: 'product_id',
-                    autoIncrement: true
-                });
-                productsStore.createIndex('product_name', 'product_name', { unique: false });
-            }
+            request.onerror = () => reject(request.error);
+            request.onsuccess = () => {
+                this.db = request.result;
+                resolve(this.db);
+            };
 
-            // Inventory store
-            if (!db.objectStoreNames.contains('inventory')) {
-                const inventoryStore = db.createObjectStore('inventory', {
-                    keyPath: 'product_id'
-                });
-                inventoryStore.createIndex('current_stock', 'current_stock', { unique: false });
-            }
+            request.onupgradeneeded = (e) => {
+                const db = e.target.result;
 
-            // Cart store
-            if (!db.objectStoreNames.contains('cart')) {
-                const cartStore = db.createObjectStore('cart', {
-                    keyPath: 'cart_id',
-                    autoIncrement: true
-                });
-                cartStore.createIndex('product_id', 'product_id', { unique: false });
-            }
+                // Products store
+                if (!db.objectStoreNames.contains('products')) {
+                    const productsStore = db.createObjectStore('products', {
+                        keyPath: 'product_id',
+                        autoIncrement: true
+                    });
+                    productsStore.createIndex('product_name', 'product_name', { unique: false });
+                    productsStore.createIndex('category', 'category', { unique: false });
+                }
 
-            // Orders store
-            if (!db.objectStoreNames.contains('orders')) {
-                const ordersStore = db.createObjectStore('orders', {
-                    keyPath: 'order_id',
-                    autoIncrement: true
-                });
-                ordersStore.createIndex('cart_id', 'cart_id', { unique: false });
-                ordersStore.createIndex('buyer_id', 'buyer_id', { unique: false });
-                ordersStore.createIndex('seller_id', 'seller_id', { unique: false });
-                ordersStore.createIndex('order_date', 'order_date', { unique: false });
-            }
+                // Inventory store
+                if (!db.objectStoreNames.contains('inventory')) {
+                    const inventoryStore = db.createObjectStore('inventory', {
+                        keyPath: 'product_id'
+                    });
+                    inventoryStore.createIndex('current_stock', 'current_stock', { unique: false });
+                    inventoryStore.createIndex('price', 'price', { unique: false });
+                    inventoryStore.createIndex('category', 'category', { unique: false });
+                    inventoryStore.createIndex('sku', 'sku', { unique: true });
+                }
 
-            // Promo store
-            if (!db.objectStoreNames.contains('promo')) {
-                const promoStore = db.createObjectStore('promo', {
-                    keyPath: 'promo_id',
-                    autoIncrement: true
-                });
-                promoStore.createIndex('code', 'code', { unique: true });
-                promoStore.createIndex('valid_from', 'valid_from', { unique: false });
-                promoStore.createIndex('valid_to', 'valid_to', { unique: false });
-            }
+                // Cart store
+                if (!db.objectStoreNames.contains('cart')) {
+                    const cartStore = db.createObjectStore('cart', {
+                        keyPath: 'cart_id',
+                        autoIncrement: true
+                    });
+                    cartStore.createIndex('product_id', 'product_id', { unique: false });
+                    cartStore.createIndex('user_id', 'user_id', { unique: false });
+                }
 
-            // Order Promo store (junction table)
-            if (!db.objectStoreNames.contains('order_promo')) {
-                const orderPromoStore = db.createObjectStore('order_promo', {
-                    keyPath: 'id',
-                    autoIncrement: true
-                });
-                orderPromoStore.createIndex('order_id', 'order_id', { unique: false });
-                orderPromoStore.createIndex('promo_id', 'promo_id', { unique: false });
-            }
-        };
-    });
-}
+                // Orders store
+                if (!db.objectStoreNames.contains('orders')) {
+                    const ordersStore = db.createObjectStore('orders', {
+                        keyPath: 'order_id',
+                        autoIncrement: true
+                    });
+                    ordersStore.createIndex('buyer_id', 'buyer_id', { unique: false });
+                    ordersStore.createIndex('seller_id', 'seller_id', { unique: false });
+                    ordersStore.createIndex('order_date', 'order_date', { unique: false });
+                    ordersStore.createIndex('status', 'status', { unique: false });
+                }
 
+                // Order Items store (replaces cart_id reference)
+                if (!db.objectStoreNames.contains('order_items')) {
+                    const orderItemsStore = db.createObjectStore('order_items', {
+                        keyPath: 'order_item_id',
+                        autoIncrement: true
+                    });
+                    orderItemsStore.createIndex('order_id', 'order_id', { unique: false });
+                    orderItemsStore.createIndex('product_id', 'product_id', { unique: false });
+                }
 
+                // Promo store
+                if (!db.objectStoreNames.contains('promo')) {
+                    const promoStore = db.createObjectStore('promo', {
+                        keyPath: 'promo_id',
+                        autoIncrement: true
+                    });
+                    promoStore.createIndex('code', 'code', { unique: true });
+                    promoStore.createIndex('valid_from', 'valid_from', { unique: false });
+                    promoStore.createIndex('valid_to', 'valid_to', { unique: false });
+                    promoStore.createIndex('is_active', 'is_active', { unique: false });
+                }
 
-// Generic CRUD operations
-function add(storeName, data) {
-    return new Promise((resolve, reject) => {
-        initDB().then(db => {
+                // Order Promo store
+                if (!db.objectStoreNames.contains('order_promo')) {
+                    const orderPromoStore = db.createObjectStore('order_promo', {
+                        keyPath: 'id',
+                        autoIncrement: true
+                    });
+                    orderPromoStore.createIndex('order_id', 'order_id', { unique: false });
+                    orderPromoStore.createIndex('promo_id', 'promo_id', { unique: false });
+                }
+            };
+        });
+    }
+
+    async add(storeName, data) {
+        const db = await this.init();
+        return new Promise((resolve, reject) => {
             const tx = db.transaction([storeName], 'readwrite');
             const store = tx.objectStore(storeName);
             const request = store.add(data);
@@ -88,12 +109,11 @@ function add(storeName, data) {
             request.onsuccess = () => resolve(request.result);
             request.onerror = () => reject(request.error);
         });
-    });
-}
+    }
 
-function getAll(storeName) {
-    return new Promise((resolve, reject) => {
-        initDB().then(db => {
+    async getAll(storeName) {
+        const db = await this.init();
+        return new Promise((resolve, reject) => {
             const tx = db.transaction([storeName], 'readonly');
             const store = tx.objectStore(storeName);
             const request = store.getAll();
@@ -101,12 +121,11 @@ function getAll(storeName) {
             request.onsuccess = () => resolve(request.result);
             request.onerror = () => reject(request.error);
         });
-    });
-}
+    }
 
-function get(storeName, key) {
-    return new Promise((resolve, reject) => {
-        initDB().then(db => {
+    async get(storeName, key) {
+        const db = await this.init();
+        return new Promise((resolve, reject) => {
             const tx = db.transaction([storeName], 'readonly');
             const store = tx.objectStore(storeName);
             const request = store.get(key);
@@ -114,12 +133,11 @@ function get(storeName, key) {
             request.onsuccess = () => resolve(request.result);
             request.onerror = () => reject(request.error);
         });
-    });
-}
+    }
 
-function update(storeName, data) {
-    return new Promise((resolve, reject) => {
-        initDB().then(db => {
+    async update(storeName, data) {
+        const db = await this.init();
+        return new Promise((resolve, reject) => {
             const tx = db.transaction([storeName], 'readwrite');
             const store = tx.objectStore(storeName);
             const request = store.put(data);
@@ -127,12 +145,11 @@ function update(storeName, data) {
             request.onsuccess = () => resolve(request.result);
             request.onerror = () => reject(request.error);
         });
-    });
-}
+    }
 
-function remove(storeName, key) {
-    return new Promise((resolve, reject) => {
-        initDB().then(db => {
+    async delete(storeName, key) {
+        const db = await this.init();
+        return new Promise((resolve, reject) => {
             const tx = db.transaction([storeName], 'readwrite');
             const store = tx.objectStore(storeName);
             const request = store.delete(key);
@@ -140,12 +157,11 @@ function remove(storeName, key) {
             request.onsuccess = () => resolve();
             request.onerror = () => reject(request.error);
         });
-    });
-}
+    }
 
-function getByIndex(storeName, indexName, value) {
-    return new Promise((resolve, reject) => {
-        initDB().then(db => {
+    async getByIndex(storeName, indexName, value) {
+        const db = await this.init();
+        return new Promise((resolve, reject) => {
             const tx = db.transaction([storeName], 'readonly');
             const store = tx.objectStore(storeName);
             const index = store.index(indexName);
@@ -154,53 +170,158 @@ function getByIndex(storeName, indexName, value) {
             request.onsuccess = () => resolve(request.result);
             request.onerror = () => reject(request.error);
         });
-    });
+    }
+
+    async clear(storeName) {
+        const db = await this.init();
+        return new Promise((resolve, reject) => {
+            const tx = db.transaction([storeName], 'readwrite');
+            const store = tx.objectStore(storeName);
+            const request = store.clear();
+
+            request.onsuccess = () => resolve();
+            request.onerror = () => reject(request.error);
+        });
+    }
+
+    async count(storeName) {
+        const db = await this.init();
+        return new Promise((resolve, reject) => {
+            const tx = db.transaction([storeName], 'readonly');
+            const store = tx.objectStore(storeName);
+            const request = store.count();
+
+            request.onsuccess = () => resolve(request.result);
+            request.onerror = () => reject(request.error);
+        });
+    }
+
+    // Helper methods for common operations
+    async addProduct(name, category) {
+        const productId = await this.add('products', { product_name: name, category });
+        return productId;
+    }
+
+    async addInventory(productId, price, stock, description, category, sku) {
+        return this.add('inventory', {
+            product_id: productId,
+            price,
+            current_stock: stock,
+            description,
+            category,
+            sku
+        });
+    }
+
+    async addToCart(userId, productId, quantity) {
+        return this.add('cart', { user_id: userId, product_id: productId, quantity });
+    }
+
+    async getCartItems(userId) {
+        return this.getByIndex('cart', 'user_id', userId);
+    }
+
+    async createOrder(buyerId, sellerId, paymentMethod, amountPaid, amountCharged, amountDiscount, items) {
+        const orderId = await this.add('orders', {
+            buyer_id: buyerId,
+            seller_id: sellerId,
+            payment_method: paymentMethod,
+            amount_paid: amountPaid,
+            amount_charged: amountCharged,
+            amount_discount: amountDiscount,
+            order_date: new Date().toISOString(),
+            status: 'pending'
+        });
+
+        // Add order items
+        for (const item of items) {
+            await this.add('order_items', {
+                order_id: orderId,
+                product_id: item.product_id,
+                quantity: item.quantity,
+                price: item.price
+            });
+        }
+
+        return orderId;
+    }
+
+    async getOrdersByBuyer(buyerId) {
+        return this.getByIndex('orders', 'buyer_id', buyerId);
+    }
+
+    async getOrderItems(orderId) {
+        return this.getByIndex('order_items', 'order_id', orderId);
+    }
+
+    async addPromo(code, description, discountType, discountValue, validFrom, validTo) {
+        return this.add('promo', {
+            code,
+            description,
+            discount_type: discountType,
+            discount_value: discountValue,
+            valid_from: validFrom,
+            valid_to: validTo,
+            is_active: true
+        });
+    }
+
+    async getPromoByCode(code) {
+        const promos = await this.getByIndex('promo', 'code', code);
+        return promos[0] || null;
+    }
+
+    async applyPromoToOrder(orderId, promoId, discountAmount) {
+        return this.add('order_promo', { order_id: orderId, promo_id: promoId, discount_amount: discountAmount });
+    }
 }
 
-// Usage examples:
+// Usage
+const db = new EcommerceDB();
 
-// Add a product
-// add('products', { product_name: 'Laptop' }).then(id => console.log('Product ID:', id));
+// Example usage:
+/*
+(async () => {
+    // Add a product
+    const productId = await db.addProduct('Gaming Laptop', 'Electronics');
+    console.log('Product ID:', productId);
 
-// Get all products
-// getAll('products').then(products => console.log(products));
+    // Add inventory
+    await db.addInventory(productId, 1299.99, 50, 'High-performance gaming laptop', 'Electronics', 'LAP-001');
 
-// Get product by ID
-// get('products', 1).then(product => console.log(product));
+    // Add to cart
+    await db.addToCart(1, productId, 2);
 
-// Update inventory
-// update('inventory', { product_id: 1, current_stock: 50 });
+    // Get cart items
+    const cartItems = await db.getCartItems(1);
+    console.log('Cart:', cartItems);
 
-// Add to cart
-// add('cart', { product_id: 1, quantity: 2 });
+    // Create order
+    const orderId = await db.createOrder(
+        1, // buyer_id
+        100, // seller_id
+        'credit_card',
+        2499.98,
+        2599.98,
+        100.00,
+        [{ product_id: productId, quantity: 2, price: 1299.99 }]
+    );
 
-// Create order
-// add('orders', {
-//   cart_id: 1,
-//   buyer_id: 101,
-//   seller_id: 201,
-//   payment_method: 'credit_card',
-//   amount_paid: 1500.00,
-//   amount_charged: 1600.00,
-//   amount_discount: 100.00,
-//   order_date: new Date().toISOString()
-// });
+    // Add promo
+    const promoId = await db.addPromo(
+        'SAVE20',
+        '20% off everything',
+        'percentage',
+        20,
+        new Date().toISOString(),
+        new Date(Date.now() + 30*24*60*60*1000).toISOString()
+    );
 
-// Add promo
-// add('promo', {
-//   code: 'SAVE20',
-//   description: '20% off everything',
-//   discount_type: 'percentage',
-//   discount_value: 20,
-//   valid_from: new Date().toISOString(),
-//   valid_to: new Date(Date.now() + 30*24*60*60*1000).toISOString()
-// });
+    // Apply promo to order
+    await db.applyPromoToOrder(orderId, promoId, 100.00);
 
-// Link promo to order
-// add('order_promo', { order_id: 1, promo_id: 1, discount_amount: 100.00 });
-
-// Get orders by buyer
-// getByIndex('orders', 'buyer_id', 101).then(orders => console.log(orders));
-
-// Remove from cart
-// remove('cart', 1);
+    // Get orders
+    const orders = await db.getOrdersByBuyer(1);
+    console.log('Orders:', orders);
+})();
+*/

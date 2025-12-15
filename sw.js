@@ -1,5 +1,5 @@
 const CACHE_NAME = `QuickTrack`;
-    
+const DEVELOPER_MODE = true;
 // Use the install event to pre-cache all initial resources.
 self.addEventListener('install', event => {
   event.waitUntil(
@@ -37,7 +37,7 @@ self.addEventListener('fetch', event => {
 
       // try cache first
       const cachedResponse = await cache.match(event.request);
-      if (cachedResponse) {
+      if (cachedResponse && !DEVELOPER_MODE) {
         return cachedResponse;
       }
 
