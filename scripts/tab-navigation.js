@@ -2,7 +2,7 @@
 document.getElementById("home").style.display = "block";
 document.getElementById("home").classList.add("active");
 
-function openTab(evt, cityName) {
+function openTab(evt, tabName) {
     // Declare all variables
     var i, tabcontent, tablinks;
 
@@ -22,6 +22,10 @@ function openTab(evt, cityName) {
     }
 
     // Show the current tab, and add an "active" class to the button that opened the tab
-    document.getElementById(cityName).style.display = "block";
+    document.getElementById(tabName).style.display = "block";
     evt.currentTarget.classList.add("active");
+
+    if (tabName === 'inventory') {
+        refreshInventoryList();
+    }
 }
