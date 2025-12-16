@@ -114,15 +114,22 @@
     <button class="tablinks" onclick="openTab(event, 'activity')">Activity</button>
     <button class="tablinks" onclick="openTab(event, 'settings')">Settings</button>
     </div>
+
+<!-- html -->
+<div id="toast" role="status" aria-hidden="true">
+  <span id="header">Barcode not found</span>
+  <span id="message">The scanned barcode is not in your inventory records.</span>
+</div>
+
     <script src="scripts/db.js"></script>
     <script src="scripts/html5-qrcode.min.js"></script>
     <script src="scripts/tab-navigation.js"></script>
     <script src="scripts/inventoryList.js"></script>
+    <script src="scripts/toast.js"></script>
 
     
     <script>
       function onScanSuccess(decodedText, decodedResult) {
-          // Handle on success condition with the decoded text or result.
           console.log(`Scan result: ${decodedText}`, decodedResult);
       }
 
