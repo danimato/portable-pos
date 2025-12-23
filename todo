@@ -3,5 +3,3 @@
 - [ ] Implement QR code scanning route
 - [ ] Implement barcode generation per item
 - [ ] Implement layout for barcode printing
-- [ ] Implement BLE plug-in for Arduino
-- [ ] Implement arduino commands 
