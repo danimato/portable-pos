@@ -79,3 +79,41 @@ h3 {
 .inventoryCheckbox {
   width:min-content;
 }
+#toast {
+  min-width: 250px;
+  margin-left: -125px;
+  background-color: #333;
+  color: #fff;
+  text-align: center;
+  border-radius: 50px;
+  padding: 8px 14px;
+  position: fixed;
+  z-index: 1;
+  left: 50%;
+  bottom: 30px;
+  font-size: 12px;
+  
+  /* Hidden by default */
+  opacity: 0;
+  transform: translateY(20px);
+  pointer-events: none;
+  
+  /* Smooth transition for both in and out */
+  transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+}
+
+#toast.show {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+#toast #header {
+  font-weight: bold;
+  display: block;
+}
+
+#toast #message {
+  font-size: 10px;
+  display: block;
+}
