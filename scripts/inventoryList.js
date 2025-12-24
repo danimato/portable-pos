@@ -68,10 +68,35 @@ async function refreshInventoryList() {
   for (const item of items) {
     // 🔥 FIX: Use item.product_id instead of item.id
     const inv = inventoryMap.get(String(item.product_id));
-    console.log('Looking up product_id:', item.product_id, 'Found:', inv);
-    
     const tr = await tableRowTemplate(item, inv);
     inventoryListTbody.appendChild(tr);
+  }
+
+
+
+
+  // Test 1: render fake items
+
+  if (FillUpInventory) {
+    const fakeItems = Array.from({ length: 30 }, (_, i) => ({
+      product: {
+        product_name: 'Laptop na Mura',
+        description: 'minumura ka na',
+        category: 'tech',
+        sku: '4234723894',
+        product_id: i + 3,
+      },
+      inventory: {
+        product_id: i + 3,
+        price: '10',
+        current_stock: '1',
+      },
+    }));
+
+    for (const { product, inventory } of fakeItems) {
+      const tr = await tableRowTemplate(product, inventory);
+      inventoryListTbody.appendChild(tr);
+    }
   }
 }
 // Initialize selectedRows as an empty array
@@ -86,10 +111,8 @@ if (inventoryListTbody) {
       const productId = checkbox.getAttribute('data-product-id');
 
       if (checkbox.checked) {
-        console.log('Selecting product ID:', productId);
         if (!selectedRows.includes(productId)) selectedRows.push(productId);
       } else {
-        console.log('Deselecting product ID:', productId);
         const index = selectedRows.indexOf(productId);
         if (index !== -1) selectedRows.splice(index, 1);
       }

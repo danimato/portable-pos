@@ -1,6 +1,8 @@
 // Select the version element
 const versionElement = document.querySelector('#version');
 
+
+var FillUpInventory = false;
 // Initialize variables to track clicks and timing
 let clickCount = 0;
 let clickTimer = null;
@@ -37,6 +39,13 @@ versionElement.addEventListener('click', () => {
     }
 });
 
-function processTest() {
-    alert(document.getElementById("select-text").value)
+async function processTest() {
+    switch (document.getElementById('select-text').value) {
+        case "FillUpInventory":
+            FillUpInventory = true;
+            break;
+        default:
+            console.log("No test selected");
+            break;
+    }
 }
