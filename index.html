@@ -2,65 +2,65 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QuickTrack</title>
-    <link rel="manifest" href="./manifest.json">
-    <link rel="stylesheet" href="style.css">
-    <meta name="application-name" content="Temperature converter">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QuickTrack</title>
+  <link rel="manifest" href="./manifest.json">
+  <link rel="stylesheet" href="style.css">
+  <meta name="application-name" content="Temperature converter">
 </head>
 
 <body>
-  
-    <!--Flow-->
-    <!--Home -> QR -> Payment options -> Cash         -> finish/print -> log activity -> scan (loop) -->
-    <!--                              -> QR for gash                                                 -->
+
+  <!--Flow-->
+  <!--Home -> QR -> Payment options -> Cash         -> finish/print -> log activity -> scan (loop) -->
+  <!--                              -> QR for gash                                                 -->
 
 
-<!-- Tab content -->
+  <!-- Tab content -->
 
-<div class="overlay" id="overlay"></div>
-<div id="home" class="tabcontent">
-  <h3>Home</h3>
-  <p>todo</p>
-  <ul>
-    <li>total sales</li>
-    <li>miniactivity</li>
-    <li>top performers</li>
-  </ul>
-</div>
-
-
-
-
-<div id="qr" class="tabcontent">
-  <h3>QR</h3>
-  <p>Paris is the capital of France.</p>
-  <div style="width: 100%" id="reader"></div>
-  <ul>
-    <li>items scanned</li>
-  </ul>
-</div>
+  <div class="overlay" id="overlay"></div>
+  <div id="home" class="tabcontent">
+    <h3>Home</h3>
+    <p>todo</p>
+    <ul>
+      <li>total sales</li>
+      <li>miniactivity</li>
+      <li>top performers</li>
+    </ul>
+  </div>
 
 
 
 
-<div id="inventory" class="tabcontent">
-  <h3>Inventory</h3>
-  <button id="inventoryAdd" onclick="showInventoryForm()">+</button>
-  <button id="inventoryBarcode">Print Barcode</button>
-  <button id="inventoryEdit">Edit</button>
-  <table id="inventoryList">
-    <tr>
-      <th class="inventoryCheckbox"><!--Select--></th>
-      <th>Item Name</th>
-      <th>Stock</th>
-      <th>Cost</th>
-    </tr>
-    <tr>
-      <td class="inventoryCheckbox"><input type="checkbox" id="item1" name="item1" value="item1"></td>
-      <td>Sample Item 1</td>
-      <td>10</td>
+  <div id="qr" class="tabcontent">
+    <h3>QR</h3>
+    <p>Paris is the capital of France.</p>
+    <div style="width: 100%" id="reader"></div>
+    <ul>
+      <li>items scanned</li>
+    </ul>
+  </div>
+
+
+
+
+  <div id="inventory" class="tabcontent">
+    <h3>Inventory</h3>
+    <button id="inventoryAdd" onclick="showInventoryForm()">+</button>
+    <button id="inventoryBarcode">Print Barcode</button>
+    <button id="inventoryEdit">Edit</button>
+    <table id="inventoryList">
+      <tr>
+        <th class="inventoryCheckbox"><!--Select--></th>
+        <th>Item Name</th>
+        <th>Stock</th>
+        <th>Cost</th>
+      </tr>
+      <tr>
+        <td class="inventoryCheckbox"><input type="checkbox" id="item1" name="item1" value="item1"></td>
+        <td>Sample Item 1</td>
+        <td>10</td>
         <td>$5.00</td>
       </tr>
       <tr>
@@ -69,151 +69,163 @@
         <td>20</td>
         <td>$15.00</td>
       </tr>
-  </table>
-  <ul>
-    <li>add button</li>
-    <li>list implementation</li>
-    <li>integration to qr</li>
-    <li>integration to db</li>
-    <li>error handling</li>
-    <li>stock count</li>
-    <li>stock delete</li>
-    <li>stock cost</li>
-    <li>stock edit/sku edit</li>
-  </ul>
-</div>
-
-
-
-
-<div id="activity" class="tabcontent">
-  <h3>Activity</h3>
-  <li>
-    <ul>list of each transactions</ul>
-    <ul>db integration</ul>
-  </li>
-</div>
-
-
-
-
-<div id="settings" class="tabcontent">
-  <h3>Settings</h3>
-  <div id="version" class="settings-item">
-    <span class="title">Version</span><br>
-    <span class="data" id="version-text"></span>
+    </table>
+    <ul>
+      <li>add button</li>
+      <li>list implementation</li>
+      <li>integration to qr</li>
+      <li>integration to db</li>
+      <li>error handling</li>
+      <li>stock count</li>
+      <li>stock delete</li>
+      <li>stock cost</li>
+      <li>stock edit/sku edit</li>
+    </ul>
   </div>
-  <ul>
-    <li>currency</li>
-    <li>language</li>
-    <li>behavior after scanning</li>
-    <li></li>
-  </ul>
-</div>
 
-    <div class="tab">
+
+
+
+  <div id="activity" class="tabcontent">
+    <h3>Activity</h3>
+    <li>
+      <ul>list of each transactions</ul>
+      <ul>db integration</ul>
+    </li>
+  </div>
+
+
+
+
+  <div id="settings" class="tabcontent">
+    <h3>Settings</h3>
+    <div id="version" class="settings-item">
+      <span class="title">Version</span><br>
+      <span class="data" id="version-text"></span>
+    </div>
+    <div id="tests" class="settings-item hidden">
+      <span class="title">Tests</span><br>
+      <span class="data" id="tests-text">
+        <select name="select-text" id="select-text">
+          <option value="FillUpInventory">Fill up inventory</option>
+
+        </select>
+        <button onclick="processTest()"></button>
+      </span>
+    </div>
+    <ul>
+      <li>currency</li>
+      <li>language</li>
+      <li>behavior after scanning</li>
+      <li></li>
+    </ul>
+  </div>
+
+  <div class="tab">
     <button class="tablinks" onclick="openTab(event, 'home')">Home</button>
     <button class="tablinks" onclick="openTab(event, 'inventory')">Inventory</button>
     <button class="tablinks" onclick="openTab(event, 'qr')">QR</button>
     <button class="tablinks" onclick="openTab(event, 'activity')">Activity</button>
     <button class="tablinks" onclick="openTab(event, 'settings')">Settings</button>
+  </div>
+
+  <!-- html -->
+  <div id="toast-parent">
+    <div id="toast" role="status" aria-hidden="true">
+      <span id="header">Barcode not found</span>
+      <span id="message">The scanned barcode is not in your inventory records.</span>
+    </div>
+  </div>
+  <div class="form-container" id="inventoryForm">
+    <h2>Add Item</h2>
+
+    <div class="form-group">
+      <label for="sku">SKU:</label>
+      <input type="text" id="sku" name="sku">
     </div>
 
-<!-- html -->
-<div id="toast" role="status" aria-hidden="true">
-  <span id="header">Barcode not found</span>
-  <span id="message">The scanned barcode is not in your inventory records.</span>
-</div>
-<div class="form-container" id="inventoryForm">
-        <h2>Add Item</h2>
-        
-        <div class="form-group">
-            <label for="sku">SKU:</label>
-            <input type="text" id="sku" name="sku">
-        </div>
-
-        <div class="form-group">
-            <label for="productName">Product Name:</label>
-            <input type="text" id="productName" name="productName">
-        </div>
-        <div class="form-group">
-            <label for="productType">Product Type:</label>
-            <input type="text" id="productType" name="productType">
-        </div>
-
-        <div class="form-group">
-            <label for="description">Description:</label>
-            <textarea id="description" name="description"></textarea>
-        </div>
-
-        <div class="form-group">
-            <label for="price">Price:</label>
-            <input type="number" id="price" name="price" step="0.01">
-        </div>
-
-        <div class="form-group" id="stockField">
-            <label for="stock">Stock:</label>
-            <input type="number" id="stock" name="stock">
-        </div>
-
-        <div class="form-group" id="newStockField">
-            <label for="newStock">New Stock:</label>
-            <input type="number" id="newStock" name="newStock">
-        </div>
-
-        <div class="form-group">
-            <label for="date">Date:</label>
-            <input type="date" id="date" name="date">
-        </div>
-
-        <div class="form-group">
-            <label>Inventory History:</label>
-            <table class="inventory-table">
-                <thead>
-                    <tr>
-                        <th>Date</th>
-                        <th>Product + Qty</th>
-                    </tr>
-                </thead>
-                <tbody id="historyTable">
-                    <tr>
-                        <td colspan="2" style="text-align: center; color: #999;">No history available</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <div class="button-group">
-            <button class="btn-clear" onclick="clearEntries()">Clear Entries</button>
-            <button class="btn-confirm" onclick="confirmForm()">Confirm</button>
-        </div>
+    <div class="form-group">
+      <label for="productName">Product Name:</label>
+      <input type="text" id="productName" name="productName">
+    </div>
+    <div class="form-group">
+      <label for="productType">Product Type:</label>
+      <input type="text" id="productType" name="productType">
     </div>
 
-    <script src="scripts/db.js"></script>
-    <script src="scripts/html5-qrcode.min.js"></script>
-    <script src="scripts/tab-navigation.js"></script>
-    <script src="scripts/inventoryList.js"></script>
-    <script src="scripts/toast.js"></script>
-    <script src="scripts/inventoryForm.js"></script>
-    <script src="scripts/settings.js"></script>
-    <script src="scripts/tests.js"></script>
+    <div class="form-group">
+      <label for="description">Description:</label>
+      <textarea id="description" name="description"></textarea>
+    </div>
 
-    
-    <script>
-      function onScanSuccess(decodedText, decodedResult) {
-          console.log(`Scan result: ${decodedText}`, decodedResult);
-      }
+    <div class="form-group">
+      <label for="price">Price:</label>
+      <input type="number" id="price" name="price" step="0.01">
+    </div>
 
-      var html5QrcodeScanner = new Html5QrcodeScanner("reader", { fps: 10 });
-      html5QrcodeScanner.render(onScanSuccess);
-    </script>
+    <div class="form-group" id="stockField">
+      <label for="stock">Stock:</label>
+      <input type="number" id="stock" name="stock">
+    </div>
+
+    <div class="form-group" id="newStockField">
+      <label for="newStock">New Stock:</label>
+      <input type="number" id="newStock" name="newStock">
+    </div>
+
+    <div class="form-group">
+      <label for="date">Date:</label>
+      <input type="date" id="date" name="date">
+    </div>
+
+    <div class="form-group">
+      <label>Inventory History:</label>
+      <table class="inventory-table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Product + Qty</th>
+          </tr>
+        </thead>
+        <tbody id="historyTable">
+          <tr>
+            <td colspan="2" style="text-align: center; color: #999;">No history available</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="button-group">
+      <button class="btn-clear" onclick="clearEntries()">Clear Entries</button>
+      <button class="btn-confirm" onclick="confirmForm()">Confirm</button>
+    </div>
+  </div>
+
+  <script src="scripts/db.js"></script>
+  <script src="scripts/html5-qrcode.min.js"></script>
+  <script src="scripts/tab-navigation.js"></script>
+  <script src="scripts/inventoryList.js"></script>
+  <script src="scripts/toast.js"></script>
+  <script src="scripts/inventoryForm.js"></script>
+  <script src="scripts/settings.js"></script>
+  <script src="scripts/tests.js"></script>
 
 
-    <script>
-      if('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('./sw.js', { scope: './' });
-      }
-    </script>
+  <script>
+    function onScanSuccess(decodedText, decodedResult) {
+      console.log(`Scan result: ${decodedText}`, decodedResult);
+    }
+
+    var html5QrcodeScanner = new Html5QrcodeScanner("reader", { fps: 10 });
+    html5QrcodeScanner.render(onScanSuccess);
+  </script>
+
+
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('./sw.js', { scope: './' });
+    }
+  </script>
 </body>
 
-</html> 
+</html>

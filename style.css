@@ -97,15 +97,13 @@ h3 {
 
 #toast {
   min-width: 250px;
-  margin-left: -125px;
   background-color: #333;
   color: #fff;
   text-align: center;
   border-radius: 50px;
   padding: 8px 14px;
   position: fixed;
-  z-index: 1;
-  left: 50%;
+  z-index: 999;
   bottom: 30px;
   font-size: 12px;
   
@@ -116,6 +114,12 @@ h3 {
   
   /* Smooth transition for both in and out */
   transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+}
+
+#toast-parent {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 #toast.show {
@@ -304,4 +308,13 @@ button {
 
 .settings-item .data {
     color: #666;
+}
+
+.hidden {
+    display: none;
+}
+
+/* bug fix */
+body {
+    touch-action: manipulation;
 }

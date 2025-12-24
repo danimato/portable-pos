@@ -11,6 +11,9 @@ function enableTests() {
     window.testsEnabled = true;
     console.log('Tests enabled!');
     // Add your test enabling logic here
+    const testsDiv = document.getElementById('tests');
+    testsDiv.classList.remove('hidden');
+    showToast('Tests Enabled', 'Here be dragons.', 5000);
 }
 
 // Add a click event listener to the version element
@@ -33,3 +36,7 @@ versionElement.addEventListener('click', () => {
         clickTimer = null; // Reset timer
     }
 });
+
+function processTest() {
+    alert(document.getElementById("select-text").value)
+}
