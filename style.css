@@ -76,9 +76,25 @@ h3 {
   padding: 6px 0;
 }
 
+
 .inventoryCheckbox {
   width:min-content;
 }
+
+
+.product-name {
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+  display:block;
+}
+
+.product-sku {
+  font-size: 12px;
+  color: rgba(0, 0, 0, 0.6);
+  display: block;
+}
+
 #toast {
   min-width: 250px;
   margin-left: -125px;
