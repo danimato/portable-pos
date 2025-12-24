@@ -272,3 +272,20 @@ button {
 #stockField, #newStockField {
     display: none;
 }
+
+
+.settings-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px;
+    border-bottom: 1px solid #eee;
+}
+
+.settings-item .title {
+    font-weight: 600;
+    color: #333;
+}
+
+.settings-item .data {
+    color: #666;
+}
