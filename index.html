@@ -19,7 +19,7 @@
 
 <!-- Tab content -->
 
-
+<div class="overlay" id="overlay"></div>
 <div id="home" class="tabcontent">
   <h3>Home</h3>
   <p>todo</p>
@@ -47,7 +47,7 @@
 
 <div id="inventory" class="tabcontent">
   <h3>Inventory</h3>
-  <button id="inventoryAdd">+</button>
+  <button id="inventoryAdd" onclick="showInventoryForm()">+</button>
   <button id="inventoryBarcode">Print Barcode</button>
   <button id="inventoryEdit">Edit</button>
   <table id="inventoryList">
@@ -99,6 +99,10 @@
 
 <div id="settings" class="tabcontent">
   <h3>Settings</h3>
+  <div id="version" class="settings-item">
+    <span class="title">Version</span><br>
+    <span class="data" id="version-text"></span>
+  </div>
   <ul>
     <li>currency</li>
     <li>language</li>
@@ -120,12 +124,79 @@
   <span id="header">Barcode not found</span>
   <span id="message">The scanned barcode is not in your inventory records.</span>
 </div>
+<div class="form-container" id="inventoryForm">
+        <h2>Add Item</h2>
+        
+        <div class="form-group">
+            <label for="sku">SKU:</label>
+            <input type="text" id="sku" name="sku">
+        </div>
+
+        <div class="form-group">
+            <label for="productName">Product Name:</label>
+            <input type="text" id="productName" name="productName">
+        </div>
+        <div class="form-group">
+            <label for="productType">Product Type:</label>
+            <input type="text" id="productType" name="productType">
+        </div>
+
+        <div class="form-group">
+            <label for="description">Description:</label>
+            <textarea id="description" name="description"></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="price">Price:</label>
+            <input type="number" id="price" name="price" step="0.01">
+        </div>
+
+        <div class="form-group" id="stockField">
+            <label for="stock">Stock:</label>
+            <input type="number" id="stock" name="stock">
+        </div>
+
+        <div class="form-group" id="newStockField">
+            <label for="newStock">New Stock:</label>
+            <input type="number" id="newStock" name="newStock">
+        </div>
+
+        <div class="form-group">
+            <label for="date">Date:</label>
+            <input type="date" id="date" name="date">
+        </div>
+
+        <div class="form-group">
+            <label>Inventory History:</label>
+            <table class="inventory-table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Product + Qty</th>
+                    </tr>
+                </thead>
+                <tbody id="historyTable">
+                    <tr>
+                        <td colspan="2" style="text-align: center; color: #999;">No history available</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="button-group">
+            <button class="btn-clear" onclick="clearEntries()">Clear Entries</button>
+            <button class="btn-confirm" onclick="confirmForm()">Confirm</button>
+        </div>
+    </div>
 
     <script src="scripts/db.js"></script>
     <script src="scripts/html5-qrcode.min.js"></script>
     <script src="scripts/tab-navigation.js"></script>
     <script src="scripts/inventoryList.js"></script>
     <script src="scripts/toast.js"></script>
+    <script src="scripts/inventoryForm.js"></script>
+    <script src="scripts/settings.js"></script>
+    <script src="scripts/tests.js"></script>
 
     
     <script>

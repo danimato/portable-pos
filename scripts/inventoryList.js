@@ -19,7 +19,16 @@ async function tableRowTemplate(item, inventory) {
   tr.appendChild(checkboxTd);
   
   const nameTd = document.createElement('td');
-  nameTd.textContent = item.product_name ?? '(no name)';
+  const productNameSpan = document.createElement('span');
+  productNameSpan.textContent = item.product_name ?? '(no name)';
+  productNameSpan.className = 'product-name';
+
+  const skuSpan = document.createElement('span');
+  skuSpan.textContent = ` ${"SKU: " + item.sku ?? 'no SKU'}`;
+  skuSpan.className = 'product-sku';
+
+  nameTd.appendChild(productNameSpan);
+  nameTd.appendChild(skuSpan);
   tr.appendChild(nameTd);
   
   const stockTd = document.createElement('td');
@@ -105,4 +114,10 @@ if (inventoryListTbody) {
 
   inventoryListTbody.addEventListener('change', handleCheckboxChange);
   inventoryListTbody.addEventListener('click', handleRowClick);
+}
+
+async function handleNewInventoryItem(data) {
+  const productId = await db.addProduct(data.productName, data.description, data.productType, data.sku);
+  await db.addInventory(productId, data.price, data.stock);
+  refreshInventoryList();
 }

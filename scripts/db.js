@@ -1,5 +1,5 @@
 const DB_NAME = 'EcommerceDB';
-const DB_VERSION = 1;
+const DB_VERSION = 2; // Incremented version for schema changes
 
 class EcommerceDB {
     constructor() {
@@ -21,7 +21,7 @@ class EcommerceDB {
             request.onupgradeneeded = (e) => {
                 const db = e.target.result;
 
-                // Products store
+                // Products store - core product information
                 if (!db.objectStoreNames.contains('products')) {
                     const productsStore = db.createObjectStore('products', {
                         keyPath: 'product_id',
@@ -29,17 +29,16 @@ class EcommerceDB {
                     });
                     productsStore.createIndex('product_name', 'product_name', { unique: false });
                     productsStore.createIndex('category', 'category', { unique: false });
+                    productsStore.createIndex('sku', 'sku', { unique: true });
                 }
 
-                // Inventory store
+                // Inventory store - stock and pricing information
                 if (!db.objectStoreNames.contains('inventory')) {
                     const inventoryStore = db.createObjectStore('inventory', {
                         keyPath: 'product_id'
                     });
                     inventoryStore.createIndex('current_stock', 'current_stock', { unique: false });
                     inventoryStore.createIndex('price', 'price', { unique: false });
-                    inventoryStore.createIndex('category', 'category', { unique: false });
-                    inventoryStore.createIndex('sku', 'sku', { unique: true });
                 }
 
                 // Cart store
@@ -64,7 +63,7 @@ class EcommerceDB {
                     ordersStore.createIndex('status', 'status', { unique: false });
                 }
 
-                // Order Items store (replaces cart_id reference)
+                // Order Items store
                 if (!db.objectStoreNames.contains('order_items')) {
                     const orderItemsStore = db.createObjectStore('order_items', {
                         keyPath: 'order_item_id',
@@ -197,19 +196,21 @@ class EcommerceDB {
     }
 
     // Helper methods for common operations
-    async addProduct(name, category) {
-        const productId = await this.add('products', { product_name: name, category });
-        return productId;
-    }
-
-    async addInventory(productId, price, stock, description, category, sku) {
-        return this.add('inventory', {
-            product_id: productId,
-            price,
-            current_stock: stock,
+    async addProduct(name, description, category, sku) {
+        const productId = await this.add('products', {
+            product_name: name,
             description,
             category,
             sku
+        });
+        return productId;
+    }
+
+    async addInventory(productId, price, stock) {
+        return this.add('inventory', {
+            product_id: productId,
+            price,
+            current_stock: stock
         });
     }
 
@@ -282,12 +283,17 @@ const db = new EcommerceDB();
 // Example usage:
 /*
 (async () => {
-    // Add a product
-    const productId = await db.addProduct('Gaming Laptop', 'Electronics');
+    // Add a product with all its info
+    const productId = await db.addProduct(
+        'Gaming Laptop',
+        'High-performance gaming laptop with RTX graphics',
+        'Electronics',
+        'LAP-001'
+    );
     console.log('Product ID:', productId);
 
-    // Add inventory
-    await db.addInventory(productId, 1299.99, 50, 'High-performance gaming laptop', 'Electronics', 'LAP-001');
+    // Add inventory for the product
+    await db.addInventory(productId, 1299.99, 50);
 
     // Add to cart
     await db.addToCart(1, productId, 2);
