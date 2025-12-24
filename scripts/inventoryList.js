@@ -106,3 +106,21 @@ if (inventoryListTbody) {
   inventoryListTbody.addEventListener('change', handleCheckboxChange);
   inventoryListTbody.addEventListener('click', handleRowClick);
 }
+
+/*
+        sku: document.getElementById('sku').value,
+        productName: document.getElementById('productName').value,
+        productType: document.getElementById('productType').value,
+        description: document.getElementById('description').value,
+        price: document.getElementById('price').value,
+        stock: document.getElementById('stock').value,
+        newStock: document.getElementById('newStock').value,
+        date: document.getElementById('date').value,
+        isNewItem: isNewItem
+*/
+
+async function handleNewInventoryItem(data) {
+  const productId = await db.addProduct(data.productName, data.productType);
+  await db.addInventory(productId, data.price, data.stock, data.description, data.productType, data.sku);
+  refreshInventoryList();
+}

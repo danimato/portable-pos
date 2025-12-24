@@ -79,6 +79,7 @@ function confirmForm() {
     updateHistoryTable();
 
     console.log('Form Data:', data);
+    handleNewInventoryItem(data);
     alert('Item added successfully!');
     
     clearEntries();
@@ -89,6 +90,7 @@ function getFormData(callback) {
     const data = {
         sku: document.getElementById('sku').value,
         productName: document.getElementById('productName').value,
+        productType: document.getElementById('productType').value,
         description: document.getElementById('description').value,
         price: document.getElementById('price').value,
         stock: document.getElementById('stock').value,
