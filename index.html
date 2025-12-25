@@ -110,18 +110,32 @@
   <div id="settings" class="tabcontent">
     <h3>Settings</h3>
     <div id="version" class="settings-item">
-      <span class="title">Version</span><br>
-      <span class="data" id="version-text"></span>
+      <div class="text-only">
+        <span class="title">Version</span><br>
+        <span class="data" id="version-text"></span>
+      </div>
     </div>
     <div id="tests" class="settings-item hidden">
-      <span class="title">Tests</span><br>
-      <span class="data" id="tests-text">
+      <div class="text-only">
+        <span class="title">Tests</span><br>
+        <span class="data" id="tests-text">Run tests to verify functionality.</span>
+      </div>
+      <div class="actions">
         <select name="select-text" id="select-text">
           <option value="FillUpInventory">Fill up inventory</option>
-
         </select>
         <button onclick="processTest()"></button>
-      </span>
+      </div>
+    </div>
+    <div id="deleteDontAskAgainEl" class="settings-item">
+      <div class="text-only">
+        <span class="title">Delete confirmation</span><br>
+        <span class="data" id="deleteDontAskAgain-text">Disables confirmation of deleting items.</span>
+      </div>
+      <div class="actions">
+        <input type="checkbox" id="deleteDontAskAgain-settings" name="deleteDontAskAgainCheckbox"
+  onchange="toggleDeleteDontAskAgain(event)">
+      </div>
     </div>
     <ul>
       <li>currency</li>
@@ -178,11 +192,6 @@
       <input type="number" id="stock" name="stock">
     </div>
 
-    <div class="form-group" id="newStockField">
-      <label for="newStock">New Stock:</label>
-      <input type="number" id="newStock" name="newStock">
-    </div>
-
     <div class="form-group">
       <label for="date">Date:</label>
       <input type="date" id="date" name="date">
@@ -210,6 +219,17 @@
       <button class="btn-confirm" onclick="confirmForm()">Confirm</button>
     </div>
   </div>
+  <div class="form-container for-prompts" id="deleter">
+    <h2>Delete <span class="countItems"></span> item<span class="countItemsPlural"></span>?</h2>
+    <p>You are about to delete the selected <span class="countItems"></span> item<span class="countItemsPlural"></span>.
+      Are you sure? <b>This action is irreversible.</b></p>
+    <p><input type="checkbox" id="deleteDontAskAgain-prompt" name="deleteDontAskAgainCheckbox"
+  onchange="toggleDeleteDontAskAgain(event)"> Don't ask me again.</p>
+    <div class="button-group">
+      <button class="btn-clear" onclick="cancelDelete('inventory')">Cancel</button>
+      <button class="btn-confirm-red" onclick="confirmDelete('inventory')">Delete</button>
+    </div>
+  </div>
 
 
   <div id="inventoryActionBarParent">
@@ -222,7 +242,7 @@
           class="material-symbols-outlined">delete</span></button>
       <button id="showBarcodeOfSelectedBtn" onclick="showBarcodeOfSelected()"><span
           class="material-symbols-outlined">barcode</span></button>
-      <button id="editBtn"><span class="material-symbols-outlined">edit</span></button>
+      <button id="editBtn" onclick="editSelected()"><span class="material-symbols-outlined">edit</span></button>
     </div>
   </div>
   <script src="scripts/db.js"></script>
@@ -233,6 +253,7 @@
   <script src="scripts/inventoryForm.js"></script>
   <script src="scripts/settings.js"></script>
   <script src="scripts/tests.js"></script>
+  <script src="scripts/deleter.js"></script>
 
 
   <script>

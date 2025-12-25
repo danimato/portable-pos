@@ -177,11 +177,32 @@ if (inventoryListTbody) {
   inventoryListTbody.addEventListener('change', handleCheckboxChange);
   inventoryListTbody.addEventListener('click', handleRowClick);
 }
-
 async function handleNewInventoryItem(data) {
-  const productId = await db.addProduct(data.productName, data.description, data.productType, data.sku);
-  await db.addInventory(productId, data.price, data.stock);
+  var existingProduct = await db.getByIndex('products', 'sku', data.sku);
+  existingProduct = existingProduct[0];
+  
+  if (existingProduct) {
+    console.log("editing only")
+    await db.update("products", {
+      product_id: existingProduct.product_id, 
+      product_name: data.productName, 
+      description: data.description, 
+      category: data.productType, 
+      sku: data.sku
+    });
+    await db.update("inventory", {
+      product_id: existingProduct.product_id, 
+      price: data.price, 
+      current_stock: data.stock
+    });
+  } else {
+    console.log("new product detected")
+    const productId = await db.addProduct(data.productName, data.description, data.productType, data.sku);
+    await db.addInventory(productId, data.price, data.stock);
+  }
+  
   refreshInventoryList();
+  // DELETED: Lines that were duplicating the add operation
 }
 
 // contextual action bar at the bottom
@@ -220,4 +241,65 @@ function resetSelected() {
   document.getElementById('inventoryActionBar').style.display = 'none';
   document.getElementById('selectedCount').textContent = `0 selected`;
 }
+// Handle click outside the inventory list to reset selection
+document.addEventListener('click', (event) => {
+  const inventoryListContainer = document.getElementById('inventoryList');
+  var ignoreList = [
+    inventoryListContainer,
+    document.getElementById('inventoryActionBar'),
+    document.getElementById('deleter')
+  ];
+  if (!ignoreList.some(el => el.contains(event.target))) {
+    resetSelected();
+  }
+});
 
+function editSelected() {
+  if (selectedRows.length !== 1) {
+    alert('Please select exactly one item to edit.');
+    return;
+  }
+  const productId = selectedRows[0];
+  showInventoryForm(productId); // Show the inventory form
+  updateEntries(productId); // Load the product details into the form
+}
+
+document.getElementById('overlay').addEventListener('click', hideDeletePrompt);
+
+
+// needs reimplementation when localizing to other languages
+function deleteSelectedItems() {
+  if (selectedRows.length === 0) {
+    alert('No items selected for deletion.');
+    return;
+  }
+  if (deleteDontAskAgain) {
+    deleteSelectedInventoryItems();
+    return;
+  }
+  document.getElementById('deleter').classList.add('active');
+  document.getElementById('overlay').classList.add('active');
+  const countItemsElements = document.querySelectorAll('.countItems');
+  countItemsElements.forEach(el => {
+    el.textContent = selectedRows.length;
+  });
+  const countItemsPluralElements = document.querySelectorAll('.countItemsPlural');
+  countItemsPluralElements.forEach(el => {
+    el.textContent = selectedRows.length > 1 ? 's' : '';
+  });
+}
+
+function deleteSelectedInventoryItems() {
+  selectedRows.forEach(async (productId) => {
+    await db.delete('products', Number(productId));
+    await db.delete('inventory', Number(productId));
+  });
+  resetSelected();
+  refreshInventoryList();
+  hideDeletePrompt();
+}
+
+function hideDeletePrompt() {
+  document.getElementById('deleter').classList.remove('active');
+  document.getElementById('overlay').classList.remove('active');
+}

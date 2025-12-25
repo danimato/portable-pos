@@ -1,5 +1,5 @@
 const DB_NAME = 'EcommerceDB';
-const DB_VERSION = 2; // Incremented version for schema changes
+const DB_VERSION = 3; // Incremented version for schema changes
 
 class EcommerceDB {
     constructor() {
@@ -93,6 +93,14 @@ class EcommerceDB {
                     });
                     orderPromoStore.createIndex('order_id', 'order_id', { unique: false });
                     orderPromoStore.createIndex('promo_id', 'promo_id', { unique: false });
+                }
+
+                // Settings
+                if (!db.objectStoreNames.contains('settings')) {
+                    const settingsStore = db.createObjectStore('settings', {
+                        keyPath: 'setting_key'
+                    });
+                    settingsStore.createIndex('setting_value', 'setting_value', { unique: false });
                 }
             };
         });

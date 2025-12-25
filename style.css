@@ -4,6 +4,7 @@
     /* Colors */
     --primary-blue: #2196F3;
     --primary-green: #4CAF50;
+    --primary-red: #de3a2e;
     --primary-green-hover: #45a049;
     --bg-light: #f1f1f1;
     --bg-lighter: #f5f5f5;
@@ -320,9 +321,19 @@ button {
     color: var(--white);
     flex: 1;
 }
+.btn-confirm-red {
+    background: var(--primary-red);
+    color: var(--white);
+    flex: 1;
+}
 
 .btn-confirm:hover {
     background: var(--primary-green-hover);
+}
+.btn-confirm-red:hover {
+    background: var(--primary-red);
+    color: var(--white);
+    flex: 1;
 }
 
 .demo-button {
@@ -358,10 +369,6 @@ button {
 }
 
 /* Utility Classes */
-#stockField,
-#newStockField {
-    display: none;
-}
 
 .hidden {
     display: none;
@@ -405,4 +412,12 @@ button {
 
 #inventoryActionBar button:hover {
     background: var(--lighter-bg);
-} 
+}
+
+.for-prompts {
+    overflow-y:hidden;
+}
+
+#deleter {
+    
+}

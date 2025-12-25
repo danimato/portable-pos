@@ -2,11 +2,15 @@
 let inventoryHistory = [];
 
 // Show the inventory form
-function showInventoryForm() {
+function showInventoryForm(productId = '') {
     document.getElementById('inventoryForm').scrollTop = 0;
     document.getElementById('overlay').classList.add('active');
     document.getElementById('inventoryForm').classList.add('active');
     setTodayDate();
+
+    if (productId) {
+        document.getElementById('sku').value = productId;
+    }
 }
 
 // Hide the inventory form
@@ -22,6 +26,29 @@ document.getElementById('overlay').addEventListener('click', hideInventoryForm);
 function setTodayDate() {
     const today = new Date().toISOString().split('T')[0];
     document.getElementById('date').value = today;
+}
+
+function updateEntries(productId) {
+    productId = Number(productId)
+    console.log("Now finding", productId);
+    db.get("products", productId).then(product => {
+        if (product) {
+            document.getElementById('sku').value = product.sku;
+            document.getElementById('productName').value = product.product_name;
+            document.getElementById('productType').value = product.category;
+            document.getElementById('description').value = product.description;
+
+            db.get("inventory", productId).then(inventory => {
+                if (inventory) {
+                    document.getElementById('price').value = inventory.price;
+                    document.getElementById('stock').value = inventory.current_stock;
+                }
+            });
+        }
+    }).catch(error => {
+        console.error('Error fetching product or inventory data:', error);
+        alert('Failed to load product details. Please try again.');
+    });
 }
 
 // Clear all form entries
