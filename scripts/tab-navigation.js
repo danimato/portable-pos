@@ -31,4 +31,6 @@ function openTab(evt, tabName) {
         clearInventoryListRender();
         refreshInventoryList();
     }
+
+    resetSelected();
 }

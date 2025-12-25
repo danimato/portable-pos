@@ -7,7 +7,19 @@
   <title>QuickTrack</title>
   <link rel="manifest" href="./manifest.json">
   <link rel="stylesheet" href="style.css">
-  <meta name="application-name" content="Temperature converter">
+  <meta name="application-name" content="QuickTrack">
+
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+  <style>
+    .material-symbols-outlined {
+      font-variation-settings:
+        'FILL' 0,
+        'wght' 400,
+        'GRAD' 0,
+        'opsz' 24
+    }
+  </style>
 </head>
 
 <body>
@@ -48,8 +60,6 @@
   <div id="inventory" class="tabcontent">
     <h3>Inventory</h3>
     <button id="inventoryAdd" onclick="showInventoryForm()">+</button>
-    <button id="inventoryBarcode">Print Barcode</button>
-    <button id="inventoryEdit">Edit</button>
     <table id="inventoryList">
       <tr>
         <th class="inventoryCheckbox"><!--Select--></th>
@@ -201,6 +211,20 @@
     </div>
   </div>
 
+
+  <div id="inventoryActionBarParent">
+    <div id="inventoryActionBar" style="display: none;">
+      <span id="selectedCount">1 selected</span>
+      <button id="resetBtn" onclick="resetSelected()"><span class="material-symbols-outlined">cancel</span></button>
+      <button id="selectAllBtn" onclick="selectAllItems()"><span
+          class="material-symbols-outlined">select_all</span></button>
+      <button id="deleteSelectedBtn" onclick="deleteSelectedItems()"><span
+          class="material-symbols-outlined">delete</span></button>
+      <button id="showBarcodeOfSelectedBtn" onclick="showBarcodeOfSelected()"><span
+          class="material-symbols-outlined">barcode</span></button>
+      <button id="editBtn"><span class="material-symbols-outlined">edit</span></button>
+    </div>
+  </div>
   <script src="scripts/db.js"></script>
   <script src="scripts/html5-qrcode.min.js"></script>
   <script src="scripts/tab-navigation.js"></script>

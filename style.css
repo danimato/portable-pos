@@ -18,10 +18,12 @@
     --border-color: #ddd;
     --border-color-light: #eee;
     --overlay-bg: rgba(0, 0, 0, 0.5);
+    --lighter-bg: rgba(255, 255, 255, 0.2);
     --toast-bg: #333;
     --white: #fff;
     
     /* Spacing */
+    --spacing-base: 14px;
     --spacing-xs: 6px;
     --spacing-sm: 8px;
     --spacing-md: 12px;
@@ -364,3 +366,43 @@ button {
 .hidden {
     display: none;
 }
+
+/* Inventory Action Bar */
+#inventoryActionBar {
+    background: var(--primary-blue);
+    color: var(--white);
+    padding: var(--spacing-xs) var(--spacing-lg);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-lg);
+    box-sizing: border-box;
+    z-index: 1000;
+    border-radius: var(--radius-md);
+}
+
+#inventoryActionBarParent {
+    display: flex;
+    justify-content: center;
+    position: fixed;
+    bottom: 50px;
+    left: 0;
+    width: 100%;
+}
+
+#inventoryActionBar button {
+    background: var(--primary-blue);
+    border: none;
+    color: var(--white);
+    cursor: pointer;
+    font-size: var(--text-lg);
+    padding: var(--spacing-sm);
+    display: flex;
+    align-items: center;
+    border-radius: 100px;
+    text-align: center;
+    transition: all var(--transition-fast);
+}
+
+#inventoryActionBar button:hover {
+    background: var(--lighter-bg);
+} 

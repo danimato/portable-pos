@@ -118,6 +118,45 @@ if (inventoryListTbody) {
       }
 
       row.style.backgroundColor = checkbox.checked ? 'lightblue' : '';
+
+      var count = inventoryListTbody.rows.length - 1; // Subtract 1 to exclude the header row
+      if (selectedRows.length === 0) {
+        document.getElementById('inventoryActionBar').style.display = 'none';
+        document.getElementById('selectedCount').textContent = '0 selected';
+      }
+      else if (selectedRows.length == 1) {
+        document.getElementById('selectedCount').textContent = `1 selected`;
+        document.getElementById('inventoryActionBar').style.display = 'flex';
+        document.getElementById('resetBtn').style.display = 'flex';
+        document.getElementById('selectAllBtn').style.display = 'flex';
+        document.getElementById('deleteSelectedBtn').style.display = 'flex';
+        document.getElementById('showBarcodeOfSelectedBtn').style.display = 'flex';
+        document.getElementById('editBtn').style.display = 'flex';
+        console.log('Total rows (excluding header):', count);  
+      }
+      else if (selectedRows.length === count) {
+        console.log('All items selected');
+        document.getElementById('inventoryActionBar').style.display = 'flex';
+        document.getElementById('selectedCount').textContent = `All ${selectedRows.length} selected`;
+        document.getElementById('resetBtn').style.display = 'flex';
+        document.getElementById('selectAllBtn').style.display = 'none';
+        document.getElementById('deleteSelectedBtn').style.display = 'flex';
+        document.getElementById('showBarcodeOfSelectedBtn').style.display = 'flex';
+        document.getElementById('editBtn').style.display = 'none';
+      }
+      else if (selectedRows.length > 0) {
+        document.getElementById('inventoryActionBar').style.display = 'flex';
+        document.getElementById('selectedCount').textContent = `${selectedRows.length} selected`;
+        document.getElementById('resetBtn').style.display = 'flex';
+        document.getElementById('selectAllBtn').style.display = 'flex';
+        document.getElementById('deleteSelectedBtn').style.display = 'flex';
+        document.getElementById('showBarcodeOfSelectedBtn').style.display = 'flex';
+        document.getElementById('editBtn').style.display = 'none';
+      }
+
+
+
+
     }
   };
 
@@ -150,3 +189,35 @@ async function handleNewInventoryItem(data) {
 // when no selection: hide bar
 // when one selection: show bar with count, select all, show barcode and edit buttons
 // when multiple selection: show bar with count, select all, delete button and show barcode(s) button
+
+
+function selectAllItems() {
+  const checkboxes = inventoryListTbody.querySelectorAll('input[type="checkbox"]');
+  selectedRows = [];
+  checkboxes.forEach(checkbox => {
+    checkbox.checked = true;
+    const productId = checkbox.getAttribute('data-product-id');
+    if (!selectedRows.includes(productId)) selectedRows.push(productId);
+    const row = checkbox.closest('tr');
+    row.style.backgroundColor = 'lightblue';
+  });
+  document.getElementById('inventoryActionBar').style.display = 'flex';
+  document.getElementById('selectedCount').textContent = `${selectedRows.length} selected`;
+  document.getElementById('selectAllBtn').style.display = 'none';
+  document.getElementById('editBtn').style.display = 'none';
+}
+
+function resetSelected() {
+  const checkboxes = inventoryListTbody.querySelectorAll('input[type="checkbox"]');
+
+  checkboxes.forEach(checkbox => {
+    checkbox.checked = false;
+    const productId = checkbox.getAttribute('data-product-id');
+    selectedRows = [];
+    const row = checkbox.closest('tr');
+    row.style.backgroundColor = '';
+  });
+  document.getElementById('inventoryActionBar').style.display = 'none';
+  document.getElementById('selectedCount').textContent = `0 selected`;
+}
+
