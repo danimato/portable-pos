@@ -1,5 +1,4 @@
 // Basic state management
-let isNewItem = true;
 let inventoryHistory = [];
 
 // Show the inventory form
@@ -8,7 +7,6 @@ function showInventoryForm() {
     document.getElementById('overlay').classList.add('active');
     document.getElementById('inventoryForm').classList.add('active');
     setTodayDate();
-    updateStockFields();
 }
 
 // Hide the inventory form
@@ -26,28 +24,6 @@ function setTodayDate() {
     document.getElementById('date').value = today;
 }
 
-// Update stock fields based on item status
-function updateStockFields() {
-    const stockField = document.getElementById('stockField');
-    const newStockField = document.getElementById('newStockField');
-    
-    if (isNewItem) {
-        stockField.style.display = 'block';
-        newStockField.style.display = 'none';
-    } else {
-        stockField.style.display = 'none';
-        newStockField.style.display = 'block';
-    }
-}
-
-// Toggle between new item and existing item (for demo purposes)
-document.getElementById('sku').addEventListener('blur', function() {
-    // Simulate checking if SKU exists
-    // In real app, this would check against database
-    isNewItem = this.value === '' || !inventoryHistory.some(h => h.sku === this.value);
-    updateStockFields();
-});
-
 // Clear all form entries
 function clearEntries() {
     document.getElementById('sku').value = '';
@@ -55,7 +31,6 @@ function clearEntries() {
     document.getElementById('description').value = '';
     document.getElementById('price').value = '';
     document.getElementById('stock').value = '';
-    document.getElementById('newStock').value = '';
     setTodayDate();
 }
 
@@ -73,7 +48,7 @@ function confirmForm() {
         sku: data.sku,
         date: data.date,
         product: data.productName,
-        qty: data.stock || data.newStock
+        qty: data.stock
     });
 
     // Update history table
@@ -95,9 +70,7 @@ function getFormData(callback) {
         description: document.getElementById('description').value,
         price: document.getElementById('price').value,
         stock: document.getElementById('stock').value,
-        newStock: document.getElementById('newStock').value,
-        date: document.getElementById('date').value,
-        isNewItem: isNewItem
+        date: document.getElementById('date').value
     };
 
     if (callback && typeof callback === 'function') {
