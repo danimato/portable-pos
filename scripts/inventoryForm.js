@@ -4,6 +4,7 @@ let inventoryHistory = [];
 
 // Show the inventory form
 function showInventoryForm() {
+    document.getElementById('inventoryForm').scrollTop = 0;
     document.getElementById('overlay').classList.add('active');
     document.getElementById('inventoryForm').classList.add('active');
     setTodayDate();
