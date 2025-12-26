@@ -1,5 +1,5 @@
 const CACHE_NAME = `QuickTrack`;
-const DEVELOPER_MODE = true;
+const DEVELOPER_MODE = false;
 // Use the install event to pre-cache all initial resources.
 self.addEventListener('install', event => {
   event.waitUntil(
@@ -8,11 +8,24 @@ self.addEventListener('install', event => {
         try {
             await cache.addAll([
                 './',
+                './scripts/barcodePrinter.js',
                 './scripts/db.js',
+                './scripts/deleter.js',
                 './scripts/html5-qrcode.min.js',
+                './scripts/inventoryForm.js',
+                './scripts/inventoryList.js',
+                './scripts/JsBarcode.all.min.js',
+                './scripts/onRun.js',
+                './scripts/qrReading.js',
+                './scripts/settings.js',
+                './scripts/svgToPng.js',
                 './scripts/tab-navigation.js',
+                './scripts/tests.js',
+                './scripts/toast.js',
                 './index.html',
-                './style.css'
+                './manifest.json',
+                './style.css',
+                './todo.md'
             ]);
             console.log("Resources pre-cached successfully.");
         } catch (error) {
