@@ -211,15 +211,7 @@ async function handleNewInventoryItem(data) {
   }
   
   refreshInventoryList();
-  // DELETED: Lines that were duplicating the add operation
 }
-
-// contextual action bar at the bottom
-// TODO: states
-// when no selection: hide bar
-// when one selection: show bar with count, select all, show barcode and edit buttons
-// when multiple selection: show bar with count, select all, delete button and show barcode(s) button
-
 
 function selectAllItems() {
   const checkboxes = inventoryListTbody.querySelectorAll('input[type="checkbox"]');
