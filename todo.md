@@ -14,6 +14,7 @@
 - [ ] UI mockup
 - [ ] conversion of UI mockup to code
 - [ ] integration of everything
+- [ ] making the service worker actually work
 
 ### barcodePrinter.js
 
