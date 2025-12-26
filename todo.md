@@ -42,6 +42,11 @@
 ### tests.js
 - [ ] think of more tests, what kind of tests? i have no idea
 
+### qrReading.js
+- [ ] UI
+- [ ] cart system
+- [x] fail scanning when product doesn't exist in db
+
 ## Milestones
 
 - [x] database system (bound to change, but mostly done)
