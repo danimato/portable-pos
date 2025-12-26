@@ -47,7 +47,7 @@ function updateEntries(productId) {
         }
     }).catch(error => {
         console.error('Error fetching product or inventory data:', error);
-        alert('Failed to load product details. Please try again.');
+        showToast('Product Loading Error', 'Failed to load product details.', 5000);
     });
 }
 
@@ -66,7 +66,7 @@ function confirmForm() {
     const data = getFormData();
     
     if (!data.sku || !data.productName) {
-        alert('Please fill in SKU and Product Name');
+        showToast('Empty Fields Error', 'Please fill in the SKU and Product Name fields.', 5000);
         return;
     }
 
@@ -83,7 +83,6 @@ function confirmForm() {
 
     console.log('Form Data:', data);
     handleNewInventoryItem(data);
-    alert('Item added successfully!');
     
     clearEntries();
 }

@@ -3,7 +3,7 @@ printArea = document.getElementById('printArea');
 async function showBarcodeOfSelected(type = 'print') {
     const selectedCount = selectedRows.length;
     if (selectedCount === 0) {
-        alert('No items selected for barcode printing.');
+        showToast('Barcode Selection Error', 'No items selected for barcode printing.', 5000);
         return;
     }
     if (type == 'print') {
@@ -91,7 +91,7 @@ async function showBarcodeOfSelected(type = 'print') {
             }, 100);
         } catch (error) {
             console.error('Error loading barcodes:', error);
-            alert('Some barcodes failed to load. Please try again.');
+                showToast('Barcode Loading Error', 'Some barcodes failed to load.', 5000);
         }
     } else if (type == 'png') {
         for (const productId of selectedRows) {

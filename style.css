@@ -159,7 +159,7 @@ h2 {
     border-radius: var(--radius-full);
     padding: var(--spacing-sm) var(--spacing-base);
     position: fixed;
-    z-index: 999;
+    z-index: 9999;
     bottom: 30px;
     font-size: var(--text-sm);
     opacity: 0;

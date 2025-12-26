@@ -201,11 +201,13 @@ async function handleNewInventoryItem(data) {
     hideInventoryForm();
     clearEntries();
     resetSelected();
-    
+    showToast('Product Edited', 'Product edited successfully.', 5000);
   } else {
     console.log("new product detected")
     const productId = await db.addProduct(data.productName, data.description, data.productType, data.sku);
     await db.addInventory(productId, data.price, data.stock);
+    showToast('Product Added', 'New product added successfully.', 5000);
+
   }
   
   refreshInventoryList();
@@ -265,7 +267,7 @@ document.addEventListener('click', (event) => {
 
 function editSelected() {
   if (selectedRows.length !== 1) {
-    alert('Please select exactly one item to edit.');
+    showToast('Edit Error', 'Please select exactly one item to edit.', 5000);
     return;
   }
   const productId = selectedRows[0];
@@ -279,7 +281,7 @@ document.getElementById('overlay').addEventListener('click', hideDeletePrompt);
 // needs reimplementation when localizing to other languages
 function deleteSelectedItems() {
   if (selectedRows.length === 0) {
-    alert('No items selected for deletion.');
+    showToast('No Items Selected', 'Please select items to delete.', 5000);
     return;
   }
   if (deleteDontAskAgain) {
