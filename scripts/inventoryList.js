@@ -178,9 +178,11 @@ if (inventoryListTbody) {
   inventoryListTbody.addEventListener('click', handleRowClick);
 }
 async function handleNewInventoryItem(data) {
-  var existingProduct = await db.getByIndex('products', 'sku', data.sku);
-  existingProduct = existingProduct[0];
-  
+  console.log(selectedRows);
+  var existingProduct = selectedRows.length === 1 
+    ? await db.get('products', Number(selectedRows[0])) 
+    : null;
+  console.log("existingProduct:", existingProduct);
   if (existingProduct) {
     console.log("editing only")
     await db.update("products", {
@@ -195,6 +197,11 @@ async function handleNewInventoryItem(data) {
       price: data.price, 
       current_stock: data.stock
     });
+    // hide inventory form after editing
+    hideInventoryForm();
+    clearEntries();
+    resetSelected();
+    
   } else {
     console.log("new product detected")
     const productId = await db.addProduct(data.productName, data.description, data.productType, data.sku);
@@ -247,7 +254,9 @@ document.addEventListener('click', (event) => {
   var ignoreList = [
     inventoryListContainer,
     document.getElementById('inventoryActionBar'),
-    document.getElementById('deleter')
+    document.getElementById('deleter'),
+    document.getElementById('inventoryForm')
+
   ];
   if (!ignoreList.some(el => el.contains(event.target))) {
     resetSelected();
@@ -303,3 +312,31 @@ function hideDeletePrompt() {
   document.getElementById('deleter').classList.remove('active');
   document.getElementById('overlay').classList.remove('active');
 }
+
+function toggleOverflowMenu() {
+  const menu = document.getElementById('overflowMenu');
+  menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
+}
+
+function saveBarcodesAsPng() {
+  // Your implementation here
+  showBarcodeOfSelected('png');
+  toggleOverflowMenu();
+}
+
+function printBarcodesToPdf() {
+  // Your implementation here
+  showBarcodeOfSelected();
+  toggleOverflowMenu();
+}
+
+// Close overflow menu when clicking outside
+document.addEventListener('click', function(event) {
+  const menu = document.getElementById('overflowMenu');
+  const inventoryActionBar = document.getElementById('inventoryActionBar');
+  const img = document.getElementById('overflowMenuImg');
+  const pdf = document.getElementById('overflowMenuPdf');
+  if (menu && !menu.contains(event.target) && !img.contains(event.target) && !pdf.contains(event.target) && !inventoryActionBar.contains(event.target)) {
+    menu.style.display = 'none';
+  }
+});

@@ -232,19 +232,32 @@
   </div>
 
 
-  <div id="inventoryActionBarParent">
-    <div id="inventoryActionBar" style="display: none;">
-      <span id="selectedCount">1 selected</span>
-      <button id="resetBtn" onclick="resetSelected()"><span class="material-symbols-outlined">cancel</span></button>
-      <button id="selectAllBtn" onclick="selectAllItems()"><span
-          class="material-symbols-outlined">select_all</span></button>
-      <button id="deleteSelectedBtn" onclick="deleteSelectedItems()"><span
-          class="material-symbols-outlined">delete</span></button>
-      <button id="showBarcodeOfSelectedBtn" onclick="showBarcodeOfSelected()"><span
-          class="material-symbols-outlined">barcode</span></button>
-      <button id="editBtn" onclick="editSelected()"><span class="material-symbols-outlined">edit</span></button>
+<div id="inventoryActionBarParent">
+  <div id="inventoryActionBar" style="display: none;">
+    <span id="selectedCount">1 selected</span>
+    <button id="resetBtn" onclick="resetSelected()"><span class="material-symbols-outlined">cancel</span></button>
+    <button id="selectAllBtn" onclick="selectAllItems()"><span
+        class="material-symbols-outlined">select_all</span></button>
+    <button id="deleteSelectedBtn" onclick="deleteSelectedItems()"><span
+        class="material-symbols-outlined">delete</span></button>
+    <button id="showBarcodeOfSelectedBtn" onclick="toggleOverflowMenu()"><span
+        class="material-symbols-outlined">barcode</span></button>
+    <div id="overflowMenu">
+      <button id="overflowMenuImg" onclick="saveBarcodesAsPng()">
+        <span class="material-symbols-outlined">image</span>
+        Save as PNG
+      </button>
+      <button id="overflowMenuPdf" onclick="printBarcodesToPdf()">
+        <span class="material-symbols-outlined">print</span> 
+        Print to PDF
+      </button>
     </div>
+    <button id="editBtn" onclick="editSelected()"><span class="material-symbols-outlined">edit</span></button>
   </div>
+</div>
+  </div>
+  <svg id="barcode" class="hidden"></svg>
+  <div id="printArea"></div>
   <script src="scripts/db.js"></script>
   <script src="scripts/html5-qrcode.min.js"></script>
   <script src="scripts/tab-navigation.js"></script>
@@ -254,6 +267,9 @@
   <script src="scripts/settings.js"></script>
   <script src="scripts/tests.js"></script>
   <script src="scripts/deleter.js"></script>
+  <script src="scripts/svgToPng.js"></script>
+  <script src="scripts/JsBarcode.all.min.js"></script>
+  <script src="scripts/barcodePrinter.js"></script>
 
 
   <script>

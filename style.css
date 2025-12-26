@@ -385,6 +385,7 @@ button {
     box-sizing: border-box;
     z-index: 1000;
     border-radius: var(--radius-md);
+    position: relative;
 }
 
 #inventoryActionBarParent {
@@ -401,7 +402,6 @@ button {
     border: none;
     color: var(--white);
     cursor: pointer;
-    font-size: var(--text-lg);
     padding: var(--spacing-sm);
     display: flex;
     align-items: center;
@@ -420,4 +420,66 @@ button {
 
 #deleter {
     
+}
+
+#printArea {
+  display: none;
+}
+
+@media print {
+  body > *:not(#printArea) {
+    display: none !important;
+  }
+
+  #printArea {
+    display: block !important;
+    width: 8.5in;
+    height: 11in;
+    margin: 0;
+    box-sizing: border-box;
+  }
+
+  .tile-grid {
+    width: 100%;
+    height: 100%;
+  }
+
+  .tile-grid img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+}
+/* Overflow Menu */
+#overflowMenu {
+    display: none;
+    position: absolute; bottom: 100%; left: 80%;
+    margin-bottom: 5px;
+    background: var(--primary-blue);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    min-width: 180px;
+    z-index: 1000;
+}
+
+#overflowMenu button {
+    display: block;
+    width: 100%;
+    text-align: left;
+    padding: var(--spacing-sm) var(--spacing-md);
+    border: none;
+    background: none;
+    cursor: pointer;
+    transition: background-color var(--transition-fast);
+    border-radius: 0;
+}
+
+#overflowMenu button:hover {
+    background-color: var(--lighter-bg);
+}
+
+#overflowMenu button .material-symbols-outlined {
+    vertical-align: middle;
+    margin-right: var(--spacing-sm);
 }
