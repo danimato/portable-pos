@@ -57,7 +57,8 @@
 - [ ] advertisement (online and organic advertising)
 - [ ] (not required) sync/backup/restore system 
 - [ ] (not required) syncing to payment handlers
-- [ ] (not required) authentication system
+- [ ] (not required, COSTS MONEY) authentication system
 - [ ] (not required) ads system (jk,,,, half jk IT's DISABLED BY DEFAUKT)
 - [ ] (not required) seo optimization
 - [ ] (not required but it would be nice) submitting to Google
+- [ ] (not required, COSTS MONEY) domain
