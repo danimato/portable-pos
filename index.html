@@ -41,10 +41,6 @@
       <li>top performers</li>
     </ul>
   </div>
-
-
-
-
   <div id="qr" class="tabcontent">
     <h3>QR</h3>
     <p>Paris is the capital of France.</p>
@@ -53,10 +49,6 @@
       <li>items scanned</li>
     </ul>
   </div>
-
-
-
-
   <div id="inventory" class="tabcontent">
     <h3>Inventory</h3>
     <button id="inventoryAdd" onclick="showInventoryForm()">+</button>
@@ -92,10 +84,6 @@
       <li>stock edit/sku edit</li>
     </ul>
   </div>
-
-
-
-
   <div id="activity" class="tabcontent">
     <h3>Activity</h3>
     <li>
@@ -103,10 +91,6 @@
       <ul>db integration</ul>
     </li>
   </div>
-
-
-
-
   <div id="settings" class="tabcontent">
     <h3>Settings</h3>
     <div id="version" class="settings-item">
@@ -134,7 +118,7 @@
       </div>
       <div class="actions">
         <input type="checkbox" id="deleteDontAskAgain-settings" name="deleteDontAskAgainCheckbox"
-  onchange="toggleDeleteDontAskAgain(event)">
+          onchange="toggleDeleteDontAskAgain(event)">
       </div>
     </div>
     <ul>
@@ -224,7 +208,7 @@
     <p>You are about to delete the selected <span class="countItems"></span> item<span class="countItemsPlural"></span>.
       Are you sure? <b>This action is irreversible.</b></p>
     <p><input type="checkbox" id="deleteDontAskAgain-prompt" name="deleteDontAskAgainCheckbox"
-  onchange="toggleDeleteDontAskAgain(event)"> Don't ask me again.</p>
+        onchange="toggleDeleteDontAskAgain(event)"> Don't ask me again.</p>
     <div class="button-group">
       <button class="btn-clear" onclick="cancelDelete('inventory')">Cancel</button>
       <button class="btn-confirm-red" onclick="confirmDelete('inventory')">Delete</button>
@@ -232,32 +216,35 @@
   </div>
 
 
-<div id="inventoryActionBarParent">
-  <div id="inventoryActionBar" style="display: none;">
-    <span id="selectedCount">1 selected</span>
-    <button id="resetBtn" onclick="resetSelected()"><span class="material-symbols-outlined">cancel</span></button>
-    <button id="selectAllBtn" onclick="selectAllItems()"><span
-        class="material-symbols-outlined">select_all</span></button>
-    <button id="deleteSelectedBtn" onclick="deleteSelectedItems()"><span
-        class="material-symbols-outlined">delete</span></button>
-    <button id="showBarcodeOfSelectedBtn" onclick="toggleOverflowMenu()"><span
-        class="material-symbols-outlined">barcode</span></button>
-    <div id="overflowMenu">
-      <button id="overflowMenuImg" onclick="saveBarcodesAsPng()">
-        <span class="material-symbols-outlined">image</span>
-        Save as PNG
-      </button>
-      <button id="overflowMenuPdf" onclick="printBarcodesToPdf()">
-        <span class="material-symbols-outlined">print</span> 
-        Print to PDF
-      </button>
+  <div id="inventoryActionBarParent">
+    <div id="inventoryActionBar" style="display: none;">
+      <span id="selectedCount">1 selected</span>
+      <button id="resetBtn" onclick="resetSelected()"><span class="material-symbols-outlined">cancel</span></button>
+      <button id="selectAllBtn" onclick="selectAllItems()"><span
+          class="material-symbols-outlined">select_all</span></button>
+      <button id="deleteSelectedBtn" onclick="deleteSelectedItems()"><span
+          class="material-symbols-outlined">delete</span></button>
+      <button id="showBarcodeOfSelectedBtn" onclick="toggleOverflowMenu()"><span
+          class="material-symbols-outlined">barcode</span></button>
+      <div id="overflowMenu">
+        <button id="overflowMenuImg" onclick="saveBarcodesAsPng()">
+          <span class="material-symbols-outlined">image</span>
+          Save as PNG
+        </button>
+        <button id="overflowMenuPdf" onclick="printBarcodesToPdf()">
+          <span class="material-symbols-outlined">print</span>
+          Print to PDF
+        </button>
+      </div>
+      <button id="editBtn" onclick="editSelected()"><span class="material-symbols-outlined">edit</span></button>
     </div>
-    <button id="editBtn" onclick="editSelected()"><span class="material-symbols-outlined">edit</span></button>
   </div>
-</div>
-  </div>
+
+
   <svg id="barcode" class="hidden"></svg>
   <div id="printArea"></div>
+
+
   <script src="scripts/db.js"></script>
   <script src="scripts/html5-qrcode.min.js"></script>
   <script src="scripts/tab-navigation.js"></script>
@@ -270,6 +257,7 @@
   <script src="scripts/svgToPng.js"></script>
   <script src="scripts/JsBarcode.all.min.js"></script>
   <script src="scripts/barcodePrinter.js"></script>
+  <script src="scripts/onRun.js"></script>
 
 
   <script>
