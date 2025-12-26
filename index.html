@@ -43,8 +43,9 @@
   </div>
   <div id="qr" class="tabcontent">
     <h3>QR</h3>
-    <p>Paris is the capital of France.</p>
     <div style="width: 100%" id="reader"></div>
+    <input type="text" id="qrInput" placeholder="Scanned QR Code will appear here" readonly>
+    <span id="productScanned"></span>
     <ul>
       <li>items scanned</li>
     </ul>
@@ -72,17 +73,6 @@
         <td>$15.00</td>
       </tr>
     </table>
-    <ul>
-      <li>add button</li>
-      <li>list implementation</li>
-      <li>integration to qr</li>
-      <li>integration to db</li>
-      <li>error handling</li>
-      <li>stock count</li>
-      <li>stock delete</li>
-      <li>stock cost</li>
-      <li>stock edit/sku edit</li>
-    </ul>
   </div>
   <div id="activity" class="tabcontent">
     <h3>Activity</h3>
@@ -259,14 +249,11 @@
   <script src="scripts/barcodePrinter.js"></script>
   <script src="scripts/onRun.js"></script>
 
+  <script src="scripts/qrReading.js"></script>
+
 
   <script>
-    function onScanSuccess(decodedText, decodedResult) {
-      console.log(`Scan result: ${decodedText}`, decodedResult);
-    }
 
-    var html5QrcodeScanner = new Html5QrcodeScanner("reader", { fps: 10 });
-    html5QrcodeScanner.render(onScanSuccess);
   </script>
 
 
