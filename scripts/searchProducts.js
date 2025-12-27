@@ -39,10 +39,58 @@ document.getElementById('qrInput').addEventListener('input', (event) => {
         var searchElementsDiv = document.getElementById('searchElements');
         searchElementsDiv.innerHTML = '';
             console.log(results);
-        results.forEach(product => {
+        results.forEach(product => { 
             var productDiv = document.createElement('div');
-            productDiv.textContent = `Product: ${product.product_name}, SKU: ${product.sku}`;
+            productDiv.className = 'search-product';
+            productDiv.dataset.productId = product.product_id;
+            var leftDiv = document.createElement("div");
+            leftDiv.id = "leftDiv";
+
+            var productNameSpan = document.createElement('span');
+            productNameSpan.className = 'product-name';
+            productNameSpan.textContent = product.product_name;
+
+            var productSkuSpan = document.createElement('span');
+            productSkuSpan.className = 'product-sku';
+            productSkuSpan.textContent = ` (SKU: ${product.sku})`;
+
+            leftDiv.appendChild(productNameSpan);
+            leftDiv.appendChild(productSkuSpan);
+
+
+            var rightDiv = document.createElement("div");
+            rightDiv.id = "rightDiv";
+
+            var addBtn = document.createElement('button');
+            addBtn.className = 'add-to-cart-btn';
+            addBtn.textContent = "+";
+            addBtn.addEventListener('click', () => {
+                fetchProductAndInventory(product.product_id).then(({product, inventory}) => {
+                    addToCart(product, inventory);
+                    showToast('Product Added', `Added ${product.product_name} to cart.`, 500);
+                }).catch(error => {
+                    console.error('Error adding product to cart:', error);
+                    showToast('Error', 'Failed to add product to cart.', 5000);
+                });
+            });
+            rightDiv.appendChild(addBtn);
+            productDiv.appendChild(leftDiv);
+            productDiv.appendChild(rightDiv);
             searchElementsDiv.appendChild(productDiv);
         });
     });
 });
+
+function fetchProductAndInventory(productId) {
+    return db.get("products", productId).then(product => {
+        if (!product) {
+            return Promise.reject('Product not found');
+        }
+        return db.get("inventory", productId).then(inventoryItems => {
+            return {
+                product: product,
+                inventory: inventoryItems
+            };
+        });
+    });
+}

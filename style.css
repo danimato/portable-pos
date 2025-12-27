@@ -501,14 +501,14 @@ input[type=number] {
 .cart-item {
     display: flex;
     align-items: center;
-    gap: 15px;
+    gap: 4px;
     margin-bottom: 10px;
 }
 
 .counter-container {
     display: inline-flex;
     align-items: center;
-    gap: 12px;
+    gap: 16px;
     background: white;
     padding: 8px 16px;
     border-radius: 8px;
@@ -516,7 +516,7 @@ input[type=number] {
 }
 
 .counter-btn {
-    width: 24px;
+    width: 12px;
     height: 24px;
     border: none;
     background: none;
@@ -525,6 +525,10 @@ input[type=number] {
     cursor: pointer;
     padding: 0;
     transition: opacity 0.2s;
+    user-select: none; /* Standard property */
+    -webkit-user-select: none; /* Safari compatibility */
+    -moz-user-select: none; /* Firefox compatibility */
+    -ms-user-select: none; /* Internet Explorer/Edge compatibility */
 }
 
 .counter-btn:hover {
@@ -536,11 +540,10 @@ input[type=number] {
 }
 
 .counter-value {
-    font-size: 20px;
     font-weight: 400;
     color: #333;
-    min-width: 30px;
     text-align: center;
+    min-width: 15px;
 }
 
 .cart-item {
@@ -561,4 +564,25 @@ input[type=number] {
 
 .cart-item-price {
     text-align: right;
+}
+
+#reader {
+    width: 98%;
+    height: 250px;
+    margin: 0 auto;
+    overflow-y: scroll;
+}
+
+#searchElements {
+    padding: 10px;
+}
+
+#cart {
+    padding: 10px;
+    border-top: 1px solid var(--lighter-bg);
+}
+.search-product {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
 }
