@@ -27,6 +27,7 @@
 - [ ] UI cleanup oml
 - [ ] bug that causes selecting all on one item causes hiding of edit and select all button
 - [ ] potentially drag to select?
+- [ ] apply currency settings on this section
 
 
 ### settings.js
@@ -49,6 +50,16 @@
 - [ ] cart system
 - [x] fail scanning when product doesn't exist in db
 
+### db.js
+- [ ] Disallow letters in number areas in the inventory add pop-up
+
+### inventoryForm.js
+- [ ] Disallow negative numbers in both stock and cost
+
+### cartManager.js
+- [ ] Cart and QR UI
+- [ ] apply currency settings on this section
+
 ## Milestones
 
 - [x] database system (bound to change, but mostly done)
@@ -70,3 +81,24 @@
 - [ ] (not required) seo optimization
 - [ ] (not required but it would be nice) submitting to Google
 - [ ] (not required, COSTS MONEY) domain
+
+## User-reported issues
+- [x] When SKU is edited on existing stock, it generates a new listing on the inventory
+
+> Response: It works on my machine
+
+To attempt fix, try clearing the cache, disabling cache temporarily, and visiting DevTools to right-click the Reload button and clicking "Empty Cache and Hard Reload" **(invalidated/not reproducible)**
+
+- [x] Stocks not updating on his browser/laptop
+
+> Response: It works on my machine
+
+To attempt fix, try clearing the cache, disabling cache temporarily, and visiting DevTools to right-click the Reload button and clicking "Empty Cache and Hard Reload" **(invalidated/not reproducible)**
+
+- [ ] You can put a negative number in both stock and cost
+
+> Response: clamp stock and price variables to 0 to Infinity. This is an [inventoryForm.js](#inventoryformjs) bug
+
+- [ ] You can put in letters in number filled areas in the inventory add pop-up
+
+> Response: lock database schema to accept floats only and preprocess/postprocess all fields to be in float only. This is an [inventoryForm.js](#inventoryformjs) and [db.js](#dbjs) bug
