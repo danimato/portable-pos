@@ -40,6 +40,7 @@
 
 ### tab-navigation.js
 - [ ] bug of clicking the inventory button and adding of elements to UI duplicating/triplicating
+- [ ] clear out QR tab when leaving it
 
 
 ### tests.js
@@ -70,7 +71,7 @@
 - [ ] Activity tab
 - [ ] Settings tab
 - [ ] figure out what to actually put there (prerequisite of settings tab)
-
+- [ ] import/export settings
 - [ ] branding
 - [ ] OG tags
 - [ ] advertisement (online and organic advertising)

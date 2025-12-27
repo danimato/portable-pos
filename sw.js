@@ -11,7 +11,9 @@ self.addEventListener('install', event => {
                 './scripts/libs/html5-qrcode.min.js',
                 './scripts/libs/fuse.min.js',
                 './scripts/libs/JsBarcode.all.min.js',
-                
+
+                './res/beep.wav',
+
                 './scripts/barcodePrinter.js',
                 './scripts/cartManager.js',
                 './scripts/db.js',
