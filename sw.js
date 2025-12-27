@@ -8,15 +8,19 @@ self.addEventListener('install', event => {
         try {
             await cache.addAll([
                 './',
+                './scripts/libs/html5-qrcode.min.js',
+                './scripts/libs/fuse.min.js',
+                './scripts/libs/JsBarcode.all.min.js',
+                
                 './scripts/barcodePrinter.js',
+                './scripts/cartManager.js',
                 './scripts/db.js',
                 './scripts/deleter.js',
-                './scripts/html5-qrcode.min.js',
                 './scripts/inventoryForm.js',
                 './scripts/inventoryList.js',
-                './scripts/JsBarcode.all.min.js',
                 './scripts/onRun.js',
                 './scripts/qrReading.js',
+                './scripts/searchProducts.js',
                 './scripts/settings.js',
                 './scripts/svgToPng.js',
                 './scripts/tab-navigation.js',

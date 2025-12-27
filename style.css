@@ -483,3 +483,82 @@ button {
     vertical-align: middle;
     margin-right: var(--spacing-sm);
 }
+
+
+/* qr screen */
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    /* display: none; <- Crashes Chrome on hover */
+    -webkit-appearance: none;
+    margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+}
+
+input[type=number] {
+    -moz-appearance:textfield; /* Firefox */
+}
+
+.cart-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 10px;
+}
+
+.counter-container {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    background: white;
+    padding: 8px 16px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.counter-btn {
+    width: 24px;
+    height: 24px;
+    border: none;
+    background: none;
+    color: #5b7ff5;
+    font-size: 20px;
+    cursor: pointer;
+    padding: 0;
+    transition: opacity 0.2s;
+}
+
+.counter-btn:hover {
+    opacity: 0.7;
+}
+
+.counter-btn:active {
+    opacity: 0.5;
+}
+
+.counter-value {
+    font-size: 20px;
+    font-weight: 400;
+    color: #333;
+    min-width: 30px;
+    text-align: center;
+}
+
+.cart-item {
+    display: flex;
+    justify-content: space-between;
+}
+
+.cart-item-name {
+    font-size: 16px;
+    font-weight: 500;
+    display: block;
+}
+.cart-item-sku {
+    font-size: 12px;
+    color: #777;
+    display: block;
+}
+
+.cart-item-price {
+    text-align: right;
+}

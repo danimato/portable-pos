@@ -15,6 +15,7 @@
 - [ ] conversion of UI mockup to code
 - [ ] integration of everything
 - [ ] making the service worker actually work
+- [ ] allow changing of sound files
 
 ### barcodePrinter.js
 
@@ -34,6 +35,7 @@
 - [ ] add setting of languages
 - [ ] add about and credits oml
 - [ ] abstract the sync checkboxes thing
+- [ ] allow changing of sound files
 
 ### tab-navigation.js
 - [ ] bug of clicking the inventory button and adding of elements to UI duplicating/triplicating

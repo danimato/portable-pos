@@ -30,6 +30,12 @@ function openTab(evt, tabName) {
         // but this is the simplest non working fix for now
         clearInventoryListRender();
         refreshInventoryList();
+    } else if (tabName === 'qr') {
+    // Refresh product cache when QR tab is focused
+    refreshProductCache().then(() => {
+        console.log("Product cache refreshed for QR tab");
+        // Any other QR tab initialization code here
+    });
     }
 
     resetSelected();
