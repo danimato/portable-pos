@@ -55,7 +55,7 @@
 - [ ] Disallow letters in number areas in the inventory add pop-up
 
 ### inventoryForm.js
-- [ ] Disallow negative numbers in both stock and cost
+- [x] Disallow negative numbers in both stock and cost
 
 ### cartManager.js
 - [ ] Cart and QR UI
