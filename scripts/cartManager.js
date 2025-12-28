@@ -8,7 +8,8 @@ function addToCart(product, inventory) {
         document.querySelector('#cart [data-product="' + product.product_id + '"] .counter-value').textContent = cartList[product.product_id].count;
     } else {
         cartList[product.product_id] = {
-            count: 1
+            count: 1,
+            price: Number(inventory.price)
         };
         updateCheckoutButton();
         renderNewCartItem(product, inventory);
@@ -234,8 +235,9 @@ function renderNewCartItem(product, inventory) {
     cart.appendChild(productDiv);
 }
 
+var nextButton = document.getElementById('qrNextScreen'); // or whatever your button ID is
+
 function updateCheckoutButton() {
-    var nextButton = document.getElementById('qrNextScreen'); // or whatever your button ID is
     console.log("called");
     console.log(cartList);
     if (Object.keys(cartList).length === 0) {
@@ -245,4 +247,30 @@ function updateCheckoutButton() {
         nextButton.classList.remove('hidden');
         nextButton.disabled = false;
     }
+}
+
+
+var totalPaymentDue = document.getElementById("totalPaymentDue");
+var paymentDueBox = document.getElementById("paymentDueBox");
+var qrScreen = document.getElementById("qrScreen");
+function qrStage2() {
+    nextButton.classList.add("hidden");
+    paymentDueBox.classList.remove("hidden");
+    qrFinishButton.classList.remove("hidden");
+    qrScreen.classList.add("hidden");
+
+    for (el of document.getElementsByClassName("counter-container")) {
+        el.classList.add("hidden");
+    }
+
+    // total sum of cart
+    var sum = 0;
+    for (product_id of Object.keys(cartList)) {
+        sum += cartList[product_id].count * cartList[product_id].price;
+    }
+    totalPaymentDue.innerText = sum.toFixed(2);
+}
+
+function qrFinish() {
+
 }

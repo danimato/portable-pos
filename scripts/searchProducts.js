@@ -7,7 +7,7 @@ function loadAllProducts(forceRefresh = false) {
         console.log(`Using ${cachedProducts.length} cached products`);
         return Promise.resolve(cachedProducts);
     }
-    
+
     console.log("Loading all products from database");
     return db.getAll("products").then(products => {
         console.log(`Loaded ${products.length} products from database`);
@@ -39,8 +39,8 @@ document.getElementById('qrInput').addEventListener('input', (event) => {
     searchProducts(query).then(results => {
         var searchElementsDiv = document.getElementById('searchElements');
         searchElementsDiv.innerHTML = '';
-            console.log(results);
-        results.forEach(product => { 
+        console.log(results);
+        results.forEach(product => {
             var productDiv = document.createElement('div');
             productDiv.className = 'search-product';
             productDiv.dataset.productId = product.product_id;
@@ -66,8 +66,17 @@ document.getElementById('qrInput').addEventListener('input', (event) => {
             addBtn.className = 'add-to-cart-btn';
             addBtn.textContent = "+";
             addBtn.addEventListener('click', () => {
-                fetchProductAndInventory(product.product_id).then(({product, inventory}) => {
+                fetchProductAndInventory(product.product_id).then(({ product, inventory }) => {
                     addToCart(product, inventory);
+
+                    var priceEl = document.querySelector(`[data-product="${product.product_id}"] .cart-item-price`);
+                    console.log(priceEl);
+                    if (priceEl) {
+                        priceEl.innerText = "$" + (cartList[product.product_id].price * cartList[product.product_id].count).toFixed(2);
+                    } else {
+                        console.warn(`Price element not found for product: ${product.productId}`);
+                    }
+
                     showToast('Product Added', `Added ${product.product_name} to cart.`, 500);
                 }).catch(error => {
                     console.error('Error adding product to cart:', error);

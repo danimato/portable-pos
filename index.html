@@ -47,7 +47,7 @@
   </div>
   <div id="qr" class="tabcontent">
     <h3>QR</h3>
-    <div id="paymentDueBox">
+    <div id="paymentDueBox" class="hidden">
       <div id="paymentDueBoxChild">
         <span id="totalPaymentDue"></span>
         <span id="paymentDueText">Total Amount Due</span>
@@ -57,18 +57,23 @@
       </div>
       <div id="modeOfPaymentBox">
         <span id="modeOfPaymentText">Mode of Payment: </span>
-        <select name="" id=""></select>
+        <select name="modeOfPaymentChoice" id="modeOfPaymentChoice">
+          <option value="InstaPay">InstaPay</option>
+          <option value="Cash">Cash</option>
+          <option value="PayPal">PayPal</option>
+        </select>
       </div>
     </div>
-    <div id="reader"></div>
-    <input type="text" id="qrInput" placeholder="Scanned QR Code will appear here">
-    <div id="searchElements">
-
+    <div id="qrScreen">
+      <div id="reader"></div>
+      <input type="text" id="qrInput" placeholder="Scanned QR Code will appear here">
+      <div id="searchElements"></div>
     </div>
     <div id="cart">
 
     </div>
-    <button id="qrNextScreen" class="hidden">Next</button>
+    <button id="qrNextScreen" class="hidden" onclick="qrStage2()">Next</button>
+    <button id="qrFinishButton" class="hidden" onclick="qrFinish()">Finish</button>
     </ul>
   </div>
   <div id="inventory" class="tabcontent">

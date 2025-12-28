@@ -38,6 +38,7 @@
     --text-base: 14px;
     --text-md: 16px;
     --text-lg: 24px;
+    --text-2xl: 48px;
     
     /* Font Weights */
     --weight-normal: 400;
@@ -371,7 +372,7 @@ button {
 /* Utility Classes */
 
 .hidden {
-    display: none;
+    display: none !important;
 }
 
 /* Inventory Action Bar */
@@ -606,4 +607,35 @@ input[type=number] {
     justify-content:space-between;
     width: 100%;
     align-items: center;
+}
+
+#paymentDueBox {
+    text-align: center;
+    padding: var(--spacing-2xl) var(--spacing-base);
+}
+
+#totalPaymentDue {
+    display: block;
+    font-size: var(--text-2xl);
+    font-weight: var(--weight-bold);
+}
+
+#modeOfPaymentBox {
+    margin-top: var(--spacing-md);
+}
+
+#qrFinishButton {
+    position: fixed;
+    bottom: 60px;
+    right: 20px;
+    background: var(--primary-red);
+    color: var(--white);
+    border: none;
+    padding: var(--spacing-md) var(--spacing-xl);
+    border-radius: var(--radius-md);
+    font-size: var(--text-md);
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: background-color var(--transition-fast);
+    z-index: 1000;
 }
