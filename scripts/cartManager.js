@@ -22,6 +22,9 @@ function renderNewCartItem(product, inventory) {
     productDiv.className = 'cart-item';
     productDiv.setAttribute('data-product', product.product_id);
 
+    var right = document.createElement("div");
+    right.className = 'right';
+
     var contentDiv = document.createElement('div');
     contentDiv.className = 'cart-item-content';
 
@@ -225,9 +228,9 @@ function renderNewCartItem(product, inventory) {
     priceDiv.textContent = '$' + parseFloat(inventory.price).toFixed(2);
 
     productDiv.appendChild(counterContainer);
-    productDiv.appendChild(contentDiv);
-    productDiv.appendChild(priceDiv);
-
+    right.appendChild(contentDiv);
+    right.appendChild(priceDiv);
+    productDiv.appendChild(right);
     cart.appendChild(productDiv);
 }
 

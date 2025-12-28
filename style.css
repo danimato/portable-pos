@@ -501,7 +501,7 @@ input[type=number] {
 .cart-item {
     display: flex;
     align-items: center;
-    gap: 4px;
+    gap: 8px;
     margin-bottom: 10px;
 }
 
@@ -546,11 +546,6 @@ input[type=number] {
     min-width: 15px;
 }
 
-.cart-item {
-    display: flex;
-    justify-content: space-between;
-}
-
 .cart-item-name {
     font-size: 16px;
     font-weight: 500;
@@ -575,6 +570,9 @@ input[type=number] {
 
 #searchElements {
     padding: 10px;
+    height: 152px;
+    overflow-y: scroll;
+    border-bottom: 1px solid var(--overlay-bg);
 }
 
 #cart {
@@ -602,3 +600,10 @@ input[type=number] {
     transition: background-color var(--transition-fast);
     z-index: 1000;
 }   
+
+.right {
+    display: flex;
+    justify-content:space-between;
+    width: 100%;
+    align-items: center;
+}
