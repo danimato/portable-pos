@@ -253,10 +253,15 @@ function updateCheckoutButton() {
 var totalPaymentDue = document.getElementById("totalPaymentDue");
 var paymentDueBox = document.getElementById("paymentDueBox");
 var qrScreen = document.getElementById("qrScreen");
+var qrFinishButton = document.getElementById("qrFinishButton");
+var qrBackButton = document.getElementById("qrBackButton");
+
 function qrStage2() {
+    // always check qrBack() to revert changes to there!
     nextButton.classList.add("hidden");
     paymentDueBox.classList.remove("hidden");
     qrFinishButton.classList.remove("hidden");
+    qrBackButton.classList.remove("hidden");
     qrScreen.classList.add("hidden");
 
     for (el of document.getElementsByClassName("counter-container")) {
@@ -273,4 +278,17 @@ function qrStage2() {
 
 function qrFinish() {
 
+}
+
+function qrBack() {
+    // always check qrStage2() to revert changes from there!
+    nextButton.classList.remove("hidden");
+    paymentDueBox.classList.add("hidden");
+    qrFinishButton.classList.add("hidden");
+    qrBackButton.classList.add("hidden");
+    qrScreen.classList.remove("hidden");
+
+    for (el of document.getElementsByClassName("counter-container")) {
+        el.classList.remove("hidden");
+    }
 }
