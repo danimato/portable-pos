@@ -19,7 +19,8 @@ function loadAllProducts(forceRefresh = false) {
 function searchProducts(query) {
     return loadAllProducts().then(productList => {
         var options = {
-            keys: ['product_name', 'sku', 'description', 'category']
+            keys: ['product_name', 'sku', 'description', 'category'],
+            limit: 5
         }
         var fuse = new Fuse(productList, options);
         var result = fuse.search(query);
