@@ -98,7 +98,7 @@ To attempt fix, try clearing the cache, disabling cache temporarily, and visitin
 
 **The bug has been reproduced!** [`3568b69`](https://github.com/danimato/portable-pos/commit/3568b69f1e85f58a66cd415f7f9fda7fefec805d) now fixes this issue. The bug was about the behavior of `resetSelected()` when the mouse input is overshooting. It is now fixed accordingly by detecting if the mouse was dragging during the event, or if there's text selected.
 
-- [ ] You can put a negative number in both stock and cost
+- [x] You can put a negative number in both stock and cost
 
 > Response: clamp stock and price variables to 0 to Infinity. This is an [inventoryForm.js](#inventoryformjs) bug
 

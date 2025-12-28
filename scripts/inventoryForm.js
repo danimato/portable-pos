@@ -70,6 +70,15 @@ function confirmForm() {
         return;
     }
 
+    if (data.price < 0) {
+        showToast('Price Input Error','Price cannot be negative.',5000);
+        return;
+    }
+
+    if (data.stock < 0) {
+        showToast('Stock Input Error','Stock cannot be negative.',5000);
+    }
+
     // Add to history
     inventoryHistory.push({
         sku: data.sku,
@@ -89,6 +98,9 @@ function confirmForm() {
 
 // Get all form data via callback
 function getFormData(callback) {
+
+    
+
     const data = {
         sku: document.getElementById('sku').value,
         productName: document.getElementById('productName').value,
@@ -122,3 +134,19 @@ function updateHistoryTable() {
         </tr>
     `).join('');
 }
+
+var priceInput = document.getElementById("price");
+var stockInput = document.getElementById("stock");
+priceInput.addEventListener("blur", (e)=>{
+    if (priceInput.value >= 0) return;
+    showToast('Price Input Error','Price cannot be negative.',5000);
+    e.preventDefault();
+    e.target.focus();
+});
+
+stockInput.addEventListener("blur", (e)=>{
+    if (stockInput.value >= 0) return;
+    showToast('Stock Input Error','Stock cannot be negative.',5000);
+    e.preventDefault();
+    e.target.focus();
+});
