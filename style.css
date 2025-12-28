@@ -586,3 +586,19 @@ input[type=number] {
     justify-content: space-between;
     width: 100%;
 }
+
+#qrNextScreen {
+    position: fixed;
+    bottom: 60px;
+    right: 20px;
+    background: var(--primary-green);
+    color: var(--white);
+    border: none;
+    padding: var(--spacing-md) var(--spacing-xl);
+    border-radius: var(--radius-md);
+    font-size: var(--text-md);
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: background-color var(--transition-fast);
+    z-index: 1000;
+}   

@@ -10,6 +10,7 @@ function addToCart(product, inventory) {
         cartList[product.product_id] = {
             count: 1
         };
+        updateCheckoutButton();
         renderNewCartItem(product, inventory);
     }
 }
@@ -112,6 +113,7 @@ function renderNewCartItem(product, inventory) {
     function handleDecrement() {
         // Stop decrementing if item no longer exists
         if (!cartList[product.product_id]) {
+            updateCheckoutButton();
             clearInterval(decrementIntervalTimer);
             return;
         }
@@ -126,6 +128,7 @@ function renderNewCartItem(product, inventory) {
         } else if (newCount === 0) {
             delete cartList[product.product_id];
             cart.removeChild(productDiv);
+            updateCheckoutButton();
             clearInterval(decrementIntervalTimer); // Stop interval when removed
         }
     }
@@ -226,4 +229,17 @@ function renderNewCartItem(product, inventory) {
     productDiv.appendChild(priceDiv);
 
     cart.appendChild(productDiv);
+}
+
+function updateCheckoutButton() {
+    var nextButton = document.getElementById('qrNextScreen'); // or whatever your button ID is
+    console.log("called");
+    console.log(cartList);
+    if (Object.keys(cartList).length === 0) {
+        nextButton.classList.add('hidden');
+        nextButton.disabled = true;
+    } else {
+        nextButton.classList.remove('hidden');
+        nextButton.disabled = false;
+    }
 }
