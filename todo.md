@@ -96,7 +96,7 @@ To attempt fix, try clearing the cache, disabling cache temporarily, and visitin
 
 ~~To attempt fix, try clearing the cache, disabling cache temporarily, and visiting DevTools to right-click the Reload button and clicking "Empty Cache and Hard Reload" **(invalidated/not reproducible)**~~
 
-**The bug has been reproduced!** 3568b69f1e85f58a66cd415f7f9fda7fefec805d now fixes this issue. The bug was about the behavior of `resetSelected()` when the mouse input is overshooting. It is now fixed accordingly by detecting if the mouse was dragging during the event, or if there's text selected.
+**The bug has been reproduced!** [`3568b69`](https://github.com/danimato/portable-pos/commit/3568b69f1e85f58a66cd415f7f9fda7fefec805d) now fixes this issue. The bug was about the behavior of `resetSelected()` when the mouse input is overshooting. It is now fixed accordingly by detecting if the mouse was dragging during the event, or if there's text selected.
 
 - [ ] You can put a negative number in both stock and cost
 
