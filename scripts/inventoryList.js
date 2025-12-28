@@ -178,6 +178,7 @@ if (inventoryListTbody) {
   inventoryListTbody.addEventListener('click', handleRowClick);
 }
 async function handleNewInventoryItem(data) {
+  debugger
   console.log(selectedRows);
   var existingProduct = selectedRows.length === 1 
     ? await db.get('products', Number(selectedRows[0])) 
@@ -243,15 +244,37 @@ function resetSelected() {
   document.getElementById('selectedCount').textContent = `0 selected`;
 }
 // Handle click outside the inventory list to reset selection
+let isSelecting = false;
+
+document.addEventListener('mousedown', () => {
+  isSelecting = false;
+});
+
+document.addEventListener('mousemove', () => {
+  isSelecting = true; // User is dragging
+});
+
 document.addEventListener('click', (event) => {
+  // Don't deselect if user was dragging (selecting text)
+  if (isSelecting) {
+    isSelecting = false;
+    return;
+  }
+
+  // Don't deselect if user has text selected
+  const selection = window.getSelection();
+  if (selection && selection.toString().length > 0) {
+    return;
+  }
+
   const inventoryListContainer = document.getElementById('inventoryList');
   var ignoreList = [
     inventoryListContainer,
     document.getElementById('inventoryActionBar'),
     document.getElementById('deleter'),
     document.getElementById('inventoryForm')
-
   ];
+  
   if (!ignoreList.some(el => el.contains(event.target))) {
     resetSelected();
   }
