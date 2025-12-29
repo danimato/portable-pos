@@ -2,7 +2,7 @@
 
 
 
-- [ ] Implement QR code scanning route
+- [x] Implement QR code scanning route
 - [x] Implement barcode generation per item
 - [x] Implement layout for barcode printing
 
@@ -48,7 +48,7 @@
 
 ### qrReading.js
 - [ ] UI
-- [ ] cart system
+- [x] cart system
 - [x] fail scanning when product doesn't exist in db
 
 ### db.js
@@ -58,7 +58,7 @@
 - [x] Disallow negative numbers in both stock and cost
 
 ### cartManager.js
-- [ ] Cart and QR UI
+- [x] Cart and QR UI
 - [ ] apply currency settings on this section
 - [ ] finish integration with qrFinish() (notes, tax, discounts. etc.)
 
@@ -68,7 +68,7 @@
 - [ ] home tab
 - [ ] algorithms to figure out min/max, total sales, best sellers (prerequisite of home tab)
 - [x] inventory tab (mostly done, just UI and QoL improvements are needed to be resolved)
-- [ ] QR tab
+- [x] QR tab
 - [ ] Activity tab
 - [ ] Settings tab
 - [ ] figure out what to actually put there (prerequisite of settings tab)
