@@ -60,6 +60,7 @@
 ### cartManager.js
 - [ ] Cart and QR UI
 - [ ] apply currency settings on this section
+- [ ] finish integration with qrFinish() (notes, tax, discounts. etc.)
 
 ## Milestones
 

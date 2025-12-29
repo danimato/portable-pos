@@ -276,8 +276,30 @@ function qrStage2() {
     totalPaymentDue.innerText = sum.toFixed(2);
 }
 
-function qrFinish() {
-
+async function qrFinish() {
+    // prepare stuff to store in the db
+    console.log(transactionIdNum);
+    console.log(transactionDateNum);
+    var sum = 0;
+    for (product_id of Object.keys(cartList)) {
+        sum += cartList[product_id].count * cartList[product_id].price;
+    }
+    var discountAmount = 0;
+    var taxAmount = 0;
+    var notes = '';
+    total = sum - discountAmount + taxAmount;
+    var paymentMethod = document.getElementById("modeOfPaymentChoice").value;
+    
+    cartListForDb = [];
+    for (product_id of Object.keys(cartList)) {
+        cartListForDb.push({
+            product_id: product_id,
+            quantity: cartList[product_id].count,
+            price: cartList[product_id].price
+        });
+    }
+    console.table(transactionIdNum, transactionDateNum, paymentMethod, sum, discountAmount, total, cartListForDb, notes, taxAmount);
+    await db.createOrder(transactionIdNum, transactionDateNum, paymentMethod, sum, discountAmount, total, cartListForDb, notes, taxAmount);
 }
 
 function qrBack() {
@@ -291,4 +313,17 @@ function qrBack() {
     for (el of document.getElementsByClassName("counter-container")) {
         el.classList.remove("hidden");
     }
+}
+
+function resetQrForm() {
+    qrBack();
+    cart.innerHTML = '';
+    cartList = [];
+    updateCheckoutButton();
+    
+    const input = document.getElementById('qrInput');
+    input.value = '';
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+
+
 }

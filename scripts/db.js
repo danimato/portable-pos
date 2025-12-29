@@ -1,5 +1,5 @@
 const DB_NAME = 'EcommerceDB';
-const DB_VERSION = 3; // Incremented version for schema changes
+const DB_VERSION = 4; // Updated version for cart removal and snowflake IDs
 
 class EcommerceDB {
     constructor() {
@@ -41,24 +41,16 @@ class EcommerceDB {
                     inventoryStore.createIndex('price', 'price', { unique: false });
                 }
 
-                // Cart store
-                if (!db.objectStoreNames.contains('cart')) {
-                    const cartStore = db.createObjectStore('cart', {
-                        keyPath: 'cart_id',
-                        autoIncrement: true
-                    });
-                    cartStore.createIndex('product_id', 'product_id', { unique: false });
-                    cartStore.createIndex('user_id', 'user_id', { unique: false });
+                // Remove cart store if it exists (migration from v3)
+                if (db.objectStoreNames.contains('cart')) {
+                    db.deleteObjectStore('cart');
                 }
 
-                // Orders store
+                // Orders store - now with snowflake IDs
                 if (!db.objectStoreNames.contains('orders')) {
                     const ordersStore = db.createObjectStore('orders', {
-                        keyPath: 'order_id',
-                        autoIncrement: true
+                        keyPath: 'order_id'
                     });
-                    ordersStore.createIndex('buyer_id', 'buyer_id', { unique: false });
-                    ordersStore.createIndex('seller_id', 'seller_id', { unique: false });
                     ordersStore.createIndex('order_date', 'order_date', { unique: false });
                     ordersStore.createIndex('status', 'status', { unique: false });
                 }
@@ -73,7 +65,7 @@ class EcommerceDB {
                     orderItemsStore.createIndex('product_id', 'product_id', { unique: false });
                 }
 
-                // Promo store
+                // Promo store (keep for later implementation)
                 if (!db.objectStoreNames.contains('promo')) {
                     const promoStore = db.createObjectStore('promo', {
                         keyPath: 'promo_id',
@@ -85,7 +77,7 @@ class EcommerceDB {
                     promoStore.createIndex('is_active', 'is_active', { unique: false });
                 }
 
-                // Order Promo store
+                // Order Promo store (keep for later implementation)
                 if (!db.objectStoreNames.contains('order_promo')) {
                     const orderPromoStore = db.createObjectStore('order_promo', {
                         keyPath: 'id',
@@ -222,24 +214,17 @@ class EcommerceDB {
         });
     }
 
-    async addToCart(userId, productId, quantity) {
-        return this.add('cart', { user_id: userId, product_id: productId, quantity });
-    }
-
-    async getCartItems(userId) {
-        return this.getByIndex('cart', 'user_id', userId);
-    }
-
-    async createOrder(buyerId, sellerId, paymentMethod, amountPaid, amountCharged, amountDiscount, items) {
-        const orderId = await this.add('orders', {
-            buyer_id: buyerId,
-            seller_id: sellerId,
+    async createOrder(orderId, order_date, paymentMethod, subtotal, discountAmount, totalAmount, items, notes = '', taxAmount = 0) {
+        await this.add('orders', {
+            order_id: orderId,
+            order_date: order_date,
+            status: 'pending',
             payment_method: paymentMethod,
-            amount_paid: amountPaid,
-            amount_charged: amountCharged,
-            amount_discount: amountDiscount,
-            order_date: new Date().toISOString(),
-            status: 'pending'
+            subtotal: subtotal,
+            discount_amount: discountAmount,
+            total_amount: totalAmount,
+            notes: notes,
+            tax_amount: taxAmount
         });
 
         // Add order items
@@ -255,14 +240,19 @@ class EcommerceDB {
         return orderId;
     }
 
-    async getOrdersByBuyer(buyerId) {
-        return this.getByIndex('orders', 'buyer_id', buyerId);
-    }
-
     async getOrderItems(orderId) {
         return this.getByIndex('order_items', 'order_id', orderId);
     }
 
+    async updateOrderStatus(orderId, status) {
+        const order = await this.get('orders', orderId);
+        if (!order) throw new Error('Order not found');
+
+        order.status = status;
+        return this.update('orders', order);
+    }
+
+    // Promo methods (for later implementation)
     async addPromo(code, description, discountType, discountValue, validFrom, validTo) {
         return this.add('promo', {
             code,
@@ -281,17 +271,24 @@ class EcommerceDB {
     }
 
     async applyPromoToOrder(orderId, promoId, discountAmount) {
-        return this.add('order_promo', { order_id: orderId, promo_id: promoId, discount_amount: discountAmount });
+        return this.add('order_promo', {
+            order_id: orderId,
+            promo_id: promoId,
+            discount_amount: discountAmount
+        });
     }
 }
 
-// Usage
+// Export for use
 const db = new EcommerceDB();
 
 // Example usage:
 /*
 (async () => {
-    // Add a product with all its info
+    // Initialize database
+    await db.init();
+
+    // Add a product
     const productId = await db.addProduct(
         'Gaming Laptop',
         'High-performance gaming laptop with RTX graphics',
@@ -303,39 +300,36 @@ const db = new EcommerceDB();
     // Add inventory for the product
     await db.addInventory(productId, 1299.99, 50);
 
-    // Add to cart
-    await db.addToCart(1, productId, 2);
+    // Cart is now handled in your application state as:
+    // { productId: { price: 1299.99, quantity: 2 } }
 
-    // Get cart items
-    const cartItems = await db.getCartItems(1);
-    console.log('Cart:', cartItems);
-
-    // Create order
+    // Create order with snowflake ID
     const orderId = await db.createOrder(
-        1, // buyer_id
-        100, // seller_id
-        'credit_card',
-        2499.98,
-        2599.98,
-        100.00,
-        [{ product_id: productId, quantity: 2, price: 1299.99 }]
+        'credit_card',        // payment_method
+        2599.98,              // subtotal
+        100.00,               // discount_amount
+        2499.98,              // total_amount
+        [                     // items array
+            { 
+                product_id: productId, 
+                quantity: 2, 
+                price: 1299.99 
+            }
+        ],
+        'Express shipping',   // notes (optional)
+        249.99                // tax_amount (optional)
     );
+    console.log('Order ID (Snowflake):', orderId);
 
-    // Add promo
-    const promoId = await db.addPromo(
-        'SAVE20',
-        '20% off everything',
-        'percentage',
-        20,
-        new Date().toISOString(),
-        new Date(Date.now() + 30*24*60*60*1000).toISOString()
-    );
+    // Get order items
+    const orderItems = await db.getOrderItems(orderId);
+    console.log('Order Items:', orderItems);
 
-    // Apply promo to order
-    await db.applyPromoToOrder(orderId, promoId, 100.00);
+    // Update order status
+    await db.updateOrderStatus(orderId, 'completed');
 
-    // Get orders
-    const orders = await db.getOrdersByBuyer(1);
-    console.log('Orders:', orders);
+    // Get all orders
+    const allOrders = await db.getAll('orders');
+    console.log('All Orders:', allOrders);
 })();
 */

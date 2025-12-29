@@ -11,6 +11,7 @@ self.addEventListener('install', event => {
                 './scripts/libs/html5-qrcode.min.js',
                 './scripts/libs/fuse.min.js',
                 './scripts/libs/JsBarcode.all.min.js',
+                './scripts/libs/flakeid.min.js',
 
                 './res/beep.wav',
 
@@ -24,6 +25,7 @@ self.addEventListener('install', event => {
                 './scripts/qrReading.js',
                 './scripts/searchProducts.js',
                 './scripts/settings.js',
+                './scripts/snowflakeGenerator.js',
                 './scripts/svgToPng.js',
                 './scripts/tab-navigation.js',
                 './scripts/tests.js',

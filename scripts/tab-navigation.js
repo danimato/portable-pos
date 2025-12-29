@@ -1,7 +1,8 @@
 
 document.getElementById("home").style.display = "block";
 document.getElementById("home").classList.add("active");
-
+var transactionIdNum;
+var transactionDateNum;
 function openTab(evt, tabName) {
     // Declare all variables
     var i, tabcontent, tablinks;
@@ -14,7 +15,7 @@ function openTab(evt, tabName) {
 
     // Get all elements with class="tablinks" and remove the class "active"
     tablinks = document.getElementsByClassName("tablinks");
-    console.table(tablinks); 
+    console.table(tablinks);
     for (i = 0; i < tablinks.length; i++) {
         if (tablinks[i].classList.contains("active")) {
             tablinks[i].classList.remove("active");
@@ -31,12 +32,15 @@ function openTab(evt, tabName) {
         clearInventoryListRender();
         refreshInventoryList();
     } else if (tabName === 'qr') {
-    // Refresh product cache when QR tab is focused
-    refreshProductCache().then(() => {
-        console.log("Product cache refreshed for QR tab");
-        // Any other QR tab initialization code here
-    });
+        // Refresh product cache when QR tab is focused
+        refreshProductCache().then(() => {
+            console.log("Product cache refreshed for QR tab");
+            // Any other QR tab initialization code here
+        });
+        transactionIdNum = flake.gen();
+        transactionDateNum = new Date().toISOString();
+        console.log("transaction Id: ", transactionIdNum);
+        document.getElementById("transactionId").innerText = transactionIdNum;
     }
-
-    resetSelected();
+    if (tabName != "qr") resetQrForm();
 }

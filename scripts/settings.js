@@ -1,4 +1,4 @@
-const versionString = "v0.0.0-alpha.1-inventory"
+const versionString = "v0.0.0-alpha.1-qr"
 var deleteDontAskAgain = false;
 
 // Load settings on page load
