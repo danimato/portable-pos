@@ -702,3 +702,17 @@ input[type=number] {
     font-size: var(--text-sm);
     color: var(--text-muted);
 }
+
+#reader__scan_region {
+    overflow: hidden;
+    height: 200px;
+}
+
+#reader__scan_region video {
+    object-fit: cover;
+    object-position: center;
+}
+
+#reader__dashboard_section {
+    padding: 0 !important;
+}

@@ -12,20 +12,35 @@ function onScanSuccess(decodedText, decodedResult) {
         cancelable: true
     });
     document.getElementById('qrInput').dispatchEvent(event);
+
 }
+var lastValidScanned = null;
+var lastScanTime = 0;
+var scanDebounceMs = 1000; // Configurable debounce time
 
 function handleScannedProduct(sku) {
     console.log(`Handling scanned product with SKU: ${sku}`);
+    
+    // Check if this is a duplicate scan within the debounce period
+    const now = Date.now();
+    if (lastValidScanned === sku && (now - lastScanTime) < scanDebounceMs) {
+        console.log(`Ignoring duplicate scan of SKU: ${sku}`);
+        return; // Exit early, don't process
+    }
 
     db.getByIndex("products", "sku", sku).then(products => {
         if (products != null && products.length > 0) {
             console.log(products);
-            var product = products[0]; // Don't redeclare - removed 'var'
+            var product = products[0];
             
             // Look up inventory for this product
             db.get("inventory", product.product_id).then(inventoryItems => {
                 if (inventoryItems != null) {
-                    // add product to cart logic here
+                    // Update scan tracking BEFORE adding to cart
+                    lastValidScanned = sku;
+                    lastScanTime = Date.now();
+                    
+                    // Add product to cart logic here
                     addToCart(product, inventoryItems);
                     showToast('Product Scanned', `SKU: ${sku} ${product.product_name} added to cart.`, 500);
                 } else {
@@ -37,11 +52,9 @@ function handleScannedProduct(sku) {
             });
 
         } else {
-            // This was missing - handles when no product is found
             console.warn(`No product found with SKU: ${sku}`);
             showToast('Product Not Found', `No product found with SKU: ${sku}`, 1000);
         }
-
 
     }).catch(err => {
         console.error('Error looking up product by SKU:', err);
@@ -50,4 +63,4 @@ function handleScannedProduct(sku) {
 }
 // Re-render scanner after handling
 var html5QrcodeScanner = new Html5QrcodeScanner("reader", { fps: 10 });
-html5QrcodeScanner.render(onScanSuccess);   
+html5QrcodeScanner.render(onScanSuccess);

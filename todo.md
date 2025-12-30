@@ -40,7 +40,7 @@
 
 ### tab-navigation.js
 - [ ] bug of clicking the inventory button and adding of elements to UI duplicating/triplicating
-- [ ] clear out QR tab when leaving it
+- [x] clear out QR tab when leaving it
 
 
 ### tests.js
@@ -52,7 +52,7 @@
 - [x] fail scanning when product doesn't exist in db
 
 ### db.js
-- [ ] Disallow letters in number areas in the inventory add pop-up
+- [x] Disallow letters in number areas in the inventory add pop-up
 
 ### inventoryForm.js
 - [x] Disallow negative numbers in both stock and cost
@@ -62,6 +62,9 @@
 - [ ] apply currency settings on this section
 - [ ] finish integration with qrFinish() (notes, tax, discounts. etc.)
 
+### transactionList.js
+- [ ] allow the viewing of transaction items and details on every transaction
+
 ## Milestones
 
 - [x] database system (bound to change, but mostly done)
@@ -69,7 +72,7 @@
 - [ ] algorithms to figure out min/max, total sales, best sellers (prerequisite of home tab)
 - [x] inventory tab (mostly done, just UI and QoL improvements are needed to be resolved)
 - [x] QR tab
-- [ ] Activity tab
+- [x] Activity tab
 - [ ] Settings tab
 - [ ] figure out what to actually put there (prerequisite of settings tab)
 - [ ] import/export settings
@@ -103,6 +106,6 @@ To attempt fix, try clearing the cache, disabling cache temporarily, and visitin
 
 > Response: clamp stock and price variables to 0 to Infinity. This is an [inventoryForm.js](#inventoryformjs) bug
 
-- [ ] You can put in letters in number filled areas in the inventory add pop-up
+- [x] You can put in letters in number filled areas in the inventory add pop-up
 
 > Response: lock database schema to accept floats only and preprocess/postprocess all fields to be in float only. This is an [inventoryForm.js](#inventoryformjs) and [db.js](#dbjs) bug
