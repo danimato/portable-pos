@@ -38,12 +38,24 @@
   <div class="overlay" id="overlay"></div>
   <div id="home" class="tabcontent">
     <h3>Home</h3>
-    <p>todo</p>
-    <ul>
-      <li>total sales</li>
-      <li>miniactivity</li>
-      <li>top performers</li>
-    </ul>
+    <div id="focusBoxParent">
+      <div id="focusBox">
+        <div id="focusBoxContent">
+          <div id="focusBoxTabContainerParent">
+            <div class="focus-box-tab-container">
+              <button id="week" class="focus-box-tab-button" onclick="setActive(this)">This week</button>
+              <button id="month" class="focus-box-tab-button active" onclick="setActive(this)">This month</button>
+              <button id="lifetime" class="focus-box-tab-button" onclick="setActive(this)">Lifetime</button>
+            </div>
+          </div>
+          <p id="totalSalesText">Total Sales</p>
+          <p id="totalSalesValue">0.00</p>
+        </div>
+      </div>
+    </div>
+    <div id="homeTransactions">
+      
+    </div>
   </div>
   <div id="qr" class="tabcontent">
     <h3>QR</h3>
@@ -104,40 +116,6 @@
   <div id="activity" class="tabcontent">
     <h3>Activity</h3>
     <div id="listOfTransactions">
-      <div class="dateBlock">
-        <div class="date">December 18, 2025</div>
-        <div class="transactionItem">
-          <div class="transactionleft">
-            <span class="title">December 18, 2025 11:19:23</span>
-            <span class="status">TID: 98423875345498230 - Paid</span>
-          </div>
-          <span class="price">$9823.32</span>
-        </div>
-        <div class="transactionItem">
-          <div class="transactionleft">
-            <span class="title">December 18, 2025 11:19:23</span>
-            <span class="status">TID: 98423875345498230 - Paid</span>
-          </div>
-          <span class="price">$9823.32</span>
-        </div>
-        <div class="transactionItem">
-          <div class="transactionleft">
-            <span class="title">December 18, 2025 11:19:23</span>
-            <span class="status">TID: 98423875345498230 - Paid</span>
-          </div>
-          <span class="price">$9823.32</span>
-        </div>
-      </div>
-      <div class="dateBlock">
-        <div class="date">December 17, 2025</div>
-        <div class="transactionItem">
-          <div class="transactionleft">
-            <span class="title">December 18, 2025 11:19:23</span>
-            <span class="status">TID: 98423875345498230 - Paid</span>
-          </div>
-          <span class="price">$9823.32</span>
-        </div>
-      </div>
     </div>
   </div>
   <div id="settings" class="tabcontent">
@@ -302,6 +280,7 @@
   <script src="scripts/cartManager.js"></script>
   <script src="scripts/db.js"></script>
   <script src="scripts/deleter.js"></script>
+  <script src="scripts/homePage.js"></script>
   <script src="scripts/inventoryForm.js"></script>
   <script src="scripts/inventoryList.js"></script>
   <script src="scripts/onRun.js"></script>

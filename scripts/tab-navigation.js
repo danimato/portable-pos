@@ -43,6 +43,8 @@ function openTab(evt, tabName) {
         document.getElementById("transactionId").innerText = transactionIdNum;
     } else if (tabName === "activity") {
         loadOrders();
+    } else if (tabName === "home") {
+        updateHomeTab();
     }
     if (tabName != "qr") resetQrForm();
 }

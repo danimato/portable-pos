@@ -19,6 +19,7 @@ self.addEventListener('install', event => {
                 './scripts/cartManager.js',
                 './scripts/db.js',
                 './scripts/deleter.js',
+                './scripts/homePage.js',
                 './scripts/inventoryForm.js',
                 './scripts/inventoryList.js',
                 './scripts/onRun.js',

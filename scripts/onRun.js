@@ -14,3 +14,4 @@ window.addEventListener('offline', () => showToast('Connection Lost', 'You are c
 
 // Initial check
 checkUserConnection();
+updateHomeTab();
