@@ -41,6 +41,8 @@ function openTab(evt, tabName) {
         transactionDateNum = new Date().toISOString();
         console.log("transaction Id: ", transactionIdNum);
         document.getElementById("transactionId").innerText = transactionIdNum;
+    } else if (tabName === "activity") {
+        loadOrders();
     }
     if (tabName != "qr") resetQrForm();
 }

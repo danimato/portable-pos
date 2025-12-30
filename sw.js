@@ -30,6 +30,7 @@ self.addEventListener('install', event => {
                 './scripts/tab-navigation.js',
                 './scripts/tests.js',
                 './scripts/toast.js',
+                './scripts/transactionList.js',
                 './index.html',
                 './manifest.json',
                 './style.css',

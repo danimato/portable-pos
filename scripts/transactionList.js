@@ -1,0 +1,152 @@
+// Function to format date as "Month Day, Year"
+function formatDate(dateStr) {
+
+    const date = new Date(dateStr);
+
+    const formatted = date.toLocaleDateString('en-US', { 
+        month: 'long', 
+        day: 'numeric', 
+        year: 'numeric' 
+    });
+
+    return formatted;
+}
+
+// Function to format time as "Month Day, Year HH:MM:SS"
+function formatDateTime(dateStr) {
+
+    const date = new Date(dateStr);
+
+    const dateFormatted = date.toLocaleDateString('en-US', { 
+        month: 'long', 
+        day: 'numeric', 
+        year: 'numeric' 
+    });
+    const timeFormatted = date.toLocaleTimeString('en-US', { 
+        hour12: false,
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+    });
+
+
+    const result = `${dateFormatted} ${timeFormatted}`;
+
+    return result;
+}
+
+// Function to group orders by date
+function groupOrdersByDate(orders) {
+    const grouped = {};
+    
+    orders.forEach(order => {
+        const dateKey = formatDate(order.order_date);
+        if (!grouped[dateKey]) {
+            grouped[dateKey] = [];
+        }
+        grouped[dateKey].push(order);
+    });
+    
+    return grouped;
+}
+
+// Function to render a single transaction item
+function createTransactionItem(order) {
+    const transactionItem = document.createElement('div');
+    transactionItem.className = 'transactionItem';
+    
+    // Create left section
+    const transactionLeft = document.createElement('div');
+    transactionLeft.className = 'transactionleft';
+    
+    // Create title span
+    const titleSpan = document.createElement('span');
+    titleSpan.className = 'title';
+    titleSpan.textContent = formatDateTime(order.order_date);
+    
+    // Create status span
+    const statusSpan = document.createElement('span');
+    statusSpan.className = 'status';
+    statusSpan.textContent = `TID: ${order.order_id} - ${order.status}`;
+    
+    transactionLeft.appendChild(titleSpan);
+    transactionLeft.appendChild(statusSpan);
+    
+    // Create price span
+    const priceSpan = document.createElement('span');
+    priceSpan.className = 'price';
+    priceSpan.textContent = `${order.total_amount.toFixed(2)}`;
+    
+    transactionItem.appendChild(transactionLeft);
+    transactionItem.appendChild(priceSpan);
+    
+    return transactionItem;
+}
+
+// Function to render a date block with its transactions
+function createDateBlock(date, orders) {
+    const dateBlock = document.createElement('div');
+    dateBlock.className = 'dateBlock';
+    
+    const dateHeader = document.createElement('div');
+    dateHeader.className = 'date';
+    dateHeader.textContent = date;
+    dateBlock.appendChild(dateHeader);
+    
+    orders.forEach(order => {
+        const transactionItem = createTransactionItem(order);
+        dateBlock.appendChild(transactionItem);
+    });
+    
+    return dateBlock;
+}
+
+// Main function to load and display orders
+async function loadOrders() {
+    try {
+
+        
+        // Get all orders from database, sorted by created_at descending
+        const orders = await db.getAll('orders');
+
+
+        
+        // Log first order details if available
+        if (orders.length > 0) {
+
+        }
+        
+        // Sort orders by date (newest first)
+        orders.sort((a, b) => new Date(b.order_date) - new Date(a.order_date));
+
+        
+        // Group orders by date
+        const groupedOrders = groupOrdersByDate(orders);
+
+        
+        // Get the container element
+        const container = document.getElementById('listOfTransactions');
+
+        
+        // Clear existing content
+        container.innerHTML = '';
+        
+        // Render each date block
+        Object.keys(groupedOrders).forEach(date => {
+
+
+            const dateBlock = createDateBlock(date, groupedOrders[date]);
+            container.appendChild(dateBlock);
+        });
+        
+
+    } catch (error) {
+        console.error('[loadOrders] Error loading orders:', error);
+    }
+}
+
+// Call this function when you want to load the orders
+// loadOrders();
+
+// Or load automatically when the page loads
+// document.addEventListener('DOMContentLoaded', loadOrders);

@@ -2,7 +2,7 @@
 
 :root {
     /* Colors */
-    --primary-blue: #2196F3;
+    --primary-blue: #0A7FAA;
     --primary-green: #4CAF50;
     --primary-red: #de3a2e;
     --primary-green-hover: #45a049;
@@ -22,7 +22,7 @@
     --lighter-bg: rgba(255, 255, 255, 0.2);
     --toast-bg: #333;
     --white: #fff;
-    
+
     /* Spacing */
     --spacing-base: 14px;
     --spacing-xs: 6px;
@@ -31,7 +31,7 @@
     --spacing-lg: 16px;
     --spacing-xl: 20px;
     --spacing-2xl: 24px;
-    
+
     /* Font Sizes */
     --text-xs: 10px;
     --text-sm: 12px;
@@ -39,18 +39,18 @@
     --text-md: 16px;
     --text-lg: 24px;
     --text-2xl: 48px;
-    
+
     /* Font Weights */
     --weight-normal: 400;
     --weight-medium: 500;
     --weight-semibold: 600;
     --weight-bold: bold;
-    
+
     /* Border Radius */
     --radius-sm: 4px;
     --radius-md: 8px;
     --radius-full: 50px;
-    
+
     /* Transitions */
     --transition-fast: 0.2s;
     --transition-normal: 0.5s ease-in-out;
@@ -67,7 +67,7 @@ body {
     font-family: "Lexend Deca", sans-serif;
     font-optical-sizing: auto;
     font-weight: var(--weight-normal);
-    font-style: normal;  
+    font-style: normal;
 }
 
 /* Tab Navigation */
@@ -322,6 +322,7 @@ button {
     color: var(--white);
     flex: 1;
 }
+
 .btn-confirm-red {
     background: var(--primary-red);
     color: var(--white);
@@ -331,6 +332,7 @@ button {
 .btn-confirm:hover {
     background: var(--primary-green-hover);
 }
+
 .btn-confirm-red:hover {
     background: var(--primary-red);
     color: var(--white);
@@ -416,45 +418,46 @@ button {
 }
 
 .for-prompts {
-    overflow-y:hidden;
+    overflow-y: hidden;
 }
 
-#deleter {
-    
-}
+#deleter {}
 
 #printArea {
-  display: none;
+    display: none;
 }
 
 @media print {
-  body > *:not(#printArea) {
-    display: none !important;
-  }
+    body>*:not(#printArea) {
+        display: none !important;
+    }
 
-  #printArea {
-    display: block !important;
-    width: 8.5in;
-    height: 11in;
-    margin: 0;
-    box-sizing: border-box;
-  }
+    #printArea {
+        display: block !important;
+        width: 8.5in;
+        height: 11in;
+        margin: 0;
+        box-sizing: border-box;
+    }
 
-  .tile-grid {
-    width: 100%;
-    height: 100%;
-  }
+    .tile-grid {
+        width: 100%;
+        height: 100%;
+    }
 
-  .tile-grid img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-  }
+    .tile-grid img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+    }
 }
+
 /* Overflow Menu */
 #overflowMenu {
     display: none;
-    position: absolute; bottom: 100%; left: 80%;
+    position: absolute;
+    bottom: 100%;
+    left: 80%;
     margin-bottom: 5px;
     background: var(--primary-blue);
     border: 1px solid var(--border-color);
@@ -492,11 +495,13 @@ input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
     /* display: none; <- Crashes Chrome on hover */
     -webkit-appearance: none;
-    margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+    margin: 0;
+    /* <-- Apparently some margin are still there even though it's hidden */
 }
 
 input[type=number] {
-    -moz-appearance:textfield; /* Firefox */
+    -moz-appearance: textfield;
+    /* Firefox */
 }
 
 .cart-item {
@@ -526,10 +531,14 @@ input[type=number] {
     cursor: pointer;
     padding: 0;
     transition: opacity 0.2s;
-    user-select: none; /* Standard property */
-    -webkit-user-select: none; /* Safari compatibility */
-    -moz-user-select: none; /* Firefox compatibility */
-    -ms-user-select: none; /* Internet Explorer/Edge compatibility */
+    user-select: none;
+    /* Standard property */
+    -webkit-user-select: none;
+    /* Safari compatibility */
+    -moz-user-select: none;
+    /* Firefox compatibility */
+    -ms-user-select: none;
+    /* Internet Explorer/Edge compatibility */
 }
 
 .counter-btn:hover {
@@ -552,6 +561,7 @@ input[type=number] {
     font-weight: 500;
     display: block;
 }
+
 .cart-item-sku {
     font-size: 12px;
     color: #777;
@@ -580,6 +590,7 @@ input[type=number] {
     padding: 10px;
     border-top: 1px solid var(--lighter-bg);
 }
+
 .search-product {
     display: flex;
     justify-content: space-between;
@@ -600,11 +611,11 @@ input[type=number] {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     transition: background-color var(--transition-fast);
     z-index: 1000;
-}   
+}
 
 .right {
     display: flex;
-    justify-content:space-between;
+    justify-content: space-between;
     width: 100%;
     align-items: center;
 }
@@ -654,4 +665,40 @@ input[type=number] {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     transition: background-color var(--transition-fast);
     z-index: 1000;
+}
+
+/* transactions */
+#listOfTransactions {
+    padding: var(--spacing-md);
+}
+
+.date {
+    display: block;
+    background-color: var(--primary-blue);
+    color: white;
+    padding: var(--spacing-sm);
+    border-radius: 200px 200px 300px 300px;
+    corner-shape: squircle;
+    margin: var(--spacing-xs) 0;
+}
+
+.transactionItem {
+    display: flex;
+    justify-content: space-between;
+    margin: var(--spacing-md) 0;
+}
+
+.transactionleft .title,
+.transactionleft .status {
+    display: block;
+}
+
+.transactionItem .title {
+    font-size: var(--text-md);
+    font-weight: var(--weight-bold);
+}
+
+.transactionItem .status {
+    font-size: var(--text-sm);
+    color: var(--text-muted);
 }
