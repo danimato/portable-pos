@@ -277,29 +277,35 @@ function qrStage2() {
 }
 
 async function qrFinish() {
-    // prepare stuff to store in the db
-    console.log(transactionIdNum);
-    console.log(transactionDateNum);
-    var sum = 0;
-    for (product_id of Object.keys(cartList)) {
-        sum += cartList[product_id].count * cartList[product_id].price;
+    try {
+        // prepare stuff to store in the db
+        console.log(transactionIdNum);
+        console.log(transactionDateNum);
+        var sum = 0;
+        for (product_id of Object.keys(cartList)) {
+            sum += cartList[product_id].count * cartList[product_id].price;
+        }
+        var discountAmount = 0;
+        var taxAmount = 0;
+        var notes = '';
+        total = sum - discountAmount + taxAmount;
+        var paymentMethod = document.getElementById("modeOfPaymentChoice").value;
+        
+        cartListForDb = [];
+        for (product_id of Object.keys(cartList)) {
+            cartListForDb.push({
+                product_id: product_id,
+                quantity: cartList[product_id].count,
+                price: cartList[product_id].price
+            });
+        }
+        console.table(transactionIdNum, transactionDateNum, paymentMethod, sum, discountAmount, total, cartListForDb, notes, taxAmount);
+        await db.createOrder(transactionIdNum, transactionDateNum, paymentMethod, sum, discountAmount, total, cartListForDb, notes, taxAmount);
+        showToast('Transaction Added', `The transaction successfully completed.`,5000)
     }
-    var discountAmount = 0;
-    var taxAmount = 0;
-    var notes = '';
-    total = sum - discountAmount + taxAmount;
-    var paymentMethod = document.getElementById("modeOfPaymentChoice").value;
-    
-    cartListForDb = [];
-    for (product_id of Object.keys(cartList)) {
-        cartListForDb.push({
-            product_id: product_id,
-            quantity: cartList[product_id].count,
-            price: cartList[product_id].price
-        });
+    catch(e) {
+        showToast('Transaction Error', `An error occured while finishing transaction: ${e}`,5000)
     }
-    console.table(transactionIdNum, transactionDateNum, paymentMethod, sum, discountAmount, total, cartListForDb, notes, taxAmount);
-    await db.createOrder(transactionIdNum, transactionDateNum, paymentMethod, sum, discountAmount, total, cartListForDb, notes, taxAmount);
 }
 
 function qrBack() {
