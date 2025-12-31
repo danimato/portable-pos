@@ -8,6 +8,8 @@ self.addEventListener('install', event => {
         try {
             await cache.addAll([
                 './',
+                'https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200',
+                'https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@100..900&display=swap',
                 './scripts/libs/html5-qrcode.min.js',
                 './scripts/libs/fuse.min.js',
                 './scripts/libs/JsBarcode.all.min.js',

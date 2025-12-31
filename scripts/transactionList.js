@@ -58,6 +58,8 @@ function createTransactionItem(order) {
     transactionItem.appendChild(transactionLeft);
     transactionItem.appendChild(priceSpan);
 
+    transactionItem.dataset.order_id = order.order_id;
+    transactionItem.addEventListener('click', showTransacHistoryForm);
     return transactionItem;
 }
 
@@ -116,3 +118,50 @@ async function loadOrders(container, group = true) {
 
 // Or load automatically when the page loads
 // document.addEventListener('DOMContentLoaded', loadOrders);
+
+
+async function showTransacHistoryForm(evt) {
+    try {
+        var transactionId;
+        var currentElement = evt.target;
+        var depth = 0;
+        var maxDepth = 6;
+
+        // Traverse up the parent elements until we find data-order_id or reach max depth
+        while (depth < maxDepth && currentElement) {
+            if (currentElement.dataset && currentElement.dataset.order_id) {
+                transactionId = currentElement.dataset.order_id;
+                break;
+            }
+            currentElement = currentElement.parentElement;
+            depth++;
+        }
+
+        if (!transactionId) {
+            throw new Error("order_id not found in element or its parents");
+        }
+
+        order_data = await db.get("orders", transactionId);
+        order_items = await db.getOrderItems(transactionId);
+        console.log(order_items);
+        renderTransacHistoryForm(order_data, order_items);
+    } catch (e) {
+        showToast("Transaction History Form Error", `An error occured while showing the transaction history form: ${e}`, 5000);
+    }
+}
+var orderDataEl = document.getElementById("orderData");
+var orderItemsEl = document.getElementById("orderItems");
+
+function renderTransacHistoryForm(order_data, order_items) {
+    document.getElementById('overlay').classList.add('active');
+    document.getElementById('transacHistoryForm').classList.add('active');
+    orderDataEl.innerText = JSON.stringify(order_data, null, 4);
+    orderItemsEl.innerText = JSON.stringify(order_items, null, 4);
+}
+function hideTransacHistoryForm() {
+    document.getElementById('overlay').classList.remove('active');
+    document.getElementById('transacHistoryForm').classList.remove('active');
+}
+
+// Close form when clicking overlay
+document.getElementById('overlay').addEventListener('click', hideTransacHistoryForm);

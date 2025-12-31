@@ -28,7 +28,11 @@ var currencyParameters = {
 
 function cF(strint) {
     var money = Number(strint);
-    return new Intl.NumberFormat('en-PH', { style: 'currency', currency: currencyParameters.currency, minimumFractionDigits: currencyParameters.decimals, maximumFractionDigits: currencyParameters.decimals
+    return new Intl.NumberFormat('en-PH', {
+        style: 'currency',
+        currency: currencyParameters.currency,
+        minimumFractionDigits: currencyParameters.decimals,
+        maximumFractionDigits: currencyParameters.decimals
 
      }).format(money);
 }
