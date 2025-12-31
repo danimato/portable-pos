@@ -59,14 +59,14 @@ function updateFocusBoxValue(sum) {
 function getWeekRange(date) {
     const tempDate = new Date(date); // Create a copy to avoid mutating input
     const day = tempDate.getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
-    
+
     // Calculate difference to get to Sunday (start of week)
     const diff = tempDate.getDate() - day;
 
     const sunday = new Date(tempDate);
     sunday.setDate(diff);
     sunday.setHours(0, 0, 0, 0); // Set to 12:00 AM
-    
+
     const saturday = new Date(sunday.getTime()); // Use getTime() to create a proper copy
     saturday.setDate(sunday.getDate() + 6);
     saturday.setHours(23, 59, 59, 999); // Set to 11:59:59.999 PM
@@ -93,4 +93,94 @@ function getMonthRange(date) {
         end: lastDay,
         month: date.toLocaleString('default', { month: 'long', year: 'numeric' })
     };
+}
+
+async function getDetailedProductSales() {
+    const db = new EcommerceDB();
+    await db.init();
+
+    const orderItems = await db.getAll('order_items');
+    const products = await db.getAll('products');
+
+    // Aggregate quantities by product_id
+    const salesByProduct = orderItems.reduce((acc, item) => {
+        const productId = item.product_id;
+        if (!acc[productId]) {
+            acc[productId] = { quantity: 0, revenue: 0 };
+        }
+        acc[productId].quantity += item.quantity;
+        acc[productId].revenue += item.quantity * item.price;
+        return acc;
+    }, {});
+
+    // Join with product details
+    const detailedSales = products.map(product => ({
+        product_id: product.product_id,
+        product_name: product.product_name,
+        sku: product.sku,
+        category: product.category,
+        quantity_sold: salesByProduct[product.product_id]?.quantity || 0,
+        total_revenue: salesByProduct[product.product_id]?.revenue || 0
+    }));
+
+    return detailedSales;
+}
+
+
+
+// Main function to load and display orders
+async function loadBestSellers(container) {
+    try {
+        container.innerHTML = '';
+        var productSales = await getDetailedProductSales();
+        productSales.sort((a, b) => {
+            return bestSellerAlgorithm(a, b);
+        });
+
+        // Display top sellers (optional: limit to top 10)
+        const topSellers = productSales.slice(0, 10);
+
+        // Now render topSellers to your container
+        // ...
+        topSellers.forEach((topSeller, index) => {
+            topSeller.top = index + 1;
+            console.log(topSeller);
+            container.appendChild(bestSellerItemGen(topSeller));
+        });
+    } catch (error) {
+        console.error('[loadBestSellers] Error loading orders:', error);
+    }
+}
+
+
+function bestSellerItemGen(product_data) {
+    const transactionItem = document.createElement('div');
+    transactionItem.className = 'transactionItem';
+
+    // Create left section
+    const transactionLeft = document.createElement('div');
+    transactionLeft.className = 'transactionleft';
+
+    // Create title span
+    const titleSpan = document.createElement('span');
+    titleSpan.className = 'title';
+    titleSpan.textContent = product_data.product_name;
+
+    // Create status span
+    const statusSpan = document.createElement('span');
+    statusSpan.className = 'status';
+    statusSpan.textContent = `SKU: ${product_data.sku} - Qty: ${product_data.quantity_sold}`;
+
+    transactionLeft.appendChild(titleSpan);
+    transactionLeft.appendChild(statusSpan);
+
+    // Create price span
+    const priceSpan = document.createElement('span');
+    priceSpan.className = 'price';
+    priceSpan.textContent = `${product_data.top} - ${product_data.total_revenue.toFixed(2)}`;
+
+    transactionItem.appendChild(transactionLeft);
+    transactionItem.appendChild(priceSpan);
+
+    return transactionItem;
 }

@@ -13,5 +13,6 @@ window.addEventListener('online', () => showToast('Connection Restored', 'You ar
 window.addEventListener('offline', () => showToast('Connection Lost', 'You are currently offline. Some features may be unavailable.', 1000));
 
 // Initial check
-checkUserConnection();
+var container = document.getElementById('homeTransactions');
+loadOrders(container, group=false);
 updateHomeTab();

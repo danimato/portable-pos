@@ -15,6 +15,7 @@ self.addEventListener('install', event => {
 
                 './res/beep.wav',
 
+                './scripts/algorithms.js',
                 './scripts/barcodePrinter.js',
                 './scripts/cartManager.js',
                 './scripts/db.js',
