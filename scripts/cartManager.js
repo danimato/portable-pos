@@ -301,7 +301,8 @@ async function qrFinish() {
         }
         console.table(transactionIdNum, transactionDateNum, paymentMethod, sum, discountAmount, total, cartListForDb, notes, taxAmount);
         await db.createOrder(transactionIdNum, transactionDateNum, paymentMethod, sum, discountAmount, total, cartListForDb, notes, taxAmount);
-        showToast('Transaction Added', `The transaction successfully completed.`,5000)
+        showToast('Transaction Added', `The transaction successfully completed.`,5000);
+        resetQrForm();
     }
     catch(e) {
         showToast('Transaction Error', `An error occured while finishing transaction: ${e}`,5000)

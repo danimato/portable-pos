@@ -45,9 +45,7 @@ function openTab(evt, tabName) {
         var container = document.getElementById('listOfTransactions');
         loadOrders(container, group=true);
     } else if (tabName === "home") {
-        var container = document.getElementById('homeTransactions');
-        loadOrders(container, group=false);
-        updateHomeTab();
+        homeLoader();
     }
     if (tabName != "qr") resetQrForm();
 }

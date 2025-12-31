@@ -12,7 +12,13 @@ function checkUserConnection() {
 window.addEventListener('online', () => showToast('Connection Restored', 'You are now online.', 1000));
 window.addEventListener('offline', () => showToast('Connection Lost', 'You are currently offline. Some features may be unavailable.', 1000));
 
-// Initial check
-var container = document.getElementById('homeTransactions');
-loadOrders(container, group=false);
-updateHomeTab();
+
+
+function homeLoader() {
+    var container = document.getElementById('homeTransactions');
+    loadOrders(container, group = false);
+    updateHomeTab();
+    var bestSellerContainer = document.getElementById("bestSeller");
+    loadBestSellers(bestSellerContainer);
+}
+homeLoader();
