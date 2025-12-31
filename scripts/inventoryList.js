@@ -40,7 +40,7 @@ async function tableRowTemplate(item, inventory) {
   // 🔥 FIX: Price is in inventory table, not products table
   const rawPrice = inventory && inventory.price != null ? Number(inventory.price) : null;
   priceTd.textContent = rawPrice != null
-    ? new Intl.NumberFormat('en-PH', { style: 'currency', currency: 'PHP' }).format(rawPrice)
+    ? cF(rawPrice)
     : '—';
   tr.appendChild(priceTd);
   

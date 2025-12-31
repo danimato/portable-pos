@@ -72,7 +72,7 @@ document.getElementById('qrInput').addEventListener('input', (event) => {
                     var priceEl = document.querySelector(`[data-product="${product.product_id}"] .cart-item-price`);
                     console.log(priceEl);
                     if (priceEl) {
-                        priceEl.innerText = "$" + (cartList[product.product_id].price * cartList[product.product_id].count).toFixed(2);
+                        priceEl.innerText = cF(cartList[product.product_id].price * cartList[product.product_id].count);
                     } else {
                         console.warn(`Price element not found for product: ${product.productId}`);
                     }

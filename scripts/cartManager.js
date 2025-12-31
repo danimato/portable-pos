@@ -50,7 +50,7 @@ function renderNewCartItem(product, inventory) {
     decrementBtn.addEventListener('click', function () {
         var newCount = cartList[product.product_id].count - 1;
         var newPrice = parseFloat(inventory.price) * newCount;
-        priceDiv.textContent = '$' + newPrice.toFixed(2);
+        priceDiv.textContent = cF(newPrice);
         if (newCount > 0) {
             cartList[product.product_id].count = newCount;
             countValue.textContent = newCount;
@@ -124,7 +124,7 @@ function renderNewCartItem(product, inventory) {
 
         var newCount = cartList[product.product_id].count - 1;
         var newPrice = parseFloat(inventory.price) * newCount;
-        priceDiv.textContent = '$' + newPrice.toFixed(2);
+        priceDiv.textContent = cF(newPrice);
 
         if (newCount > 0) {
             cartList[product.product_id].count = newCount;
@@ -149,7 +149,7 @@ function renderNewCartItem(product, inventory) {
     incrementBtn.addEventListener('click', function () {
         cartList[product.product_id].count++;
         var newPrice = parseFloat(inventory.price) * cartList[product.product_id].count;
-        priceDiv.textContent = '$' + newPrice.toFixed(2);
+        priceDiv.textContent = cF(newPrice);
         countValue.textContent = cartList[product.product_id].count;
     });
 
@@ -212,7 +212,7 @@ function renderNewCartItem(product, inventory) {
     // Helper function to update display
     function updateDisplay() {
         var newPrice = parseFloat(inventory.price) * cartList[product.product_id].count;
-        priceDiv.textContent = '$' + newPrice.toFixed(2);
+        priceDiv.textContent = cF(newPrice);
         countValue.textContent = cartList[product.product_id].count;
     }
 
@@ -226,7 +226,7 @@ function renderNewCartItem(product, inventory) {
     var priceDiv = document.createElement('span');
     priceDiv.className = 'cart-item-price';
     console.log("Inventory price:", inventory);
-    priceDiv.textContent = '$' + parseFloat(inventory.price).toFixed(2);
+    priceDiv.textContent = cF(inventory.price);
 
     productDiv.appendChild(counterContainer);
     right.appendChild(contentDiv);
@@ -273,7 +273,7 @@ function qrStage2() {
     for (product_id of Object.keys(cartList)) {
         sum += cartList[product_id].count * cartList[product_id].price;
     }
-    totalPaymentDue.innerText = sum.toFixed(2);
+    totalPaymentDue.innerText = cF(sum);
 }
 
 async function qrFinish() {

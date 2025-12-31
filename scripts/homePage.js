@@ -52,7 +52,7 @@ function summer(allOrders) {
     return transactionSum;
 }
 function updateFocusBoxValue(sum) {
-    document.getElementById("totalSalesValue").innerText = "$" + sum.toFixed(2);
+    document.getElementById("totalSalesValue").innerText = cF(sum);
 }
 
 
@@ -177,7 +177,7 @@ function bestSellerItemGen(product_data) {
     // Create price span
     const priceSpan = document.createElement('span');
     priceSpan.className = 'price';
-    priceSpan.textContent = `${product_data.top} - ${product_data.total_revenue.toFixed(2)}`;
+    priceSpan.textContent = `${product_data.top} - ${cF(product_data.total_revenue)}`;
 
     transactionItem.appendChild(transactionLeft);
     transactionItem.appendChild(priceSpan);

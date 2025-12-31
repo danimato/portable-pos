@@ -53,7 +53,7 @@ function createTransactionItem(order) {
     // Create price span
     const priceSpan = document.createElement('span');
     priceSpan.className = 'price';
-    priceSpan.textContent = `${order.total_amount.toFixed(2)}`;
+    priceSpan.textContent = cF(order.total_amount);
 
     transactionItem.appendChild(transactionLeft);
     transactionItem.appendChild(priceSpan);
