@@ -1,5 +1,5 @@
 const DB_NAME = 'EcommerceDB';
-const DB_VERSION = 4; // Updated version for cart removal and snowflake IDs
+const DB_VERSION = 5; // Updated version for soft delete fields
 
 class EcommerceDB {
     constructor() {
@@ -20,6 +20,7 @@ class EcommerceDB {
 
             request.onupgradeneeded = (e) => {
                 const db = e.target.result;
+                const oldVersion = e.oldVersion;
 
                 // Products store - core product information
                 if (!db.objectStoreNames.contains('products')) {
@@ -94,6 +95,45 @@ class EcommerceDB {
                     });
                     settingsStore.createIndex('setting_value', 'setting_value', { unique: false });
                 }
+
+                // Version 5: Add soft delete fields to existing products and inventory
+                if (oldVersion < 5) {
+                    const transaction = e.target.transaction;
+                    
+                    // Update existing products
+                    if (db.objectStoreNames.contains('products')) {
+                        const productsStore = transaction.objectStore('products');
+                        productsStore.openCursor().onsuccess = (event) => {
+                            const cursor = event.target.result;
+                            if (cursor) {
+                                const product = cursor.value;
+                                if (!product.hasOwnProperty('is_deleted')) {
+                                    product.is_deleted = false;
+                                    product.deleted_at = null;
+                                    cursor.update(product);
+                                }
+                                cursor.continue();
+                            }
+                        };
+                    }
+                    
+                    // Update existing inventory
+                    if (db.objectStoreNames.contains('inventory')) {
+                        const inventoryStore = transaction.objectStore('inventory');
+                        inventoryStore.openCursor().onsuccess = (event) => {
+                            const cursor = event.target.result;
+                            if (cursor) {
+                                const inventory = cursor.value;
+                                if (!inventory.hasOwnProperty('is_deleted')) {
+                                    inventory.is_deleted = false;
+                                    inventory.deleted_at = null;
+                                    cursor.update(inventory);
+                                }
+                                cursor.continue();
+                            }
+                        };
+                    }
+                }
             };
         });
     }
@@ -158,6 +198,16 @@ class EcommerceDB {
         });
     }
 
+    // Soft delete method
+    async softDelete(storeName, key) {
+        const item = await this.get(storeName, key);
+        if (!item) throw new Error('Item not found');
+        
+        item.is_deleted = true;
+        item.deleted_at = new Date().toISOString();
+        return this.update(storeName, item);
+    }
+
     async getByIndex(storeName, indexName, value) {
         const db = await this.init();
         return new Promise((resolve, reject) => {
@@ -201,7 +251,9 @@ class EcommerceDB {
             product_name: name,
             description,
             category,
-            sku
+            sku,
+            is_deleted: false,
+            deleted_at: null
         });
         return productId;
     }
@@ -210,7 +262,9 @@ class EcommerceDB {
         return this.add('inventory', {
             product_id: productId,
             price,
-            current_stock: stock
+            current_stock: stock,
+            is_deleted: false,
+            deleted_at: null
         });
     }
 

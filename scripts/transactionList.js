@@ -144,19 +144,47 @@ async function showTransacHistoryForm(evt) {
         order_data = await db.get("orders", transactionId);
         order_items = await db.getOrderItems(transactionId);
         console.log(order_items);
-        renderTransacHistoryForm(order_data, order_items);
+        await renderTransacHistoryForm(order_data, order_items);
     } catch (e) {
         showToast("Transaction History Form Error", `An error occured while showing the transaction history form: ${e}`, 5000);
     }
 }
-var orderDataEl = document.getElementById("orderData");
-var orderItemsEl = document.getElementById("orderItems");
+//var orderDataEl = document.getElementById("orderData");
+//var orderItemsPreEl = document.getElementById("orderItemsPre");
 
-function renderTransacHistoryForm(order_data, order_items) {
+async function renderTransacHistoryForm(order_data, order_items) {
+    try {
     document.getElementById('overlay').classList.add('active');
     document.getElementById('transacHistoryForm').classList.add('active');
-    orderDataEl.innerText = JSON.stringify(order_data, null, 4);
-    orderItemsEl.innerText = JSON.stringify(order_items, null, 4);
+
+    //orderDataEl.innerText = JSON.stringify(order_data, null, 4);
+
+    //orderItemsPreEl.innerText = JSON.stringify(order_items, null, 4);
+
+    console.log(document.getElementById("transactionId"));
+    document.getElementById("transactionId").innerText = order_data["order_id"];
+    var orderItemsEl = document.getElementById("orderItems");
+    orderItemsEl.innerHTML = '';
+
+    for (const order_item of order_items) {
+        const product_data = await db.get("products", parseInt(order_item.product_id));
+        console.log(product_data);
+
+        if (!product_data) {
+            console.error("Product not found for ID:", order_item.product_id);
+            continue;
+        }
+
+        // Merge data if needed
+        const combined = { ...order_item, ...product_data };
+        orderItemsEl.appendChild(orderItemGen(combined));
+    }
+
+    document.getElementById("totalRevenue").innerText = cF(order_data.total_amount);
+}
+catch(e) {
+    showToast('Transaction History Form Error', `An error occured while loading the history form: ${e}`, 5000);
+}
 }
 function hideTransacHistoryForm() {
     document.getElementById('overlay').classList.remove('active');
@@ -165,3 +193,36 @@ function hideTransacHistoryForm() {
 
 // Close form when clicking overlay
 document.getElementById('overlay').addEventListener('click', hideTransacHistoryForm);
+
+
+function orderItemGen(product_data) {
+    const transactionItem = document.createElement('div');
+    transactionItem.className = 'transactionItem';
+
+    // Create left section
+    const transactionLeft = document.createElement('div');
+    transactionLeft.className = 'transactionleft';
+
+    // Create title span
+    const titleSpan = document.createElement('span');
+    titleSpan.className = 'title';
+    titleSpan.textContent = `x${product_data.quantity} ${product_data.product_name}`;
+
+    // Create status span
+    const statusSpan = document.createElement('span');
+    statusSpan.className = 'status';
+    statusSpan.textContent = `SKU: ${product_data.sku}`;
+
+    transactionLeft.appendChild(titleSpan);
+    transactionLeft.appendChild(statusSpan);
+
+    // Create price span
+    const priceSpan = document.createElement('span');
+    priceSpan.className = 'price';
+    priceSpan.textContent = `${cF(product_data.price * product_data.quantity)}`;
+
+    transactionItem.appendChild(transactionLeft);
+    transactionItem.appendChild(priceSpan);
+
+    return transactionItem;
+}

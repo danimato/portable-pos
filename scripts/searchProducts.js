@@ -10,6 +10,7 @@ function loadAllProducts(forceRefresh = false) {
 
     console.log("Loading all products from database");
     return db.getAll("products").then(products => {
+        products = products.filter(p => !p.is_deleted);
         console.log(`Loaded ${products.length} products from database`);
         cachedProducts = products; // Cache the results
         return products;

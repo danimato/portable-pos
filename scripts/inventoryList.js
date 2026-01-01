@@ -1,4 +1,4 @@
-    // safer tbody lookup: uses the <tbody> if present, otherwise falls back
+// safer tbody lookup: uses the <tbody> if present, otherwise falls back
 const inventoryListTbody =
   document.querySelector('#inventoryList tbody') ||
   (document.getElementById('inventoryList') && document.getElementById('inventoryList').children[0]);
@@ -9,7 +9,7 @@ function clearInventoryListRender() {
 
 async function tableRowTemplate(item, inventory) {
   const tr = document.createElement('tr');
-  
+
   const checkboxTd = document.createElement('td');
   const checkbox = document.createElement('input');
   checkbox.type = 'checkbox';
@@ -17,7 +17,7 @@ async function tableRowTemplate(item, inventory) {
   checkboxTd.className = 'inventoryCheckbox';
   checkboxTd.appendChild(checkbox);
   tr.appendChild(checkboxTd);
-  
+
   const nameTd = document.createElement('td');
   const productNameSpan = document.createElement('span');
   productNameSpan.textContent = item.product_name ?? '(no name)';
@@ -30,12 +30,12 @@ async function tableRowTemplate(item, inventory) {
   nameTd.appendChild(productNameSpan);
   nameTd.appendChild(skuSpan);
   tr.appendChild(nameTd);
-  
+
   const stockTd = document.createElement('td');
   const stock = inventory && inventory.current_stock != null ? inventory.current_stock : 0;
   stockTd.textContent = stock;
   tr.appendChild(stockTd);
-  
+
   const priceTd = document.createElement('td');
   // 🔥 FIX: Price is in inventory table, not products table
   const rawPrice = inventory && inventory.price != null ? Number(inventory.price) : null;
@@ -43,7 +43,7 @@ async function tableRowTemplate(item, inventory) {
     ? cF(rawPrice)
     : '—';
   tr.appendChild(priceTd);
-  
+
   return tr;
 }
 
@@ -55,16 +55,19 @@ async function refreshInventoryList() {
       <th>Stock</th>
       <th>Cost</th>
     </tr>`;
-  
-  const items = await db.getAll('products');
-  const inventory = await db.getAll('inventory');
-  
+
+  var items = await db.getAll('products');
+  items = items.filter(p => !p.is_deleted);
+
+  var inventory = await db.getAll('inventory');
+  inventory = inventory.filter(p => !p.is_deleted);
+
   // normalize keys to strings to avoid type-mismatch issues
   const inventoryMap = new Map();
   for (const inv of inventory) {
     inventoryMap.set(String(inv.product_id), inv);
   }
-  
+
   for (const item of items) {
     // 🔥 FIX: Use item.product_id instead of item.id
     const inv = inventoryMap.get(String(item.product_id));
@@ -132,7 +135,7 @@ if (inventoryListTbody) {
         document.getElementById('deleteSelectedBtn').style.display = 'flex';
         document.getElementById('showBarcodeOfSelectedBtn').style.display = 'flex';
         document.getElementById('editBtn').style.display = 'flex';
-        console.log('Total rows (excluding header):', count);  
+        console.log('Total rows (excluding header):', count);
       }
       else if (selectedRows.length === count) {
         console.log('All items selected');
@@ -180,22 +183,22 @@ if (inventoryListTbody) {
 async function handleNewInventoryItem(data) {
   debugger
   console.log(selectedRows);
-  var existingProduct = selectedRows.length === 1 
-    ? await db.get('products', Number(selectedRows[0])) 
+  var existingProduct = selectedRows.length === 1
+    ? await db.get('products', Number(selectedRows[0]))
     : null;
   console.log("existingProduct:", existingProduct);
   if (existingProduct) {
     console.log("editing only")
     await db.update("products", {
-      product_id: existingProduct.product_id, 
-      product_name: data.productName, 
-      description: data.description, 
-      category: data.productType, 
+      product_id: existingProduct.product_id,
+      product_name: data.productName,
+      description: data.description,
+      category: data.productType,
       sku: data.sku
     });
     await db.update("inventory", {
-      product_id: existingProduct.product_id, 
-      price: data.price, 
+      product_id: existingProduct.product_id,
+      price: data.price,
       current_stock: data.stock
     });
     // hide inventory form after editing
@@ -210,7 +213,7 @@ async function handleNewInventoryItem(data) {
     showToast('Product Added', 'New product added successfully.', 5000);
 
   }
-  
+
   refreshInventoryList();
 }
 
@@ -274,7 +277,7 @@ document.addEventListener('click', (event) => {
     document.getElementById('deleter'),
     document.getElementById('inventoryForm')
   ];
-  
+
   if (!ignoreList.some(el => el.contains(event.target))) {
     resetSelected();
   }
@@ -315,11 +318,12 @@ function deleteSelectedItems() {
   });
 }
 
-function deleteSelectedInventoryItems() {
-  selectedRows.forEach(async (productId) => {
-    await db.delete('products', Number(productId));
-    await db.delete('inventory', Number(productId));
-  });
+async function deleteSelectedInventoryItems() {
+  for (const productId of selectedRows) {
+    await db.softDelete('products', Number(productId));
+    await db.softDelete('inventory', Number(productId));
+  }
+  
   resetSelected();
   refreshInventoryList();
   hideDeletePrompt();
@@ -348,7 +352,7 @@ function printBarcodesToPdf() {
 }
 
 // Close overflow menu when clicking outside
-document.addEventListener('click', function(event) {
+document.addEventListener('click', function (event) {
   const menu = document.getElementById('overflowMenu');
   const inventoryActionBar = document.getElementById('inventoryActionBar');
   const img = document.getElementById('overflowMenuImg');

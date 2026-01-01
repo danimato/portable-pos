@@ -100,8 +100,8 @@ async function getDetailedProductSales() {
     await db.init();
 
     const orderItems = await db.getAll('order_items');
-    const products = await db.getAll('products');
-
+    var products = await db.getAll('products');
+    products = products.filter(p => !p.is_deleted);
     // Aggregate quantities by product_id
     const salesByProduct = orderItems.reduce((acc, item) => {
         const productId = item.product_id;

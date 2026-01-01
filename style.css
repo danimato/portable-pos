@@ -809,7 +809,8 @@ input[type=number] {
     box-shadow: 0 4px 6px rgba(8, 145, 178, 0.3);
 }
 
-#homeTransactionsParent, #bestSellerParent {
+#homeTransactionsParent,
+#bestSellerParent {
     display: block;
     height: 250px;
     margin: 18px;
@@ -828,7 +829,8 @@ input[type=number] {
     /* Firefox */
 }
 
-#homeTransactions .transactionItem, #bestSeller .transactionItem {
+#homeTransactions .transactionItem,
+#bestSeller .transactionItem {
     border-bottom: 1px solid var(--bg-light);
     padding: var(--spacing-xs) 0;
     margin: var(--spacing-xs) 0;
@@ -838,5 +840,16 @@ h4 {
     color: var(--primary-blue);
     margin: var(--spacing-lg) var(--spacing-xl) 0;
     font-size: var(--text-lg);
-    padding:0;
+    padding: 0;
+}
+
+#transacHistoryForm #totalRevenue {
+    font-size: var(--text-lg);
+    font-weight: var(--weight-semibold);
+
+}
+
+#amountDueParent {
+    display: block;
+    text-align: right;
 }
