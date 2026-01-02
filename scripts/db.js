@@ -1,5 +1,5 @@
 const DB_NAME = 'EcommerceDB';
-const DB_VERSION = 5; // Updated version for soft delete fields
+const DB_VERSION = 6; // Updated version for inventory history
 
 class EcommerceDB {
     constructor() {
@@ -99,7 +99,7 @@ class EcommerceDB {
                 // Version 5: Add soft delete fields to existing products and inventory
                 if (oldVersion < 5) {
                     const transaction = e.target.transaction;
-                    
+
                     // Update existing products
                     if (db.objectStoreNames.contains('products')) {
                         const productsStore = transaction.objectStore('products');
@@ -116,7 +116,7 @@ class EcommerceDB {
                             }
                         };
                     }
-                    
+
                     // Update existing inventory
                     if (db.objectStoreNames.contains('inventory')) {
                         const inventoryStore = transaction.objectStore('inventory');
@@ -133,6 +133,18 @@ class EcommerceDB {
                             }
                         };
                     }
+                }
+
+                // v6: added inventory history
+                // Inventory History store - track stock changes
+                if (!db.objectStoreNames.contains('inventory_history')) {
+                    const inventoryHistoryStore = db.createObjectStore('inventory_history', {
+                        keyPath: 'history_id',
+                        autoIncrement: true
+                    });
+                    inventoryHistoryStore.createIndex('product_id', 'product_id', { unique: false });
+                    inventoryHistoryStore.createIndex('change_date', 'change_date', { unique: false });
+                    inventoryHistoryStore.createIndex('change_type', 'change_type', { unique: false });
                 }
             };
         });
@@ -202,7 +214,7 @@ class EcommerceDB {
     async softDelete(storeName, key) {
         const item = await this.get(storeName, key);
         if (!item) throw new Error('Item not found');
-        
+
         item.is_deleted = true;
         item.deleted_at = new Date().toISOString();
         return this.update(storeName, item);
@@ -330,6 +342,22 @@ class EcommerceDB {
             promo_id: promoId,
             discount_amount: discountAmount
         });
+    }
+
+    async logInventoryChange(productId, changeType, quantityChange, previousStock, newStock, notes = '') {
+        return this.add('inventory_history', {
+            product_id: productId,
+            change_type: changeType, // e.g., 'sale', 'restock', 'adjustment', 'return'
+            quantity_change: quantityChange,
+            previous_stock: previousStock,
+            new_stock: newStock,
+            change_date: new Date().toISOString(),
+            notes: notes
+        });
+    }
+
+    async getInventoryHistory(productId) {
+        return this.getByIndex('inventory_history', 'product_id', productId);
     }
 }
 
