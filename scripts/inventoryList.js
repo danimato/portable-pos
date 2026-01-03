@@ -30,9 +30,10 @@ async function tableRowTemplate(item, inventory) {
   nameTd.appendChild(productNameSpan);
   nameTd.appendChild(skuSpan);
   tr.appendChild(nameTd);
-
+  actualStock = await getActualStock(item.product_id);
+  
   const stockTd = document.createElement('td');
-  const stock = inventory && inventory.current_stock != null ? inventory.current_stock : 0;
+  const stock = inventory && inventory.current_stock != null && actualStock ? actualStock : 0;
   stockTd.textContent = stock;
   tr.appendChild(stockTd);
 
@@ -181,14 +182,20 @@ if (inventoryListTbody) {
   inventoryListTbody.addEventListener('click', handleRowClick);
 }
 async function handleNewInventoryItem(data) {
-  debugger
   console.log(selectedRows);
   var existingProduct = selectedRows.length === 1
     ? await db.get('products', Number(selectedRows[0]))
     : null;
   console.log("existingProduct:", existingProduct);
+
   if (existingProduct) {
     console.log("editing only")
+
+    // Get current stock BEFORE updating
+    const currentInventory = await db.get('inventory', existingProduct.product_id);
+    const previousStock = currentInventory.current_stock;
+
+    // Update product and inventory
     await db.update("products", {
       product_id: existingProduct.product_id,
       product_name: data.productName,
@@ -201,19 +208,42 @@ async function handleNewInventoryItem(data) {
       price: data.price,
       current_stock: data.stock
     });
-    // hide inventory form after editing
+
+    // Log the stock change
+    const stockChange = data.stock - previousStock;
+    await db.logInventoryChange(
+      existingProduct.product_id,
+      'adjustment',
+      stockChange,
+      previousStock,
+      data.stock,
+      `Stock adjusted`
+    );
+
     hideInventoryForm();
     clearEntries();
     resetSelected();
     showToast('Product Edited', 'Product edited successfully.', 5000);
+
   } else {
     console.log("new product detected")
     const productId = await db.addProduct(data.productName, data.description, data.productType, data.sku);
     await db.addInventory(productId, data.price, data.stock);
-    showToast('Product Added', 'New product added successfully.', 5000);
 
+    // Log initial stock
+    await db.logInventoryChange(
+      productId,
+      'initial_stock',
+      data.stock,
+      0,
+      data.stock,
+      `Initial stock added`
+    );
+
+    showToast('Product Added', 'New product added successfully.', 5000);
   }
 
+  await updateHistoryTable(); // Refresh history display
   refreshInventoryList();
 }
 
@@ -323,7 +353,7 @@ async function deleteSelectedInventoryItems() {
     await db.softDelete('products', Number(productId));
     await db.softDelete('inventory', Number(productId));
   }
-  
+
   resetSelected();
   refreshInventoryList();
   hideDeletePrompt();
@@ -361,3 +391,63 @@ document.addEventListener('click', function (event) {
     menu.style.display = 'none';
   }
 });
+
+async function getLastUpdate(product_id) {
+  const product_data = await db.get('products', product_id);
+  const inventory_data = await db.get('inventory', product_id);
+  const product_history = await db.getInventoryHistory(product_id);
+
+  // Get the most recent history entry
+  const last_change = product_history.length > 0
+    ? product_history.sort((a, b) => new Date(b.change_date) - new Date(a.change_date))[0]
+    : null;
+
+  return {
+    last_restock: last_change ? last_change.change_date : null,
+    current_stock: inventory_data ? inventory_data.current_stock : 0,
+    timestamp: last_change ? new Date(last_change.change_date).toLocaleString() : 'No history',
+    change_type: last_change ? last_change.change_type : null,
+    quantity_change: last_change ? last_change.quantity_change : 0,
+    product_name: product_data ? product_data.product_name : 'Unknown'
+  };
+}
+
+// flow:
+// 1. get all order items of some product
+// 2. get last update of product restock
+// 3. filter all order items based on the timestamp from the last update
+// 4. sum all orders and decide whether to still show that product
+//  - if available
+//    normal operation
+//  - if almost running out,
+//    warn user, add warnings, add settings to use a threshold system for how much before warning
+//  - if run out
+//    hide product from searches
+//    fail scan because no more product exists, add a quick button to add inventory quickly
+
+async function getActualStock(product_id) {
+  const currentData = await getLastUpdate(product_id);
+  const orderItemData = await db.getByIndex("order_items", "product_id", String(product_id));
+
+  const threshold = new Date(currentData.last_restock);
+  const ordersAfterRestock = orderItemData.filter((order_item) => {
+    const orderTimestamp = getTimestampFromFlakeId(order_item.order_id, flake.timeOffset);
+    return orderTimestamp >= threshold;
+  });
+  const totalSold = ordersAfterRestock.reduce((sum, item) => sum + item.quantity, 0);
+  const actualStock = currentData.current_stock - totalSold;
+  console.log(totalSold);
+  console.log(actualStock);
+  return actualStock;
+}
+
+async function getStockDecision(current_stock, remaining_stock, threshold_type, threshold) {
+  if (remaining_stock === 0) {
+    return "RESTOCK";
+  } else if ((threshold_type == "%" && (remaining_stock / current_stock) <= threshold) ||
+             (threshold_type == "+" && current_stock <= threshold)) {
+    return "WARNING";
+  } else {
+    return "OK";
+  }
+}

@@ -40,8 +40,10 @@ function updateEntries(productId) {
 
             db.get("inventory", productId).then(inventory => {
                 if (inventory) {
-                    document.getElementById('price').value = inventory.price;
-                    document.getElementById('stock').value = inventory.current_stock;
+                    getActualStock(productId).then(actualStock => {
+                        document.getElementById('price').value = inventory.price;
+                        document.getElementById('stock').value = actualStock;
+                    });
                 }
             });
         }
@@ -62,44 +64,34 @@ function clearEntries() {
 }
 
 // Confirm and get form data
-function confirmForm() {
+async function confirmForm() {
     const data = getFormData();
-    
+
     if (!data.sku || !data.productName) {
         showToast('Empty Fields Error', 'Please fill in the SKU and Product Name fields.', 5000);
         return;
     }
 
     if (data.price < 0) {
-        showToast('Price Input Error','Price cannot be negative.',5000);
+        showToast('Price Input Error', 'Price cannot be negative.', 5000);
         return;
     }
 
     if (data.stock < 0) {
-        showToast('Stock Input Error','Stock cannot be negative.',5000);
+        showToast('Stock Input Error', 'Stock cannot be negative.', 5000);
+        return; // Added missing return
     }
 
-    // Add to history
-    inventoryHistory.push({
-        sku: data.sku,
-        date: data.date,
-        product: data.productName,
-        qty: data.stock
-    });
-
-    // Update history table
-    updateHistoryTable();
-
     console.log('Form Data:', data);
-    handleNewInventoryItem(data);
-    
+    await handleNewInventoryItem(data); // Just add await here
+
     clearEntries();
 }
 
 // Get all form data via callback
 function getFormData(callback) {
 
-    
+
 
     const data = {
         sku: document.getElementById('sku').value,
@@ -121,7 +113,7 @@ function getFormData(callback) {
 // Update history table
 function updateHistoryTable() {
     const tbody = document.getElementById('historyTable');
-    
+
     if (inventoryHistory.length === 0) {
         tbody.innerHTML = '<tr><td colspan="2" style="text-align: center; color: #999;">No history available</td></tr>';
         return;
@@ -137,16 +129,16 @@ function updateHistoryTable() {
 
 var priceInput = document.getElementById("price");
 var stockInput = document.getElementById("stock");
-priceInput.addEventListener("blur", (e)=>{
+priceInput.addEventListener("blur", (e) => {
     if (priceInput.value >= 0) return;
-    showToast('Price Input Error','Price cannot be negative.',5000);
+    showToast('Price Input Error', 'Price cannot be negative.', 5000);
     e.preventDefault();
     e.target.focus();
 });
 
-stockInput.addEventListener("blur", (e)=>{
+stockInput.addEventListener("blur", (e) => {
     if (stockInput.value >= 0) return;
-    showToast('Stock Input Error','Stock cannot be negative.',5000);
+    showToast('Stock Input Error', 'Stock cannot be negative.', 5000);
     e.preventDefault();
     e.target.focus();
 });
