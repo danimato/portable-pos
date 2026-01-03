@@ -427,8 +427,6 @@ button {
     overflow-y: hidden;
 }
 
-#deleter {}
-
 #printArea {
     display: none;
 }
@@ -506,8 +504,7 @@ input::-webkit-inner-spin-button {
 }
 
 input[type=number] {
-    -moz-appearance: textfield;
-    /* Firefox */
+    appearance: textfield;
 }
 
 .cart-item {
