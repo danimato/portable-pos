@@ -10,7 +10,7 @@
     --color-success-hover: #45a049;
     --color-danger: #de3a2e;
     --color-white: #fff;
-    
+
     /* Neutral Colors */
     --color-gray-50: #f8f8f8;
     --color-gray-100: #f5f5f5;
@@ -23,7 +23,7 @@
     --color-gray-800: #666;
     --color-gray-900: #555;
     --color-gray-950: #333;
-    
+
     /* Semantic Colors */
     --color-text-primary: var(--color-gray-950);
     --color-text-secondary: var(--color-gray-900);
@@ -31,13 +31,13 @@
     --color-text-muted: rgba(0, 0, 0, 0.6);
     --color-border: var(--color-gray-500);
     --color-border-light: var(--color-gray-300);
-    
+
     /* Background Colors */
     --bg-body: linear-gradient(180deg, rgba(212, 243, 255, 1) 0%, rgba(252, 254, 255, 1) 100%);
     --bg-overlay: rgba(0, 0, 0, 0.5);
     --bg-overlay-light: rgba(255, 255, 255, 0.2);
     --bg-toast: #333;
-    
+
     /* Spacing Scale */
     --space-1: 6px;
     --space-2: 8px;
@@ -48,7 +48,7 @@
     --space-7: 18px;
     --space-8: 20px;
     --space-9: 24px;
-    
+
     /* Typography */
     --font-family: "Lexend Deca", sans-serif;
     --font-size-xs: 10px;
@@ -61,18 +61,19 @@
     --font-weight-medium: 500;
     --font-weight-semibold: 600;
     --font-weight-bold: 700;
-    
+
     /* Border Radius */
     --radius-sm: 4px;
     --radius-md: 8px;
     --radius-lg: 17px;
     --radius-xl: 40px;
     --radius-full: 50px;
-    
+
     /* Transitions */
+    --transition-faster: 0.1s;
     --transition-fast: 0.2s;
     --transition-smooth: 0.5s ease-in-out;
-    
+
     /* Shadows */
     --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
     --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.2);
@@ -116,6 +117,50 @@ input::-webkit-inner-spin-button {
 
 input[type=number] {
     appearance: textfield;
+}
+
+input[type=checkbox] {
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border: 3px solid black;
+    background: white;
+    margin: 4px;
+    cursor: pointer;
+    outline: none;
+    transition: var(--transition-fast);
+}
+
+input[type=checkbox]:checked {
+    background: black;
+    border: black;
+}
+
+input[type=checkbox]:active,
+input[type=checkbox]:hover,
+input[type=checkbox]:visited,
+input[type=checkbox]:focus {
+    border: black 3px solid;
+}
+
+input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 0;
+    border: 1px solid var(--color-primary);
+    background-color: var(--color-white);
+    cursor: pointer;
+}
+
+input[type=range]::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    border-radius: 0;
+    border: 1px solid var(--color-primary);
+    background-color: var(--color-white);
+    cursor: pointer;
 }
 
 /* ========================================
@@ -841,6 +886,11 @@ button {
     justify-content: space-between;
     padding: var(--space-2);
     border-bottom: 1px solid var(--color-border-light);
+    transition: var(--transition-faster);
+}
+
+.settings-item:active {
+    background-color: var(--bg-overlay);
 }
 
 .settings-item .title {
@@ -850,6 +900,12 @@ button {
 
 .settings-item .data {
     color: var(--color-text-tertiary);
+}
+
+.actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 /* ========================================
@@ -864,7 +920,7 @@ button {
 }
 
 @media print {
-    body > *:not(#printArea) {
+    body>*:not(#printArea) {
         display: none !important;
     }
 

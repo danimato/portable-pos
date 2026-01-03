@@ -12,7 +12,6 @@
   <link rel="stylesheet"
     href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
   <style>
-  
     .material-symbols-outlined {
       font-variation-settings:
         'FILL' 0,
@@ -115,7 +114,7 @@
     </ul>
   </div>
   <div id="inventory" class="tabcontent">
-      <h3>Inventory</h3>
+    <h3>Inventory</h3>
     <button id="inventoryAdd" onclick="showInventoryForm()">+</button>
     <table id="inventoryList">
       <tr>
@@ -171,6 +170,15 @@
       <div class="actions">
         <input type="checkbox" id="deleteDontAskAgain-settings" name="deleteDontAskAgainCheckbox"
           onchange="toggleDeleteDontAskAgain(event)">
+      </div>
+    </div>
+    <div id="deleteDontAskAgainEl" class="settings-item">
+      <div class="text-only">
+        <span class="title">Scaling</span><br>
+        <span class="data" id="zoom-text">Adjusts the scaling of the app.</span>
+      </div>
+      <div class="actions">
+        <input type="range" min="80" max="120" value="100" step="10" id="zoom-input" onchange="console.log('tea')">
       </div>
     </div>
     <ul>

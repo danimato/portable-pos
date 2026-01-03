@@ -51,3 +51,20 @@ async function toggleDeleteDontAskAgain(event) {
         console.error('Error saving deleteDontAskAgain setting:', error);
     }
 }
+
+function setupCheckboxToggle(parentElement, checkboxElement) {
+  parentElement.addEventListener('click', function(e) {
+    // Don't toggle if the click was on the checkbox itself
+    if (e.target === checkboxElement) {
+      return;
+    }
+    
+    // Toggle the checkbox
+    checkboxElement.checked = !checkboxElement.checked;
+    
+    // Dispatch the input event
+    checkboxElement.dispatchEvent(new Event('input', { bubbles: true }));
+  });
+}
+
+setupCheckboxToggle(document.getElementById("deleteDontAskAgainEl"), document.getElementById("deleteDontAskAgain-settings"))
