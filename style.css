@@ -111,7 +111,6 @@ body {
 h3 {
     color: var(--white);
     text-align: center;
-    background-color: var(--primary-blue);
     padding: var(--spacing-lg);
     margin: 0;
     position: -webkit-sticky;
@@ -839,4 +838,21 @@ h4 {
     margin: var(--spacing-lg) var(--spacing-xl) 0;
     font-size: var(--text-lg);
     padding:0;
+}
+
+.aheader {
+    background: linear-gradient(135deg, #0A7FAA 0%, #1E8FB0 100%);
+    border-radius: 17px;
+    padding: 16px 24px;
+    margin-bottom: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    padding-top: 3px;
+    padding-bottom: 3px;
+    
+}
+
+#inventory {
+    padding-right: 20px;
+    padding-left: 20px;
+    padding-top: 115px;
 }
