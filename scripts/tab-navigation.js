@@ -32,15 +32,7 @@ function openTab(evt, tabName) {
         clearInventoryListRender();
         refreshInventoryList();
     } else if (tabName === 'qr') {
-        // Refresh product cache when QR tab is focused
-        refreshProductCache().then(() => {
-            console.log("Product cache refreshed for QR tab");
-            // Any other QR tab initialization code here
-        });
-        transactionIdNum = flake.gen();
-        transactionDateNum = new Date().toISOString();
-        console.log("transaction Id: ", transactionIdNum);
-        document.getElementById("transactionId").innerText = transactionIdNum;
+        resetQrForm();
     } else if (tabName === "activity") {
         var container = document.getElementById('listOfTransactions');
         loadOrders(container, group=true);
