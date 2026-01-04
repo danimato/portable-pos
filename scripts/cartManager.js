@@ -290,7 +290,7 @@ async function qrFinish() {
         var notes = '';
         total = sum - discountAmount + taxAmount;
         var paymentMethod = document.getElementById("modeOfPaymentChoice").value;
-        
+
         cartListForDb = [];
         for (product_id of Object.keys(cartList)) {
             cartListForDb.push({
@@ -301,11 +301,11 @@ async function qrFinish() {
         }
         console.table(transactionIdNum, transactionDateNum, paymentMethod, sum, discountAmount, total, cartListForDb, notes, taxAmount);
         await db.createOrder(transactionIdNum, transactionDateNum, paymentMethod, sum, discountAmount, total, cartListForDb, notes, taxAmount);
-        showToast('Transaction Added', `The transaction successfully completed.`,5000);
+        showToast('Transaction Added', `The transaction successfully completed.`, 5000);
         resetQrForm();
     }
-    catch(e) {
-        showToast('Transaction Error', `An error occured while finishing transaction: ${e}`,5000)
+    catch (e) {
+        showToast('Transaction Error', `An error occured while finishing transaction: ${e}`, 5000)
     }
 }
 
@@ -327,10 +327,17 @@ function resetQrForm() {
     cart.innerHTML = '';
     cartList = [];
     updateCheckoutButton();
-    
+
     const input = document.getElementById('qrInput');
     input.value = '';
     input.dispatchEvent(new Event('input', { bubbles: true }));
-
-
+    // Refresh product cache when QR tab is focused
+    refreshProductCache().then(() => {
+        console.log("Product cache refreshed for QR tab");
+        // Any other QR tab initialization code here
+    });
+    transactionIdNum = flake.gen();
+    transactionDateNum = new Date().toISOString();
+    console.log("transaction Id: ", transactionIdNum);
+    document.getElementById("transactionId").innerText = transactionIdNum;
 }
