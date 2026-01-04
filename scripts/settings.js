@@ -1,6 +1,6 @@
 const versionString = "v0.0.0-alpha.1-home";
 var deleteDontAskAgain = false;
-
+var zoom = 100;
 // Sync all checkboxes with matching IDs to a value
 function syncCheckboxes(ids, value) {
     ids.forEach(id => {
@@ -12,10 +12,10 @@ function syncCheckboxes(ids, value) {
 // Generic toggle function for any boolean setting
 async function toggleSetting(settingKey, checkboxIds, updateCallback, event) {
     const newValue = event.target.checked;
-    
+
     updateCallback(newValue);
     syncCheckboxes(checkboxIds, newValue);
-    
+
     try {
         await db.update('settings', {
             setting_key: settingKey,
@@ -39,11 +39,11 @@ async function toggleDeleteDontAskAgain(event) {
 // Generic checkbox toggle setup
 function setupCheckboxToggle(parentElement, checkboxElement) {
     if (!parentElement || !checkboxElement) return;
-    
-    parentElement.addEventListener('click', function(e) {
+
+    parentElement.addEventListener('click', function (e) {
         // Don't toggle if the click was on the checkbox itself
         if (e.target === checkboxElement) return;
-        
+
         // Toggle the checkbox and dispatch event
         checkboxElement.checked = !checkboxElement.checked;
         checkboxElement.dispatchEvent(new Event('input', { bubbles: true }));
@@ -69,9 +69,37 @@ document.addEventListener('DOMContentLoaded', async () => {
         console.error('Error loading deleteDontAskAgain setting:', error);
     }
 
+    var zoomInput = document.getElementById("zoom-input");
+    // Load zoom setting
+    try {
+        const setting = await db.get('settings', 'zoom');
+        if (setting) {
+            zoom = setting.setting_value;
+            document.body.style.zoom = zoom + "%";
+            zoomInput.value = zoom;
+        }
+    } catch (error) {
+        console.error('Error loading deleteDontAskAgain setting:', error);
+    }
+
     // Setup checkbox toggles
     setupCheckboxToggle(
         document.getElementById('deleteDontAskAgainEl'),
         document.getElementById('deleteDontAskAgain-settings')
     );
+
+    zoomInput.addEventListener("change", async () => {
+        zoom = zoomInput.value;
+        document.body.style.zoom = zoom + "%";
+
+
+        try {
+            await db.update('settings', {
+                setting_key: "zoom",
+                setting_value: zoomInput.value
+            });
+        } catch (error) {
+            console.error(`Error saving ${settingKey}:`, error);
+        }
+    })
 });
