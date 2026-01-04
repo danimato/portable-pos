@@ -182,11 +182,26 @@
   </div>
 
   <div class="tab">
-    <button class="tablinks" onclick="openTab(event, 'home')">Home</button>
-    <button class="tablinks" onclick="openTab(event, 'inventory')">Inventory</button>
-    <button class="tablinks" onclick="openTab(event, 'qr')">QR</button>
-    <button class="tablinks" onclick="openTab(event, 'activity')">Activity</button>
-    <button class="tablinks" onclick="openTab(event, 'settings')">Settings</button>
+    <button class="tablinks" onclick="openTab(event, 'home')">
+      <span class="material-symbols-outlined">home</span>
+      <span id="home-text">Home</span>
+    </button>
+    <button class="tablinks" onclick="openTab(event, 'inventory')">
+      <span class="material-symbols-outlined">inventory_2</span>
+      <span id="inventory-text"></span>Inventory
+    </button>
+    <button class="tablinks" onclick="openTab(event, 'qr')">
+      <span class="material-symbols-outlined">barcode_scanner</span>
+      <span id="qr-text">QR</span>
+    </button>
+    <button class="tablinks" onclick="openTab(event, 'activity')">
+      <span class="material-symbols-outlined">receipt</span>
+      <span id="transactions-text"></span>Activity
+    </button>
+    <button class="tablinks" onclick="openTab(event, 'settings')">
+      <span class="material-symbols-outlined">settings</span>
+      <span id="settings-text"></span>Settings
+    </button>
   </div>
 
   <!-- html -->

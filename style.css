@@ -74,6 +74,12 @@ body {
 }
 
 /* Tab Navigation */
+.tab .tablinks span{
+    display: block;
+    align: center;
+    color: var(--primary-blue)!important;
+}
+
 .tab {
     overflow: hidden;
     background-color: var(--bg-light);
