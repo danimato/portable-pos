@@ -202,7 +202,7 @@ h4 {
 /* Tab Navigation */
 .tab .tablinks span{
     display: block;
-    align: center;
+    text-align: center;
     color: var(--primary-blue)!important;
 }
 
