@@ -142,3 +142,10 @@ stockInput.addEventListener("blur", (e) => {
     e.preventDefault();
     e.target.focus();
 });
+
+var randomizer = document.getElementById("randomizer");
+
+randomizer.addEventListener("click", () => {
+    var randomNumber = rngForSKU();
+    document.getElementById('sku').value = randomNumber;
+})
