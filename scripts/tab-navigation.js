@@ -35,7 +35,15 @@ function openTab(evt, tabName) {
         resetQrForm();
     } else if (tabName === "activity") {
         var container = document.getElementById('listOfTransactions');
-        loadOrders(container, group=true);
+        loadOrders(container, group = true).then((orders) => {
+            console.log(orders);
+            if (orders.length == 0) {
+                noTransactionsElement = document.createElement("div");
+                noTransactionsElement.id = "noTransactions";
+                noTransactionsElement.innerText = "Nothing to see here… yet!\nLog your first transaction in the QR tab to get started.";
+                container.appendChild(noTransactionsElement);
+            }
+        });
     } else if (tabName === "home") {
         homeLoader();
     }

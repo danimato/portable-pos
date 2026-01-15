@@ -108,6 +108,7 @@ async function loadOrders(container, group = true) {
                 container.appendChild(createTransactionItem(order));
             };
         }
+        return orders;
     } catch (error) {
         console.error('[loadOrders] Error loading orders:', error);
     }
