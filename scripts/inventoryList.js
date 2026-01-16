@@ -31,7 +31,7 @@ async function tableRowTemplate(item, inventory) {
   nameTd.appendChild(skuSpan);
   tr.appendChild(nameTd);
   actualStock = await getActualStock(item.product_id);
-  
+
   const stockTd = document.createElement('td');
   const stock = inventory && inventory.current_stock != null && actualStock ? actualStock : 0;
   stockTd.textContent = stock;
@@ -445,7 +445,7 @@ async function getStockDecision(current_stock, remaining_stock, threshold_type, 
   if (remaining_stock === 0) {
     return "RESTOCK";
   } else if ((threshold_type == "%" && (remaining_stock / current_stock) <= threshold) ||
-             (threshold_type == "+" && current_stock <= threshold)) {
+    (threshold_type == "+" && current_stock <= threshold)) {
     return "WARNING";
   } else {
     return "OK";
