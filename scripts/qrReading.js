@@ -16,7 +16,7 @@ function onScanSuccess(decodedText, decodedResult) {
 }
 var lastValidScanned = null;
 var lastScanTime = 0;
-var scanDebounceMs = 1000; // Configurable debounce time
+var scanDebounceMs = 5000; // Configurable debounce time
 
 function handleScannedProduct(sku) {
     console.log(`Handling scanned product with SKU: ${sku}`);
