@@ -220,7 +220,14 @@
     </div>
   </div>
   <div class="form-container" id="inventoryForm">
-    <h2>Add Item</h2>
+    <div class="header-with-close">
+      <h2>Add Item</h2>
+      <button class="close" onclick="hideInventoryForm()">
+        <span class="material-symbols-outlined">
+          close
+        </span>
+      </button>
+    </div>
 
     <div class="form-group">
       <label for="sku">SKU:</label>
@@ -286,7 +293,14 @@
     </div>
   </div>
   <div class="form-container for-prompts" id="deleter">
-    <h2>Delete <span class="countItems"></span> item<span class="countItemsPlural"></span>?</h2>
+    <div class="header-with-close">
+      <h2>Delete <span class="countItems"></span> item<span class="countItemsPlural"></span>?</h2>
+      <button class="close" onclick="hideDeletePrompt()">
+        <span class="material-symbols-outlined">
+          close
+        </span>
+      </button>
+    </div>
     <p>You are about to delete the selected <span class="countItems"></span> item<span class="countItemsPlural"></span>.
       Are you sure? <b>This action is irreversible.</b></p>
     <p><input type="checkbox" id="deleteDontAskAgain-prompt" name="deleteDontAskAgainCheckbox"
@@ -298,7 +312,14 @@
   </div>
 
   <div class="form-container" id="transacHistoryForm">
-    <h1>Sales Receipt</h1>
+    <div class="header-with-close">
+      <h2>Sales Receipt</h2>
+      <button class="close" onclick="hideTransacHistoryForm()">
+        <span class="material-symbols-outlined">
+          close
+        </span>
+      </button>
+    </div>
     <span id="transactionId"></span>
     <div id="orderItems"></div>
     <div id="amountDueParent">

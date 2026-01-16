@@ -927,6 +927,15 @@ button {
     justify-content: center;
 }
 
+.header-with-close {
+    display: flex;
+    justify-content: space-between;
+}
+
+.close {
+    background-color: unset;
+}
+
 /* ========================================
    PRINT STYLES
    ======================================== */
