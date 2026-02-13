@@ -38,7 +38,8 @@
   <div class="overlay" id="overlay"></div>
   <div id="home" class="tabcontent">
     <div class="image-container">
-    <img src="images/qt.png" alt="My Photo">
+    <img src="images/qt.png" alt="My Photo"> 
+    <span class="imgtextheaderhome"> Hello QuickTrack!</span>
     </div>
     <div id="focusBoxParent">
       <div id="focusBox">
@@ -117,8 +118,13 @@
   </div>
   <div id="inventory" class="tabcontent">
     <h3>Inventory</h3>
-    <button id="inventoryAdd" onclick="showInventoryForm()">+</button>
-    <table id="inventoryList">
+    <div class="inventoryTable">
+      <button id="inventoryAdd" onclick="showInventoryForm()">+</button>
+      <span class="inventoryTableText">Add Items</span>
+      <button class="inventoryEdit">Edit</button>
+    </div>
+    <div class="tableContainer">
+     <table id="inventoryList">
       <tr>
         <th class="inventoryCheckbox"><!--Select--></th>
         <th>Item Name</th>
@@ -137,7 +143,8 @@
         <td>20</td>
         <td>$15.00</td>
       </tr>
-    </table>
+     </table>
+    </div>
   </div>
   <div id="activity" class="tabcontent">
     <h3>Activity</h3>

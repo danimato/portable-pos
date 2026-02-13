@@ -390,6 +390,34 @@ button {
 /* ========================================
    TABLE COMPONENTS
    ======================================== */
+
+.tableContainer {
+     display: block;
+    height: 250px;
+    margin: var(--space-7);
+    padding: var(--space-4);
+    box-shadow: var(--shadow-card);
+    transition: var(--transition-fast);
+    background-color: white;
+    overflow-y: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    border-radius: 25px;
+    padding-top: 15px;
+    color: #0A7FAA;
+}
+
+#inventoryList th {
+    text-align: left;
+    font-size: 14px;  
+
+}
+
+#inventory h3 {
+    margin-top: 40px;
+
+}
+
 #inventoryList {
     margin: 0;
     padding: 0;
@@ -431,13 +459,11 @@ button {
 .product-name {
     font-size: var(--font-size-md);
     font-weight: var(--font-weight-bold);
-    color: var(--color-text-primary);
     display: block;
 }
 
 .product-sku {
     font-size: var(--font-size-sm);
-    color: var(--color-text-muted);
     display: block;
 }
 
@@ -449,6 +475,42 @@ button {
     bottom: 50px;
     left: 0;
     width: 100%;
+}
+
+#inventoryAdd {
+    border-radius:100%;
+    margin-left: 20px;
+    background-color:#0A7FAA;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    color: #ffffff;
+}
+
+.inventoryTable{
+    width: 100%;
+    height: 50px;
+    align-items: center;
+    margin-top: 20px;
+    display: flex;
+    color: var(--color-primary);
+    font-size: large;
+
+}
+
+.inventoryTableText {
+    padding-left: 10px;
+    flex: 1;
+}
+
+.inventoryEdit {
+        margin-right: 20px;
+        border-radius: var(--radius-lg);
+        background-color: #0A7FAA;
+        color: white;
 }
 
 #inventoryActionBar {
@@ -997,6 +1059,9 @@ button {
   height: 50px;         /* adjust as needed */
   align-items: center;   /* vertical centering */
   margin-top: 20px;
+  display: flex;
+  color:var(--color-primary);
+  font-size: large;
 }
 
 .image-container img {
@@ -1005,6 +1070,26 @@ button {
   display: block;
   object-fit: contain;   /* maintain aspect ratio */
   padding-left: 25px;
+}
+
+#homeTransactionsParent h4 {
+        margin-left: 10px;
+}
+
+#homeTransactions {
+    padding-top: 0px;
+}
+
+#bestSellerParent h4{
+    margin-left: 10px;
+}
+
+#bestSeller {
+    padding-left: 12px;
+    padding-right: 12px;
+    padding-top: unset;
+    padding-bottom: 12px;
+
 }
 
 
