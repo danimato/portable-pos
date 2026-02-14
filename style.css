@@ -123,25 +123,31 @@ input[type=checkbox] {
     appearance: none;
     width: 20px;
     height: 20px;
-    border: 3px solid black;
+    border: 3px solid #0A7FAA;
     background: white;
     margin: 4px;
     cursor: pointer;
     outline: none;
     transition: var(--transition-fast);
+    display: none;
 }
 
 input[type=checkbox]:checked {
-    background: black;
-    border: black;
+    background: #0A7FAA;
+    border: #0A7FAA;
 }
 
 input[type=checkbox]:active,
 input[type=checkbox]:hover,
 input[type=checkbox]:visited,
 input[type=checkbox]:focus {
-    border: black 3px solid;
+    border: #0A7FAA 3px solid;
 }
+
+.edit-mode-active input[type=checkbox] {
+    display: block;
+}
+
 input[type=range] {
     -webkit-appearance: none;
     appearance: none;
@@ -393,7 +399,7 @@ button {
 
 .tableContainer {
      display: block;
-    height: 250px;
+    height: 67vh;
     margin: var(--space-7);
     padding: var(--space-4);
     box-shadow: var(--shadow-card);
@@ -413,10 +419,10 @@ button {
 
 }
 
-#inventory h3 {
-    margin-top: 40px;
-
+#inventory{
+    padding-top: 40px;
 }
+
 
 #inventoryList {
     margin: 0;
@@ -427,6 +433,7 @@ button {
 #inventoryList td,
 #inventoryList th {
     padding: var(--space-1) 0;
+    padding-right: 15px;
 }
 
 .inventory-table {
@@ -453,6 +460,21 @@ button {
     width: min-content;
 }
 
+#inventoryList th:nth-child(1), #inventoryList td:nth-child(1) {
+    padding-left: 10px;
+}
+
+#inventoryList th:nth-child(2), #inventoryList td:nth-child(2) {
+    width: 160px;
+    min-width: 67px;
+    max-width: 90px;
+}
+
+#inventoryList th:nth-child(3), #inventoryList td:nth-child(3) {
+    width: 160px;
+    max-width: 80px;
+}
+
 /* ========================================
    PRODUCT & INVENTORY COMPONENTS
    ======================================== */
@@ -460,6 +482,11 @@ button {
     font-size: var(--font-size-md);
     font-weight: var(--font-weight-bold);
     display: block;
+    width: 120px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: inline-block;
 }
 
 .product-sku {
@@ -1058,7 +1085,6 @@ button {
      width: 100%;           /* full width of the page */
   height: 50px;         /* adjust as needed */
   align-items: center;   /* vertical centering */
-  margin-top: 20px;
   display: flex;
   color:var(--color-primary);
   font-size: large;

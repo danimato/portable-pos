@@ -10,13 +10,6 @@ function clearInventoryListRender() {
 async function tableRowTemplate(item, inventory) {
   const tr = document.createElement('tr');
 
-  const checkboxTd = document.createElement('td');
-  const checkbox = document.createElement('input');
-  checkbox.type = 'checkbox';
-  checkbox.setAttribute('data-product-id', item.product_id);
-  checkboxTd.className = 'inventoryCheckbox';
-  checkboxTd.appendChild(checkbox);
-  tr.appendChild(checkboxTd);
 
   const nameTd = document.createElement('td');
   const productNameSpan = document.createElement('span');
@@ -45,16 +38,24 @@ async function tableRowTemplate(item, inventory) {
     : '—';
   tr.appendChild(priceTd);
 
+  const checkboxTd = document.createElement('td');
+  const checkbox = document.createElement('input');
+  checkbox.type = 'checkbox';
+  checkbox.setAttribute('data-product-id', item.product_id);
+  checkboxTd.className = 'inventoryCheckbox';
+  checkboxTd.appendChild(checkbox);
+  tr.appendChild(checkboxTd);
+
   return tr;
 }
 
 async function refreshInventoryList() {
   inventoryListTbody.innerHTML = `
     <tr>
-      <th class="inventoryCheckbox"><!--Select--></th>
       <th>Item Name</th>
       <th>Stock</th>
       <th>Cost</th>
+      <th class="inventoryCheckbox"><!--Select--></th>
     </tr>`;
 
   var items = await db.getAll('products');
@@ -107,8 +108,10 @@ async function refreshInventoryList() {
 
 if (inventoryListTbody) {
   var selectedRows = [];
+  var isEditModeEnabled = false;
 
   const handleCheckboxChange = (event) => {
+    if (!isEditModeEnabled) return;
     const checkbox = event.target;
     if (checkbox.type === 'checkbox' && checkbox.hasAttribute('data-product-id')) {
       const row = checkbox.closest('tr');
@@ -165,6 +168,7 @@ if (inventoryListTbody) {
   };
 
   const handleRowClick = (event) => {
+    if (!isEditModeEnabled) return;
     const row = event.target.closest('tr');
     if (!row) return;
 
@@ -451,3 +455,21 @@ async function getStockDecision(current_stock, remaining_stock, threshold_type, 
     return "OK";
   }
 }
+
+// Edit Mode Toggle
+document.querySelector('.inventoryEdit').addEventListener('click', function() {
+  isEditModeEnabled = !isEditModeEnabled;
+  
+  const tableContainer = document.querySelector('.tableContainer'); // or #inventoryList
+  
+  if (isEditModeEnabled) {
+    this.style.backgroundColor = 'lightblue';
+    this.textContent = 'Done Editing';
+    tableContainer.classList.add('edit-mode-active'); // Show checkboxes
+  } else {
+    this.style.backgroundColor = '';
+    this.textContent = 'Edit';
+    tableContainer.classList.remove('edit-mode-active'); // Hide checkboxes
+    resetSelected();
+  }
+});
