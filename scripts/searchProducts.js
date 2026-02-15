@@ -65,8 +65,8 @@ document.getElementById('qrInput').addEventListener('input', (event) => {
 
             var addBtn = document.createElement('button');
             addBtn.className = 'add-to-cart-btn';
-            addBtn.textContent = "+";
-            addBtn.addEventListener('click', () => {
+            addBtn.textContent = "Add";
+            addBtn.addEventListener('click', () => {    
                 fetchProductAndInventory(product.product_id).then(({ product, inventory }) => {
                     addToCart(product, inventory);
 
