@@ -715,22 +715,6 @@ button {
    QR & SCANNER COMPONENTS
    ======================================== */
 
-#html5-qrcode-anchor-scan-type-change {
-    display: none;
-}
-
-#html5-qrcode-button-camera-permission {
-    position: absolute;
-    z-index: 3;
-    right: 50px;
-    top: 70px;
-    border-radius: var(--radius-lg);
-    color: white;
-    background-color: var(--color-primary);
-}
-
-
-
 #leftDiv {
     color:#0A7FAA;
 }
@@ -796,15 +780,10 @@ button {
     overflow-y: auto;
     border-radius: 10px;
     border: 1.5px solid #0A7FAA !important;
-    overflow: hidden;
 }
 
-#reader img {
-    display: none;
-}
 
 #reader__scan_region {
-    overflow: hidden;
     height: 200px;
 }
 
