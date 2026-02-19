@@ -2,27 +2,12 @@ cart = document.getElementById('cart');
 
 cartList = {}
 
-async function addToCart(product, inventory) {
-    const productId = product.product_id;
-    
-    // Get actual available stock
-    const actualStock = await getActualStock(productId);
-    
-    // Check current quantity in cart
-    const currentCartQty = cartList[productId] ? cartList[productId].count : 0;
-    
-    // Prevent adding if it would exceed stock
-    if (currentCartQty >= actualStock) {
-        showToast('Out of Stock', `Cannot add more. Only ${actualStock} available.`, 3000);
-        return; // Exit early, don't add
-    }
-    
-    // Original logic
-    if (cartList[productId]) {
-        cartList[productId].count += 1;
-        document.querySelector('#cart [data-product="' + productId + '"] .counter-value').textContent = cartList[productId].count;
+function addToCart(product, inventory) {
+    if (cartList[product.product_id]) {
+        cartList[product.product_id].count += 1;
+        document.querySelector('#cart [data-product="' + product.product_id + '"] .counter-value').textContent = cartList[product.product_id].count;
     } else {
-        cartList[productId] = {
+        cartList[product.product_id] = {
             count: 1,
             price: Number(inventory.price)
         };
@@ -75,19 +60,26 @@ function renderNewCartItem(product, inventory) {
         }
     });
 
+
+
     let decrementPressTimer;
     let isDecrementLongPress = false;
     let decrementIntervalTimer;
 
     decrementBtn.addEventListener('mousedown', function () {
         isDecrementLongPress = false;
+
+        // Initial press - decrement once
         handleDecrement();
+
+        // Start timer for long press detection
         decrementPressTimer = setTimeout(function () {
             isDecrementLongPress = true;
+            // Start rapid decrement
             decrementIntervalTimer = setInterval(function () {
                 handleDecrement();
-            }, 100);
-        }, 500);
+            }, 100); // Decrement every 100ms
+        }, 500); // Long press triggers after 500ms
     });
 
     decrementBtn.addEventListener('mouseup', function () {
@@ -100,10 +92,13 @@ function renderNewCartItem(product, inventory) {
         clearInterval(decrementIntervalTimer);
     });
 
+    // Touch support for mobile
     decrementBtn.addEventListener('touchstart', function (e) {
         e.preventDefault();
         isDecrementLongPress = false;
+
         handleDecrement();
+
         decrementPressTimer = setTimeout(function () {
             isDecrementLongPress = true;
             decrementIntervalTimer = setInterval(function () {
@@ -118,7 +113,9 @@ function renderNewCartItem(product, inventory) {
         clearInterval(decrementIntervalTimer);
     });
 
+    // Helper function to handle decrement logic
     function handleDecrement() {
+        // Stop decrementing if item no longer exists
         if (!cartList[product.product_id]) {
             updateCheckoutButton();
             clearInterval(decrementIntervalTimer);
@@ -136,7 +133,7 @@ function renderNewCartItem(product, inventory) {
             delete cartList[product.product_id];
             cart.removeChild(productDiv);
             updateCheckoutButton();
-            clearInterval(decrementIntervalTimer);
+            clearInterval(decrementIntervalTimer); // Stop interval when removed
         }
     }
 
@@ -145,61 +142,38 @@ function renderNewCartItem(product, inventory) {
     countValue.className = 'counter-value';
     countValue.textContent = cartList[product.product_id].count;
 
-    // Create increment button with STOCK VALIDATION
+    // Create increment button
     var incrementBtn = document.createElement('button');
     incrementBtn.className = 'counter-btn';
     incrementBtn.textContent = '+';
-    
-    // ✅ FIX: Add stock validation to click
-    incrementBtn.addEventListener('click', async function () {
-        const actualStock = await getActualStock(product.product_id);
-        const currentCartQty = cartList[product.product_id].count;
-        
-        if (currentCartQty >= actualStock) {
-            showToast('Out of Stock', `Cannot add more. Only ${actualStock} available.`, 3000);
-            return;
-        }
-        
+    incrementBtn.addEventListener('click', function () {
         cartList[product.product_id].count++;
         var newPrice = parseFloat(inventory.price) * cartList[product.product_id].count;
         priceDiv.textContent = cF(newPrice);
         countValue.textContent = cartList[product.product_id].count;
     });
 
+
     let pressTimer;
     let isLongPress = false;
     let intervalTimer;
 
-    // ✅ FIX: Add stock validation to mousedown
-    incrementBtn.addEventListener('mousedown', async function () {
-        const actualStock = await getActualStock(product.product_id);
-        let currentCartQty = cartList[product.product_id].count;
-        
-        if (currentCartQty >= actualStock) {
-            showToast('Out of Stock', `Cannot add more. Only ${actualStock} available.`, 3000);
-            return;
-        }
-        
+    incrementBtn.addEventListener('mousedown', function () {
         isLongPress = false;
+
+        // Initial press - increment once
         cartList[product.product_id].count++;
         updateDisplay();
 
+        // Start timer for long press detection
         pressTimer = setTimeout(function () {
             isLongPress = true;
-            intervalTimer = setInterval(async function () {
-                const actualStock = await getActualStock(product.product_id);
-                const currentCartQty = cartList[product.product_id].count;
-                
-                if (currentCartQty >= actualStock) {
-                    clearInterval(intervalTimer);
-                    showToast('Out of Stock', `Cannot add more. Only ${actualStock} available.`, 3000);
-                    return;
-                }
-                
+            // Start rapid increment
+            intervalTimer = setInterval(function () {
                 cartList[product.product_id].count++;
                 updateDisplay();
-            }, 100);
-        }, 500);
+            }, 100); // Increment every 100ms
+        }, 500); // Long press triggers after 500ms
     });
 
     incrementBtn.addEventListener('mouseup', function () {
@@ -212,34 +186,17 @@ function renderNewCartItem(product, inventory) {
         clearInterval(intervalTimer);
     });
 
-    // ✅ FIX: Add stock validation to touchstart
-    incrementBtn.addEventListener('touchstart', async function (e) {
+    // Touch support for mobile
+    incrementBtn.addEventListener('touchstart', function (e) {
         e.preventDefault();
-        
-        const actualStock = await getActualStock(product.product_id);
-        let currentCartQty = cartList[product.product_id].count;
-        
-        if (currentCartQty >= actualStock) {
-            showToast('Out of Stock', `Cannot add more. Only ${actualStock} available.`, 3000);
-            return;
-        }
-        
         isLongPress = false;
+
         cartList[product.product_id].count++;
         updateDisplay();
 
         pressTimer = setTimeout(function () {
             isLongPress = true;
-            intervalTimer = setInterval(async function () {
-                const actualStock = await getActualStock(product.product_id);
-                const currentCartQty = cartList[product.product_id].count;
-                
-                if (currentCartQty >= actualStock) {
-                    clearInterval(intervalTimer);
-                    showToast('Out of Stock', `Cannot add more. Only ${actualStock} available.`, 3000);
-                    return;
-                }
-                
+            intervalTimer = setInterval(function () {
                 cartList[product.product_id].count++;
                 updateDisplay();
             }, 100);
@@ -252,11 +209,14 @@ function renderNewCartItem(product, inventory) {
         clearInterval(intervalTimer);
     });
 
+    // Helper function to update display
     function updateDisplay() {
         var newPrice = parseFloat(inventory.price) * cartList[product.product_id].count;
         priceDiv.textContent = cF(newPrice);
         countValue.textContent = cartList[product.product_id].count;
     }
+
+
 
     // Assemble counter
     counterContainer.appendChild(decrementBtn);
@@ -275,7 +235,7 @@ function renderNewCartItem(product, inventory) {
     cart.appendChild(productDiv);
 }
 
-var nextButton = document.getElementById('qrNextScreen');
+var nextButton = document.getElementById('qrNextScreen'); // or whatever your button ID is
 
 function updateCheckoutButton() {
     console.log("called");
@@ -289,6 +249,7 @@ function updateCheckoutButton() {
     }
 }
 
+
 var totalPaymentDue = document.getElementById("totalPaymentDue");
 var paymentDueBox = document.getElementById("paymentDueBox");
 var qrScreen = document.getElementById("qrScreen");
@@ -296,6 +257,7 @@ var qrFinishButton = document.getElementById("qrFinishButton");
 var qrBackButton = document.getElementById("qrBackButton");
 
 function qrStage2() {
+    // always check qrBack() to revert changes to there!
     nextButton.classList.add("hidden");
     paymentDueBox.classList.remove("hidden");
     qrFinishButton.classList.remove("hidden");
@@ -306,6 +268,7 @@ function qrStage2() {
         el.classList.add("hidden");
     }
 
+    // total sum of cart
     var sum = 0;
     for (product_id of Object.keys(cartList)) {
         sum += cartList[product_id].count * cartList[product_id].price;
@@ -315,6 +278,7 @@ function qrStage2() {
 
 async function qrFinish() {
     try {
+        // prepare stuff to store in the db
         console.log(transactionIdNum);
         console.log(transactionDateNum);
         var sum = 0;
@@ -346,6 +310,7 @@ async function qrFinish() {
 }
 
 function qrBack() {
+    // always check qrStage2() to revert changes from there!
     nextButton.classList.remove("hidden");
     paymentDueBox.classList.add("hidden");
     qrFinishButton.classList.add("hidden");
@@ -366,8 +331,10 @@ function resetQrForm() {
     const input = document.getElementById('qrInput');
     input.value = '';
     input.dispatchEvent(new Event('input', { bubbles: true }));
+    // Refresh product cache when QR tab is focused
     refreshProductCache().then(() => {
         console.log("Product cache refreshed for QR tab");
+        // Any other QR tab initialization code here
     });
     transactionIdNum = flake.gen();
     transactionDateNum = new Date().toISOString();

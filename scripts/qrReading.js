@@ -29,41 +29,32 @@ function handleScannedProduct(sku) {
     }
 
     db.getByIndex("products", "sku", sku).then(products => {
-    if (products != null && products.length > 0) {
-        console.log(products);
-        var product = products[0];
-        
-        // Look up inventory for this product
-        db.get("inventory", product.product_id).then(async inventoryItems => {  // ← Added async here
-            if (inventoryItems != null) {
-                const actualStock = await getActualStock(product.product_id);
-                const currentCartQty = cartList[product.product_id] ? cartList[product.product_id].count : 0;
-                
-                // Check if adding would exceed stock
-                if (currentCartQty >= actualStock) {
-                    showToast('Out of Stock', `${product.product_name} - Only ${actualStock} in stock`, 3000);
-                    return;
+        if (products != null && products.length > 0) {
+            console.log(products);
+            var product = products[0];
+            
+            // Look up inventory for this product
+            db.get("inventory", product.product_id).then(inventoryItems => {
+                if (inventoryItems != null) {
+                    // Update scan tracking BEFORE adding to cart
+                    lastValidScanned = sku;
+                    lastScanTime = Date.now();
+                    
+                    // Add product to cart logic here
+                    addToCart(product, inventoryItems);
+                    showToast('Product Scanned', `SKU: ${sku} ${product.product_name} added to cart.`, 500);
+                } else {
+                    console.warn(`No inventory found for product: ${product.product_name}`);
+                    showToast('No Inventory', `Product found but no inventory available.`, 1000);
                 }
-                
-                // Update scan tracking BEFORE adding to cart
-                lastValidScanned = sku;
-                lastScanTime = Date.now();
-                
-                // Add product to cart logic here
-                await addToCart(product, inventoryItems);
-                showToast('Product Scanned', `SKU: ${sku} ${product.product_name} added to cart.`, 500);
-            } else {
-                console.warn(`No inventory found for product: ${product.product_name}`);
-                showToast('No Inventory', `Product found but no inventory available.`, 1000);
-            }
-        }).catch(err => {
-            console.error('Error looking up inventory:', err);
-        });
+            }).catch(err => {
+                console.error('Error looking up inventory:', err);
+            });
 
-    } else {
-        console.warn(`No product found with SKU: ${sku}`);
-        showToast('Product Not Found', `No product found with SKU: ${sku}`, 1000);
-    }
+        } else {
+            console.warn(`No product found with SKU: ${sku}`);
+            showToast('Product Not Found', `No product found with SKU: ${sku}`, 1000);
+        }
 
     }).catch(err => {
         console.error('Error looking up product by SKU:', err);

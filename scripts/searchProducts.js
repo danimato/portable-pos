@@ -64,44 +64,26 @@ document.getElementById('qrInput').addEventListener('input', (event) => {
             rightDiv.id = "rightDiv";
 
             var addBtn = document.createElement('button');
-addBtn.className = 'add-to-cart-btn';
-addBtn.textContent = "Add";
-addBtn.addEventListener('click', async () => {
-    const productId = product.product_id; // ← FIX: Store ID first!
-    
-    try {
-        const { product: fetchedProduct, inventory } = await fetchProductAndInventory(productId);
-        
-        // Get actual stock
-        const actualStock = await getActualStock(productId);
-        
-        // Check current cart quantity
-        const currentCartQty = cartList[productId] ? cartList[productId].count : 0;
-        
-        // Validate stock before adding
-        if (currentCartQty >= actualStock) {
-            showToast('Out of Stock', `Cannot add more. Only ${actualStock} in stock.`, 3000);
-            return;
-        }
-        
-        // If stock is available, add to cart
-        await addToCart(fetchedProduct, inventory);
+            addBtn.className = 'add-to-cart-btn';
+            addBtn.textContent = "Add";
+            addBtn.addEventListener('click', () => {    
+                fetchProductAndInventory(product.product_id).then(({ product, inventory }) => {
+                    addToCart(product, inventory);
 
-        var priceEl = document.querySelector(`[data-product="${productId}"] .cart-item-price`);
-        console.log(priceEl);
-        if (priceEl) {
-            priceEl.innerText = cF(cartList[productId].price * cartList[productId].count);
-        } else {
-            console.warn(`Price element not found for product: ${productId}`);
-        }
+                    var priceEl = document.querySelector(`[data-product="${product.product_id}"] .cart-item-price`);
+                    console.log(priceEl);
+                    if (priceEl) {
+                        priceEl.innerText = cF(cartList[product.product_id].price * cartList[product.product_id].count);
+                    } else {
+                        console.warn(`Price element not found for product: ${product.productId}`);
+                    }
 
-        showToast('Product Added', `Added ${fetchedProduct.product_name} to cart.`, 500);
-        
-    } catch (error) {
-        console.error('Error adding product to cart:', error);
-        showToast('Error', 'Failed to add product to cart.', 5000);
-    }
-});
+                    showToast('Product Added', `Added ${product.product_name} to cart.`, 500);
+                }).catch(error => {
+                    console.error('Error adding product to cart:', error);
+                    showToast('Error', 'Failed to add product to cart.', 5000);
+                });
+            });
             rightDiv.appendChild(addBtn);
             productDiv.appendChild(leftDiv);
             productDiv.appendChild(rightDiv);
