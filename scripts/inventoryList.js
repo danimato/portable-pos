@@ -204,7 +204,7 @@ async function handleNewInventoryItem(data) {
       product_id: existingProduct.product_id,
       product_name: data.productName,
       description: data.description,
-      category: data.productType,
+      category: '',
       sku: data.sku
     });
     await db.update("inventory", {

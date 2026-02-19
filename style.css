@@ -300,7 +300,7 @@ h4 {
 label {
     display: block;
     margin-bottom: var(--space-1);
-    color: var(--color-text-secondary);
+    color: #0A7FAA;
     font-weight: var(--font-weight-medium);
     font-size: var(--font-size-base);
 }

@@ -35,7 +35,6 @@ function updateEntries(productId) {
         if (product) {
             document.getElementById('sku').value = product.sku;
             document.getElementById('productName').value = product.product_name;
-            document.getElementById('productType').value = product.category;
             document.getElementById('description').value = product.description;
 
             db.get("inventory", productId).then(inventory => {
@@ -96,7 +95,6 @@ function getFormData(callback) {
     const data = {
         sku: document.getElementById('sku').value,
         productName: document.getElementById('productName').value,
-        productType: document.getElementById('productType').value,
         description: document.getElementById('description').value,
         price: document.getElementById('price').value,
         stock: document.getElementById('stock').value,
