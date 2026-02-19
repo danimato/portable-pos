@@ -86,6 +86,7 @@
   </div>
   <div id="qr" class="tabcontent">
     <div id="paymentDueBox" class="hidden">
+      <h3 id="paymentCheckout"> Checkout </h3>
       <div id="paymentDueBoxChild">
         <span id="totalPaymentDue"></span>
         <span id="paymentDueText">Total Amount Due</span>
@@ -95,11 +96,13 @@
       </div>
       <div id="modeOfPaymentBox">
         <span id="modeOfPaymentText">Mode of Payment: </span>
+        <div class="select-wrapper">
         <select name="modeOfPaymentChoice" id="modeOfPaymentChoice">
           <option value="InstaPay">InstaPay</option>
           <option value="Cash">Cash</option>
           <option value="PayPal">PayPal</option>
         </select>
+        </div>
       </div>
     </div>
     <div id="qrScreen">

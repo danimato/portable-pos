@@ -894,7 +894,11 @@ button {
    ======================================== */
 #paymentDueBox {
     text-align: center;
-    padding: var(--space-9) var(--space-5);
+    padding-top: 40px;
+}
+
+#paymentCheckout {
+    margin-top: 0px;
 }
 
 #totalPaymentDue {
@@ -905,6 +909,9 @@ button {
 
 #modeOfPaymentBox {
     margin-top: var(--space-4);
+    display: flex;
+    justify-content: center; 
+    align-items: center;
 }
 
 #amountDueParent {
@@ -922,6 +929,9 @@ button {
     padding-top: 2px;
     padding-bottom: 2px;
     border-radius: 7px;
+    margin-right: 35px;
+    margin-left: 35px;
+    margin-top: 10px;
 }
 
 
@@ -1208,5 +1218,66 @@ button {
 
 }
 
+.select-wrapper {
+    position: relative;
+    width: 180px;
+  }
 
+  /* Arrow icon — sits behind the select so it never blocks clicks */
+  .select-wrapper::after {
+    content: '';
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 14px;
+    height: 14px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%232563eb' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-size: contain;
+    pointer-events: none;
+    transition: transform 0.2s ease;
+  }
 
+  /* Arrow rotates ONLY while the select is actively focused */
+  .select-wrapper:has(select:focus-visible)::after {
+    transform: translateY(-50%) rotate(180deg);
+  }
+
+  select#modeOfPaymentChoice {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 100%;
+    padding: 9px 36px 9px 13px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #0A7FAA;
+    background: #ffffff;
+    border: 1.5px solid #bfdbfe;
+    border-radius: 9px;
+    outline: none;
+    cursor: pointer;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+    box-shadow: 0 1px 6px rgba(37, 99, 235, 0.07);
+    margin-left: 5px;
+  }
+
+  select#modeOfPaymentChoice:hover {
+    border-color: #60a5fa;
+    box-shadow: 0 2px 10px rgba(37, 99, 235, 0.12);
+  }
+
+  /* Highlight ONLY while focused — clears automatically on blur, no JS needed */
+  select#modeOfPaymentChoice:focus-visible {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12), 0 2px 10px rgba(37, 99, 235, 0.12);
+    background: #f0f6ff;
+  }
+
+  select#modeOfPaymentChoice option {
+    background: #ffffff;
+    color: #1e3a8a;
+    font-weight: 500;
+    font-size: 10px;
+    padding: 1px 1px;
+  }
