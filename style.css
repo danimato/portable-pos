@@ -291,6 +291,7 @@ h4 {
 
 .form-container.active {
     display: block;
+    background: linear-gradient(to top left, #cff3ff, white);
 }
 
 .form-group {
@@ -451,9 +452,9 @@ button {
 }
 
 .inventory-table th {
-    background: var(--color-gray-50);
+    background: #0A7FAA;
     font-weight: var(--font-weight-semibold);
-    color: var(--color-text-tertiary);
+    color: white;
 }
 
 .inventoryCheckbox {
@@ -1120,12 +1121,23 @@ button {
 
 #sku-parent {
     display: flex;
+    gap: 8px;
 }
 
 #randomizer {
     display: flex;
     align-items: center;
     justify-content: center;
+    background: #0A7FAA;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s ease;
 }
 
 .header-with-close {
@@ -1281,3 +1293,54 @@ button {
     font-size: 10px;
     padding: 1px 1px;
   }
+
+  /* Stock parent container - similar to SKU */
+#stock-parent {
+    display: flex;
+    gap: 8px;
+}
+
+#stock-parent input {
+    flex: 1;
+}
+
+#editStockBtn {
+    background: #0A7FAA;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s ease;
+}
+
+#editStockBtn:hover {
+    background: #0891B2;
+}
+
+#editStockBtn .material-symbols-outlined {
+    font-size: 20px;
+}
+
+/* Stock adjustment field */
+#stockAdjustmentField {
+    margin-top: -10px;
+}
+
+.stock-adjustment-hint {
+    display: block;
+    font-size: 12px;
+    color: #666;
+    margin-top: 4px;
+    font-style: italic;
+}
+
+/* Readonly stock input */
+#stock:read-only {
+    background-color: #f5f5f5;
+    color: #666;
+    cursor: not-allowed;
+}

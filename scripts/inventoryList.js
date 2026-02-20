@@ -169,9 +169,13 @@ if (inventoryListTbody) {
 
 async function handleNewInventoryItem(data) {
   console.log(selectedRows);
-  var existingProduct = selectedRows.length === 1
-    ? await db.get('products', Number(selectedRows[0]))
-    : null;
+  // Check if editing via currentEditingProductId (more reliable than selectedRows)
+var existingProduct = null;
+if (typeof currentEditingProductId !== 'undefined' && currentEditingProductId !== null) {
+    existingProduct = await db.get('products', Number(currentEditingProductId));
+} else if (selectedRows.length === 1) {
+    existingProduct = await db.get('products', Number(selectedRows[0]));
+}
   console.log("existingProduct:", existingProduct);
 
   if (existingProduct) {
@@ -179,6 +183,21 @@ async function handleNewInventoryItem(data) {
 
     // Get ACTUAL current stock (accounting for sales)
     const actualStock = await getActualStock(existingProduct.product_id);
+    
+    // Calculate new actual stock based on adjustment or direct entry
+    let newActualStock;
+    if (data.stockAdjustment !== null && data.stockAdjustment !== undefined) {
+      // Stock adjustment mode (adding/removing stock)
+      newActualStock = actualStock + data.stockAdjustment;
+      
+      if (newActualStock < 0) {
+        showToast('Invalid Adjustment', 'Cannot remove more stock than available.', 5000);
+        return;
+      }
+    } else {
+      // Direct stock edit (should not happen for existing products, but handle it)
+      newActualStock = Number(data.stock);
+    }
     
     // Calculate total sold since last restock
     const currentData = await getLastUpdate(existingProduct.product_id);
@@ -190,8 +209,8 @@ async function handleNewInventoryItem(data) {
     });
     const totalSold = ordersAfterRestock.reduce((sum, item) => sum + item.quantity, 0);
     
-    // User enters ACTUAL stock (after sales), so calculate DATABASE stock (before sales)
-    const newDatabaseStock = Number(data.stock) + totalSold;
+    // Calculate DATABASE stock (actual + sold)
+    const newDatabaseStock = newActualStock + totalSold;
     
     // Update product
     await db.update("products", {
@@ -202,22 +221,22 @@ async function handleNewInventoryItem(data) {
       sku: data.sku
     });
     
-    // Update inventory with DATABASE stock (includes sold items)
+    // Update inventory with DATABASE stock
     await db.update("inventory", {
       product_id: existingProduct.product_id,
       price: data.price,
-      current_stock: newDatabaseStock  // ✅ CORRECT - Database stock = actual + sold
+      current_stock: newDatabaseStock
     });
 
     // Log the stock change based on ACTUAL stock
-    const stockChange = Number(data.stock) - actualStock;
+    const stockChange = newActualStock - actualStock;
     if (stockChange !== 0) {
       await db.logInventoryChange(
         existingProduct.product_id,
         'adjustment',
         stockChange,
         actualStock,
-        Number(data.stock),
+        newActualStock,
         `Stock adjusted`,
         data.date
       );

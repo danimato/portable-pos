@@ -1,5 +1,7 @@
 // Basic state management
 let inventoryHistory = [];
+let isEditingExistingProduct = false;
+let currentEditingProductId = null;
 
 // Show the inventory form
 async function showInventoryForm(productId = '') {
@@ -9,11 +11,39 @@ async function showInventoryForm(productId = '') {
     setTodayDate();
 
     if (productId) {
-        document.getElementById('sku').value = productId;
-        // Load inventory history when editing
+        // Editing existing product
+        isEditingExistingProduct = true;
+        currentEditingProductId = productId; 
+        
+        // Make stock input readonly
+        document.getElementById('stock').readOnly = true;
+        
+        // Show edit stock button
+        document.getElementById('editStockBtn').style.display = 'flex';
+        document.getElementById('editStockBtn').innerHTML = '<span class="material-symbols-outlined">edit</span>';
+        
+        // Hide adjustment field initially
+        document.getElementById('stockAdjustmentField').style.display = 'none';
+        document.getElementById('stockAdjustment').value = '';
+        
+        // Load inventory history
         await loadInventoryHistory(productId);
     } else {
-        // Clear history for new products
+        // New product
+        isEditingExistingProduct = false;
+        currentEditingProductId = null; 
+        
+        // Make stock input editable
+        document.getElementById('stock').readOnly = false;
+        
+        // Hide edit stock button
+        document.getElementById('editStockBtn').style.display = 'none';
+        
+        // Hide adjustment field
+        document.getElementById('stockAdjustmentField').style.display = 'none';
+        document.getElementById('stockAdjustment').value = '';
+        
+        // Clear history
         inventoryHistory = [];
         updateHistoryTable();
     }
@@ -23,6 +53,10 @@ async function showInventoryForm(productId = '') {
 function hideInventoryForm() {
     document.getElementById('overlay').classList.remove('active');
     document.getElementById('inventoryForm').classList.remove('active');
+
+     // Reset edit stock button icon
+    document.getElementById('editStockBtn').innerHTML = '<span class="material-symbols-outlined">edit</span>';
+    document.getElementById('stockAdjustmentField').style.display = 'none';
 }
 
 // Close form when clicking overlay
@@ -65,7 +99,17 @@ function clearEntries() {
     document.getElementById('description').value = '';
     document.getElementById('price').value = '';
     document.getElementById('stock').value = '';
+    document.getElementById('stockAdjustment').value = '';
     setTodayDate();
+    
+    // Reset edit mode
+    isEditingExistingProduct = false;
+    currentEditingProductId = null;  // ← ADD THIS LINE
+    document.getElementById('stock').readOnly = false;
+    document.getElementById('editStockBtn').style.display = 'none';
+    document.getElementById('editStockBtn').innerHTML = '<span class="material-symbols-outlined">edit</span>';
+    document.getElementById('stockAdjustmentField').style.display = 'none';
+    
     inventoryHistory = [];
     updateHistoryTable();
 }
@@ -106,6 +150,14 @@ function getFormData(callback) {
         date: document.getElementById('date').value
     };
 
+    // Add stock adjustment if editing existing product
+    const stockAdjustmentValue = document.getElementById('stockAdjustment').value;
+    if (isEditingExistingProduct && stockAdjustmentValue !== '') {
+        data.stockAdjustment = Number(stockAdjustmentValue);
+    } else {
+        data.stockAdjustment = null;
+    }
+
     if (callback && typeof callback === 'function') {
         callback(data);
     }
@@ -136,7 +188,6 @@ async function loadInventoryHistory(productId) {
         const history = await db.getInventoryHistory(Number(productId));
         
         if (history && history.length > 0) {
-            // Filter out sales - only show manual changes
             const filteredHistory = history.filter(entry => 
                 entry.change_type === 'adjustment' || 
                 entry.change_type === 'initial_stock'
@@ -148,7 +199,6 @@ async function loadInventoryHistory(productId) {
                 return;
             }
             
-            // Sort by date (newest first), then by history_id (newest first)
             filteredHistory.sort((a, b) => {
                 const dateCompare = new Date(b.change_date) - new Date(a.change_date);
                 if (dateCompare !== 0) {
@@ -186,6 +236,24 @@ async function loadInventoryHistory(productId) {
         updateHistoryTable();
     }
 }
+
+// Edit Stock button functionality
+const editStockBtn = document.getElementById('editStockBtn');
+const stockAdjustmentField = document.getElementById('stockAdjustmentField');
+const stockAdjustmentInput = document.getElementById('stockAdjustment');
+
+editStockBtn.addEventListener('click', function() {
+    if (stockAdjustmentField.style.display === 'none') {
+        stockAdjustmentField.style.display = 'block';
+        stockAdjustmentInput.value = '';
+        stockAdjustmentInput.focus();
+        editStockBtn.innerHTML = '<span class="material-symbols-outlined">close</span>';
+    } else {
+        stockAdjustmentField.style.display = 'none';
+        stockAdjustmentInput.value = '';
+        editStockBtn.innerHTML = '<span class="material-symbols-outlined">edit</span>';
+    }
+});
 
 // Validation
 var priceInput = document.getElementById("price");
