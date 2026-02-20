@@ -281,30 +281,45 @@ class EcommerceDB {
     }
 
     async createOrder(orderId, order_date, paymentMethod, subtotal, discountAmount, totalAmount, items, notes = '', taxAmount = 0) {
-        await this.add('orders', {
+    await this.add('orders', {
+        order_id: orderId,
+        order_date: order_date,
+        status: 'pending',
+        payment_method: paymentMethod,
+        subtotal: subtotal,
+        discount_amount: discountAmount,
+        total_amount: totalAmount,
+        notes: notes,
+        tax_amount: taxAmount
+    });
+
+    // Add order items and log inventory changes
+    for (const item of items) {
+        await this.add('order_items', {
             order_id: orderId,
-            order_date: order_date,
-            status: 'pending',
-            payment_method: paymentMethod,
-            subtotal: subtotal,
-            discount_amount: discountAmount,
-            total_amount: totalAmount,
-            notes: notes,
-            tax_amount: taxAmount
+            product_id: item.product_id,
+            quantity: item.quantity,
+            price: item.price
         });
-
-        // Add order items
-        for (const item of items) {
-            await this.add('order_items', {
-                order_id: orderId,
-                product_id: item.product_id,
-                quantity: item.quantity,
-                price: item.price
-            });
-        }
-
-        return orderId;
+        
+        // Get current inventory
+        const inventory = await this.get('inventory', item.product_id);
+        const currentStock = inventory ? inventory.current_stock : 0;
+        
+        // Log the sale to inventory history
+        await this.logInventoryChange(
+            item.product_id,
+            'sale',
+            -item.quantity,
+            currentStock,
+            currentStock,
+            `Sold ${item.quantity} unit(s) - Order #${orderId}`,
+            order_date
+        );
     }
+
+    return orderId;
+}
 
     async getOrderItems(orderId) {
         return this.getByIndex('order_items', 'order_id', orderId);
@@ -344,17 +359,20 @@ class EcommerceDB {
         });
     }
 
-    async logInventoryChange(productId, changeType, quantityChange, previousStock, newStock, notes = '') {
-        return this.add('inventory_history', {
-            product_id: productId,
-            change_type: changeType, // e.g., 'sale', 'restock', 'adjustment', 'return'
-            quantity_change: quantityChange,
-            previous_stock: previousStock,
-            new_stock: newStock,
-            change_date: new Date().toISOString(),
-            notes: notes
-        });
-    }
+    async logInventoryChange(productId, changeType, quantityChange, previousStock, newStock, notes = '', changeDate = null) {
+    // Use provided date or default to current date
+    const finalDate = changeDate ? new Date(changeDate).toISOString() : new Date().toISOString();
+    
+    return this.add('inventory_history', {
+        product_id: productId,
+        change_type: changeType,
+        quantity_change: quantityChange,
+        previous_stock: previousStock,
+        new_stock: newStock,
+        change_date: finalDate,
+        notes: notes
+    });
+}
 
     async getInventoryHistory(productId) {
         return this.getByIndex('inventory_history', 'product_id', productId);

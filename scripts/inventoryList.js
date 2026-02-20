@@ -10,7 +10,6 @@ function clearInventoryListRender() {
 async function tableRowTemplate(item, inventory) {
   const tr = document.createElement('tr');
 
-
   const nameTd = document.createElement('td');
   const productNameSpan = document.createElement('span');
   productNameSpan.textContent = item.product_name ?? '(no name)';
@@ -31,11 +30,8 @@ async function tableRowTemplate(item, inventory) {
   tr.appendChild(stockTd);
 
   const priceTd = document.createElement('td');
-  // 🔥 FIX: Price is in inventory table, not products table
   const rawPrice = inventory && inventory.price != null ? Number(inventory.price) : null;
-  priceTd.textContent = rawPrice != null
-    ? cF(rawPrice)
-    : '—';
+  priceTd.textContent = rawPrice != null ? cF(rawPrice) : '—';
   tr.appendChild(priceTd);
 
   const checkboxTd = document.createElement('td');
@@ -64,23 +60,16 @@ async function refreshInventoryList() {
   var inventory = await db.getAll('inventory');
   inventory = inventory.filter(p => !p.is_deleted);
 
-  // normalize keys to strings to avoid type-mismatch issues
   const inventoryMap = new Map();
   for (const inv of inventory) {
     inventoryMap.set(String(inv.product_id), inv);
   }
 
   for (const item of items) {
-    // 🔥 FIX: Use item.product_id instead of item.id
     const inv = inventoryMap.get(String(item.product_id));
     const tr = await tableRowTemplate(item, inv);
     inventoryListTbody.appendChild(tr);
   }
-
-
-
-
-  // Test 1: render fake items
 
   if (FillUpInventory) {
     const fakeItems = Array.from({ length: 30 }, (_, i) => ({
@@ -104,7 +93,6 @@ async function refreshInventoryList() {
     }
   }
 }
-// Initialize selectedRows as an empty array
 
 if (inventoryListTbody) {
   var selectedRows = [];
@@ -126,7 +114,7 @@ if (inventoryListTbody) {
 
       row.style.backgroundColor = checkbox.checked ? 'lightblue' : '';
 
-      var count = inventoryListTbody.rows.length - 1; // Subtract 1 to exclude the header row
+      var count = inventoryListTbody.rows.length - 1;
       if (selectedRows.length === 0) {
         document.getElementById('inventoryActionBar').style.display = 'none';
         document.getElementById('selectedCount').textContent = '0 selected';
@@ -139,10 +127,8 @@ if (inventoryListTbody) {
         document.getElementById('deleteSelectedBtn').style.display = 'flex';
         document.getElementById('showBarcodeOfSelectedBtn').style.display = 'flex';
         document.getElementById('editBtn').style.display = 'flex';
-        console.log('Total rows (excluding header):', count);
       }
       else if (selectedRows.length === count) {
-        console.log('All items selected');
         document.getElementById('inventoryActionBar').style.display = 'flex';
         document.getElementById('selectedCount').textContent = `All ${selectedRows.length} selected`;
         document.getElementById('resetBtn').style.display = 'flex';
@@ -160,10 +146,6 @@ if (inventoryListTbody) {
         document.getElementById('showBarcodeOfSelectedBtn').style.display = 'flex';
         document.getElementById('editBtn').style.display = 'none';
       }
-
-
-
-
     }
   };
 
@@ -175,7 +157,6 @@ if (inventoryListTbody) {
     const checkbox = row.querySelector('input[type="checkbox"]');
     if (!checkbox) return;
 
-    // prevent double toggle if clicking the checkbox itself
     if (event.target === checkbox) return;
 
     checkbox.checked = !checkbox.checked;
@@ -185,6 +166,7 @@ if (inventoryListTbody) {
   inventoryListTbody.addEventListener('change', handleCheckboxChange);
   inventoryListTbody.addEventListener('click', handleRowClick);
 }
+
 async function handleNewInventoryItem(data) {
   console.log(selectedRows);
   var existingProduct = selectedRows.length === 1
@@ -193,13 +175,25 @@ async function handleNewInventoryItem(data) {
   console.log("existingProduct:", existingProduct);
 
   if (existingProduct) {
-    console.log("editing only")
+    console.log("editing existing product")
 
-    // Get current stock BEFORE updating
-    const currentInventory = await db.get('inventory', existingProduct.product_id);
-    const previousStock = currentInventory.current_stock;
-
-    // Update product and inventory
+    // Get ACTUAL current stock (accounting for sales)
+    const actualStock = await getActualStock(existingProduct.product_id);
+    
+    // Calculate total sold since last restock
+    const currentData = await getLastUpdate(existingProduct.product_id);
+    const orderItemData = await db.getByIndex("order_items", "product_id", String(existingProduct.product_id));
+    const threshold = new Date(currentData.last_restock);
+    const ordersAfterRestock = orderItemData.filter((order_item) => {
+        const orderTimestamp = getTimestampFromFlakeId(order_item.order_id, flake.timeOffset);
+        return orderTimestamp >= threshold;
+    });
+    const totalSold = ordersAfterRestock.reduce((sum, item) => sum + item.quantity, 0);
+    
+    // User enters ACTUAL stock (after sales), so calculate DATABASE stock (before sales)
+    const newDatabaseStock = Number(data.stock) + totalSold;
+    
+    // Update product
     await db.update("products", {
       product_id: existingProduct.product_id,
       product_name: data.productName,
@@ -207,22 +201,27 @@ async function handleNewInventoryItem(data) {
       category: '',
       sku: data.sku
     });
+    
+    // Update inventory with DATABASE stock (includes sold items)
     await db.update("inventory", {
       product_id: existingProduct.product_id,
       price: data.price,
-      current_stock: data.stock
+      current_stock: newDatabaseStock  // ✅ CORRECT - Database stock = actual + sold
     });
 
-    // Log the stock change
-    const stockChange = data.stock - previousStock;
-    await db.logInventoryChange(
-      existingProduct.product_id,
-      'adjustment',
-      stockChange,
-      previousStock,
-      data.stock,
-      `Stock adjusted`
-    );
+    // Log the stock change based on ACTUAL stock
+    const stockChange = Number(data.stock) - actualStock;
+    if (stockChange !== 0) {
+      await db.logInventoryChange(
+        existingProduct.product_id,
+        'adjustment',
+        stockChange,
+        actualStock,
+        Number(data.stock),
+        `Stock adjusted`,
+        data.date
+      );
+    }
 
     hideInventoryForm();
     clearEntries();
@@ -231,23 +230,24 @@ async function handleNewInventoryItem(data) {
 
   } else {
     console.log("new product detected")
-    const productId = await db.addProduct(data.productName, data.description, data.productType, data.sku);
+    const productId = await db.addProduct(data.productName, data.description, '', data.sku);
     await db.addInventory(productId, data.price, data.stock);
 
-    // Log initial stock
+    // Log initial stock with custom date
     await db.logInventoryChange(
       productId,
       'initial_stock',
       data.stock,
       0,
       data.stock,
-      `Initial stock added`
+      `Initial stock added`,
+      data.date
     );
 
     showToast('Product Added', 'New product added successfully.', 5000);
   }
 
-  await updateHistoryTable(); // Refresh history display
+  await updateHistoryTable();
   refreshInventoryList();
 }
 
@@ -269,10 +269,8 @@ function selectAllItems() {
 
 function resetSelected() {
   const checkboxes = inventoryListTbody.querySelectorAll('input[type="checkbox"]');
-
   checkboxes.forEach(checkbox => {
     checkbox.checked = false;
-    const productId = checkbox.getAttribute('data-product-id');
     selectedRows = [];
     const row = checkbox.closest('tr');
     row.style.backgroundColor = '';
@@ -280,29 +278,19 @@ function resetSelected() {
   document.getElementById('inventoryActionBar').style.display = 'none';
   document.getElementById('selectedCount').textContent = `0 selected`;
 }
-// Handle click outside the inventory list to reset selection
+
 let isSelecting = false;
-
-document.addEventListener('mousedown', () => {
-  isSelecting = false;
-});
-
-document.addEventListener('mousemove', () => {
-  isSelecting = true; // User is dragging
-});
+document.addEventListener('mousedown', () => { isSelecting = false; });
+document.addEventListener('mousemove', () => { isSelecting = true; });
 
 document.addEventListener('click', (event) => {
-  // Don't deselect if user was dragging (selecting text)
   if (isSelecting) {
     isSelecting = false;
     return;
   }
 
-  // Don't deselect if user has text selected
   const selection = window.getSelection();
-  if (selection && selection.toString().length > 0) {
-    return;
-  }
+  if (selection && selection.toString().length > 0) return;
 
   const inventoryListContainer = document.getElementById('inventoryList');
   var ignoreList = [
@@ -323,14 +311,12 @@ function editSelected() {
     return;
   }
   const productId = selectedRows[0];
-  showInventoryForm(productId); // Show the inventory form
-  updateEntries(productId); // Load the product details into the form
+  showInventoryForm(productId);
+  updateEntries(productId);
 }
 
 document.getElementById('overlay').addEventListener('click', hideDeletePrompt);
 
-
-// needs reimplementation when localizing to other languages
 function deleteSelectedItems() {
   if (selectedRows.length === 0) {
     showToast('No Items Selected', 'Please select items to delete.', 5000);
@@ -343,13 +329,9 @@ function deleteSelectedItems() {
   document.getElementById('deleter').classList.add('active');
   document.getElementById('overlay').classList.add('active');
   const countItemsElements = document.querySelectorAll('.countItems');
-  countItemsElements.forEach(el => {
-    el.textContent = selectedRows.length;
-  });
+  countItemsElements.forEach(el => { el.textContent = selectedRows.length; });
   const countItemsPluralElements = document.querySelectorAll('.countItemsPlural');
-  countItemsPluralElements.forEach(el => {
-    el.textContent = selectedRows.length > 1 ? 's' : '';
-  });
+  countItemsPluralElements.forEach(el => { el.textContent = selectedRows.length > 1 ? 's' : ''; });
 }
 
 async function deleteSelectedInventoryItems() {
@@ -357,7 +339,6 @@ async function deleteSelectedInventoryItems() {
     await db.softDelete('products', Number(productId));
     await db.softDelete('inventory', Number(productId));
   }
-
   resetSelected();
   refreshInventoryList();
   hideDeletePrompt();
@@ -374,18 +355,15 @@ function toggleOverflowMenu() {
 }
 
 function saveBarcodesAsPng() {
-  // Your implementation here
   showBarcodeOfSelected('png');
   toggleOverflowMenu();
 }
 
 function printBarcodesToPdf() {
-  // Your implementation here
   showBarcodeOfSelected();
   toggleOverflowMenu();
 }
 
-// Close overflow menu when clicking outside
 document.addEventListener('click', function (event) {
   const menu = document.getElementById('overflowMenu');
   const inventoryActionBar = document.getElementById('inventoryActionBar');
@@ -401,9 +379,14 @@ async function getLastUpdate(product_id) {
   const inventory_data = await db.get('inventory', product_id);
   const product_history = await db.getInventoryHistory(product_id);
 
-  // Get the most recent history entry
-  const last_change = product_history.length > 0
-    ? product_history.sort((a, b) => new Date(b.change_date) - new Date(a.change_date))[0]
+  // Get the most recent RESTOCK/ADJUSTMENT (ignore sales)
+  const restockHistory = product_history.filter(entry => 
+    entry.change_type === 'adjustment' || 
+    entry.change_type === 'initial_stock'
+  );
+  
+  const last_change = restockHistory.length > 0
+    ? restockHistory.sort((a, b) => new Date(b.change_date) - new Date(a.change_date))[0]
     : null;
 
   return {
@@ -416,19 +399,6 @@ async function getLastUpdate(product_id) {
   };
 }
 
-// flow:
-// 1. get all order items of some product
-// 2. get last update of product restock
-// 3. filter all order items based on the timestamp from the last update
-// 4. sum all orders and decide whether to still show that product
-//  - if available
-//    normal operation
-//  - if almost running out,
-//    warn user, add warnings, add settings to use a threshold system for how much before warning
-//  - if run out
-//    hide product from searches
-//    fail scan because no more product exists, add a quick button to add inventory quickly
-
 async function getActualStock(product_id) {
   const currentData = await getLastUpdate(product_id);
   const orderItemData = await db.getByIndex("order_items", "product_id", String(product_id));
@@ -440,8 +410,6 @@ async function getActualStock(product_id) {
   });
   const totalSold = ordersAfterRestock.reduce((sum, item) => sum + item.quantity, 0);
   const actualStock = currentData.current_stock - totalSold;
-  console.log(totalSold);
-  console.log(actualStock);
   return actualStock;
 }
 
@@ -456,20 +424,18 @@ async function getStockDecision(current_stock, remaining_stock, threshold_type, 
   }
 }
 
-// Edit Mode Toggle
 document.querySelector('.inventoryEdit').addEventListener('click', function() {
   isEditModeEnabled = !isEditModeEnabled;
-  
-  const tableContainer = document.querySelector('.tableContainer'); // or #inventoryList
+  const tableContainer = document.querySelector('.tableContainer');
   
   if (isEditModeEnabled) {
     this.style.backgroundColor = 'lightblue';
     this.textContent = 'Done Editing';
-    tableContainer.classList.add('edit-mode-active'); // Show checkboxes
+    tableContainer.classList.add('edit-mode-active');
   } else {
     this.style.backgroundColor = '';
     this.textContent = 'Edit';
-    tableContainer.classList.remove('edit-mode-active'); // Hide checkboxes
+    tableContainer.classList.remove('edit-mode-active');
     resetSelected();
   }
 });

@@ -2,7 +2,7 @@
 let inventoryHistory = [];
 
 // Show the inventory form
-function showInventoryForm(productId = '') {
+async function showInventoryForm(productId = '') {
     document.getElementById('inventoryForm').scrollTop = 0;
     document.getElementById('overlay').classList.add('active');
     document.getElementById('inventoryForm').classList.add('active');
@@ -10,6 +10,12 @@ function showInventoryForm(productId = '') {
 
     if (productId) {
         document.getElementById('sku').value = productId;
+        // Load inventory history when editing
+        await loadInventoryHistory(productId);
+    } else {
+        // Clear history for new products
+        inventoryHistory = [];
+        updateHistoryTable();
     }
 }
 
@@ -60,6 +66,8 @@ function clearEntries() {
     document.getElementById('price').value = '';
     document.getElementById('stock').value = '';
     setTodayDate();
+    inventoryHistory = [];
+    updateHistoryTable();
 }
 
 // Confirm and get form data
@@ -78,20 +86,17 @@ async function confirmForm() {
 
     if (data.stock < 0) {
         showToast('Stock Input Error', 'Stock cannot be negative.', 5000);
-        return; // Added missing return
+        return;
     }
 
     console.log('Form Data:', data);
-    await handleNewInventoryItem(data); // Just add await here
+    await handleNewInventoryItem(data);
 
     clearEntries();
 }
 
-// Get all form data via callback
+// Get all form data
 function getFormData(callback) {
-
-
-
     const data = {
         sku: document.getElementById('sku').value,
         productName: document.getElementById('productName').value,
@@ -120,13 +125,72 @@ function updateHistoryTable() {
     tbody.innerHTML = inventoryHistory.map(item => `
         <tr>
             <td>${item.date}</td>
-            <td>${item.product} (${item.qty})</td>
+            <td>${item.qty}</td>
         </tr>
     `).join('');
 }
 
+// Load inventory history from database
+async function loadInventoryHistory(productId) {
+    try {
+        const history = await db.getInventoryHistory(Number(productId));
+        
+        if (history && history.length > 0) {
+            // Filter out sales - only show manual changes
+            const filteredHistory = history.filter(entry => 
+                entry.change_type === 'adjustment' || 
+                entry.change_type === 'initial_stock'
+            );
+            
+            if (filteredHistory.length === 0) {
+                inventoryHistory = [];
+                updateHistoryTable();
+                return;
+            }
+            
+            // Sort by date (newest first), then by history_id (newest first)
+            filteredHistory.sort((a, b) => {
+                const dateCompare = new Date(b.change_date) - new Date(a.change_date);
+                if (dateCompare !== 0) {
+                    return dateCompare;
+                }
+                return b.history_id - a.history_id;
+            });
+            
+            inventoryHistory = filteredHistory.map(entry => {
+                const date = new Date(entry.change_date).toLocaleDateString();
+                const change = Number(entry.quantity_change);
+                
+                let stockInfo;
+                if (change > 0) {
+                    stockInfo = `+${change}`;
+                } else if (change < 0) {
+                    stockInfo = `${change}`;
+                } else {
+                    stockInfo = `0`;
+                }
+                
+                return {
+                    date: date,
+                    qty: stockInfo
+                };
+            });
+        } else {
+            inventoryHistory = [];
+        }
+        
+        updateHistoryTable();
+    } catch (error) {
+        console.error('Error loading inventory history:', error);
+        inventoryHistory = [];
+        updateHistoryTable();
+    }
+}
+
+// Validation
 var priceInput = document.getElementById("price");
 var stockInput = document.getElementById("stock");
+
 priceInput.addEventListener("blur", (e) => {
     if (priceInput.value >= 0) return;
     showToast('Price Input Error', 'Price cannot be negative.', 5000);
@@ -142,8 +206,7 @@ stockInput.addEventListener("blur", (e) => {
 });
 
 var randomizer = document.getElementById("randomizer");
-
 randomizer.addEventListener("click", () => {
     var randomNumber = rngForSKU();
     document.getElementById('sku').value = randomNumber;
-})
+});
