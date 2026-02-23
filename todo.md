@@ -26,15 +26,15 @@
 ### inventoryList.js
 - [ ] UI cleanup oml
 - [ ] bug that causes selecting all on one item causes hiding of edit and select all button
-- [ ] potentially drag to select?
-- [ ] apply currency settings on this section
+- [ ] potentially drag to select? --
+- [ ] apply currency settings on this section -- (settings)
 
 
 ### settings.js
-- [ ] allow editing of barcode and barcode layout on paper from settings
-- [ ] add currency setting
-- [ ] add setting of languages
-- [ ] add about and credits oml
+- [ ] allow editing of barcode and barcode layout on paper from settings 
+- [ ] add currency setting --
+- [ ] add setting of languages --
+- [ ] add about and credits oml --
 - [ ] abstract the sync checkboxes thing
 - [ ] allow changing of sound files
 
@@ -85,7 +85,7 @@
 - [ ] (not required) ads system (jk,,,, half jk IT's DISABLED BY DEFAUKT)
 - [ ] (not required) seo optimization
 - [ ] (not required but it would be nice) submitting to Google
-- [ ] (not required, COSTS MONEY) domain
+- [ ] (not required, COSTS MONEY) domain --
 
 ## User-reported issues
 - [x] When SKU is edited on existing stock, it generates a new listing on the inventory

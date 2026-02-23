@@ -181,25 +181,23 @@ if (typeof currentEditingProductId !== 'undefined' && currentEditingProductId !=
   if (existingProduct) {
     console.log("editing existing product")
 
-    // Get ACTUAL current stock (accounting for sales)
+    // Get ACTUAL current stock (accounting for ALL sales from the beginning)
     const actualStock = await getActualStock(existingProduct.product_id);
     
-    // Calculate new actual stock based on adjustment or direct entry
+    // Calculate new actual stock based on adjustment
     let newActualStock;
     if (data.stockAdjustment !== null && data.stockAdjustment !== undefined) {
-      // Stock adjustment mode (adding/removing stock)
-      newActualStock = actualStock + data.stockAdjustment;
-      
-      if (newActualStock < 0) {
-        showToast('Invalid Adjustment', 'Cannot remove more stock than available.', 5000);
-        return;
-      }
+        newActualStock = actualStock + data.stockAdjustment;
+        
+        if (newActualStock < 0) {
+            showToast('Invalid Adjustment', 'Cannot remove more stock than available.', 5000);
+            return;
+        }
     } else {
-      // Direct stock edit (should not happen for existing products, but handle it)
-      newActualStock = Number(data.stock);
+        newActualStock = Number(data.stock);
     }
     
-    // Calculate total sold since last restock
+    // Get total sales from the beginning (using initial stock as threshold)
     const currentData = await getLastUpdate(existingProduct.product_id);
     const orderItemData = await db.getByIndex("order_items", "product_id", String(existingProduct.product_id));
     const threshold = new Date(currentData.last_restock);
@@ -209,45 +207,52 @@ if (typeof currentEditingProductId !== 'undefined' && currentEditingProductId !=
     });
     const totalSold = ordersAfterRestock.reduce((sum, item) => sum + item.quantity, 0);
     
-    // Calculate DATABASE stock (actual + sold)
+    // Database stock = actual stock + all accumulated sales
     const newDatabaseStock = newActualStock + totalSold;
+    
+    console.log('Stock calculation:', {
+        actualStock,
+        newActualStock,
+        totalSold,
+        newDatabaseStock,
+        threshold: currentData.last_restock
+    });
     
     // Update product
     await db.update("products", {
-      product_id: existingProduct.product_id,
-      product_name: data.productName,
-      description: data.description,
-      category: '',
-      sku: data.sku
+        product_id: existingProduct.product_id,
+        product_name: data.productName,
+        description: data.description,
+        category: '',
+        sku: data.sku
     });
     
-    // Update inventory with DATABASE stock
+    // Update inventory
     await db.update("inventory", {
-      product_id: existingProduct.product_id,
-      price: data.price,
-      current_stock: newDatabaseStock
+        product_id: existingProduct.product_id,
+        price: data.price,
+        current_stock: newDatabaseStock
     });
 
-    // Log the stock change based on ACTUAL stock
+    // Log the stock change
     const stockChange = newActualStock - actualStock;
     if (stockChange !== 0) {
-      await db.logInventoryChange(
-        existingProduct.product_id,
-        'adjustment',
-        stockChange,
-        actualStock,
-        newActualStock,
-        `Stock adjusted`,
-        data.date
-      );
+        await db.logInventoryChange(
+            existingProduct.product_id,
+            'adjustment',
+            stockChange,
+            actualStock,
+            newActualStock,
+            `Stock adjusted`,
+            data.date
+        );
     }
 
     hideInventoryForm();
     clearEntries();
     resetSelected();
     showToast('Product Edited', 'Product edited successfully.', 5000);
-
-  } else {
+} else {
     console.log("new product detected")
     const productId = await db.addProduct(data.productName, data.description, '', data.sku);
     await db.addInventory(productId, data.price, data.stock);
@@ -398,15 +403,24 @@ async function getLastUpdate(product_id) {
   const inventory_data = await db.get('inventory', product_id);
   const product_history = await db.getInventoryHistory(product_id);
 
-  // Get the most recent RESTOCK/ADJUSTMENT (ignore sales)
-  const restockHistory = product_history.filter(entry => 
-    entry.change_type === 'adjustment' || 
+  // ALWAYS use initial_stock as threshold, NEVER use adjustments
+  const initialStock = product_history.filter(entry => 
     entry.change_type === 'initial_stock'
   );
   
-  const last_change = restockHistory.length > 0
-    ? restockHistory.sort((a, b) => new Date(b.change_date) - new Date(a.change_date))[0]
-    : null;
+  let last_change;
+  if (initialStock.length > 0) {
+    // Use the EARLIEST initial stock (should only be one)
+    last_change = initialStock.sort((a, b) => new Date(a.change_date) - new Date(b.change_date))[0];
+  } else {
+    // Fallback: use the EARLIEST adjustment if no initial stock exists
+    const adjustmentHistory = product_history.filter(entry => 
+      entry.change_type === 'adjustment'
+    );
+    last_change = adjustmentHistory.length > 0
+      ? adjustmentHistory.sort((a, b) => new Date(a.change_date) - new Date(b.change_date))[0]
+      : null;
+  }
 
   return {
     last_restock: last_change ? last_change.change_date : null,
