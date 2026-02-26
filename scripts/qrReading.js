@@ -73,3 +73,12 @@ function handleScannedProduct(sku) {
 // Re-render scanner after handling
 var html5QrcodeScanner = new Html5QrcodeScanner("reader", { fps: 10 });
 html5QrcodeScanner.render(onScanSuccess);
+
+// Move the library's control buttons outside the reader border
+setTimeout(() => {
+    const dashboard = document.getElementById('reader__dashboard_section');
+    const reader = document.getElementById('reader');
+    if (dashboard && reader && reader.parentNode) {
+        reader.parentNode.insertBefore(dashboard, reader.nextSibling);
+    }
+}, 0);
