@@ -69,7 +69,7 @@
 
 - [x] database system (bound to change, but mostly done)
 - [ ] home tab
-- [ ] algorithms to figure out min/max, total sales, best sellers (prerequisite of home tab)
+- [ ] algorithms to figure out min/max, total sales, best sellers (prerequisite of home tab)    
 - [x] inventory tab (mostly done, just UI and QoL improvements are needed to be resolved)
 - [x] QR tab
 - [x] Activity tab

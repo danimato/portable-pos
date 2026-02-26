@@ -106,6 +106,7 @@ body {
     background: #D4F3FF;
     background: var(--bg-body);
     height: 100vh;
+    overflow: hidden;
 }
 
 /* Remove spinner from number inputs */
@@ -575,7 +576,7 @@ button {
     display: none;
     position: absolute;
     bottom: 100%;
-    left: 80%;
+    left: 50%;
     margin-bottom: 5px;
     background: var(--color-primary);
     border: 1px solid var(--color-border);
@@ -784,10 +785,6 @@ button {
 }
 
 
-#reader__scan_region {
-    height: 200px;
-}
-
 #reader__scan_region video {
     object-fit: cover;
     object-position: center;
@@ -799,7 +796,7 @@ button {
 
 #searchElements {
     padding: var(--space-3);
-    height: 178px;
+    height: 137px;
     overflow-y: auto;
     border-bottom: 1px solid var(--bg-overlay);
 }
@@ -819,6 +816,10 @@ button {
     padding-left: unset;
     padding-right: unset;
     color:#0A7FAA;
+    max-height: calc(91vh - 500px);
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: none;
 }
 
 #rightDiv {
