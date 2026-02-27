@@ -85,6 +85,14 @@
 /* ========================================
    BASE STYLES
    ======================================== */
+html {
+    background: linear-gradient(to top left, #cff3ff, white);
+;
+    background: var(--bg-body);
+    background-attachment: fixed;
+    min-height: 100%;
+}
+
 *,
 *::before,
 *::after {
@@ -103,8 +111,6 @@ body {
     padding: 0;
     overflow-x: hidden;
     touch-action: manipulation;
-    background: #D4F3FF;
-    background: var(--bg-body);
     height: 100vh;
     overflow: hidden;
 }
@@ -411,14 +417,17 @@ button {
     scrollbar-width: none;
     -ms-overflow-style: none;
     border-radius: 25px;
-    padding-top: 15px;
+    padding-top: 0px;
     color: #0A7FAA;
 }
 
 #inventoryList th {
     text-align: left;
-    font-size: 14px;  
-
+    font-size: 14px;
+    position: sticky;
+    top: 0;
+    background-color: white;
+    z-index: 1;
 }
 
 #inventory{
@@ -913,9 +922,9 @@ button {
 
 #qrFinishButton {
     position: fixed;
-    bottom: 60px;
+    bottom: 80px;
     right: 20px;
-    background: var(--color-danger);
+    background: #0A7FAA;
     color: var(--color-white);
     border: none;
     padding: var(--space-4) var(--space-8);
@@ -929,9 +938,9 @@ button {
 
 #qrBackButton {
     position: fixed;
-    bottom: 60px;
+    bottom: 80px;
     right: 120px;
-    background: var(--color-danger);
+    background: #0A7FAA;
     color: var(--color-white);
     border: none;
     padding: var(--space-4) var(--space-8);
@@ -981,7 +990,6 @@ button {
     display: block;
     height: calc(100vh - 180px);
     padding: var(--space-4);
-    box-shadow: var(--shadow-card);
     transition: var(--transition-fast);
     overflow-y: auto;
     scrollbar-width: none;
@@ -1009,6 +1017,7 @@ button {
 
 #activity {
     padding-top: 40px;
+    background: linear-gradient(to top left, #cff3ff, white);
 }
 
 
@@ -1050,8 +1059,15 @@ button {
     display: block;
 }
 
+.transactionRight {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: flex-end;  
+}
+
 .transactionItem .title {
-    font-size: var(--font-size-md);
+    font-size: 22px;
     font-weight: var(--font-weight-bold);
 }
 
@@ -1168,13 +1184,17 @@ button {
     box-shadow: var(--shadow-card);
     transition: var(--transition-fast);
     background-color: white;
-    overflow-y: auto;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
     border-radius: var(--radius-xl);
 }
 
-#homeTransactionsParent::-webkit-scrollbar,
+#homeTransactionsParent {
+    overflow-y: hidden;
+}
+
+#bestSellerParent {
+    overflow-y: hidden;
+}
+
 #bestSellerParent::-webkit-scrollbar {
     display: none;
 }
@@ -1195,8 +1215,9 @@ button {
     display: flex;
     justify-content: space-between;
     padding: var(--space-2);
-    border-bottom: 1px solid var(--color-border-light);
     transition: var(--transition-faster);
+    padding-left: 20px;
+    padding-right: 20px;
 }
 
 .settings-item:active {
@@ -1205,12 +1226,20 @@ button {
 
 .settings-item .title {
     font-weight: var(--font-weight-semibold);
-    color: var(--color-text-primary);
 }
 
-.settings-item .data {
-    color: var(--color-text-tertiary);
+.data
+{
+    color:#0A7FAA;
+    font-size: 12px;
 }
+
+.title {
+    color:#0A7FAA;
+    margin-bottom: -3px;
+    display: block;
+}
+
 
 .actions {
     display: flex;
@@ -1442,4 +1471,123 @@ button {
     background-color: #f5f5f5;
     color: #666;
     cursor: not-allowed;
+}
+
+.settingsHeader {
+    display: flex;
+  align-items: center;
+  gap: 12px;
+  font-weight: bold;
+  margin-bottom: 5px;
+  color:#31AE05;
+  padding-left: 22px;
+  padding-right: 24px;
+  margin-top:5px;
+}
+
+.settingsHeader::after {
+  content: '';
+  flex: 1;
+  height: 2px;
+  background-color: #31AE05;
+}
+
+#deleteDontAskAgain-settings {
+    display: block;
+}
+
+.setting-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 3px 10px 3px 7px;
+      font-size: 15px;
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-text-primary);
+      padding-left: 20px;
+      padding-right: 20px;
+      padding-bottom: 8px;
+      padding-top: 6px;
+
+    }
+
+.setting-row .title {
+    font-weight: var(--font-weight-semibold);
+}
+
+select.settingsChoices {
+appearance: none;
+-webkit-appearance: none;
+    padding: 5px 15px 5px 15px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #0A7FAA;
+    background: #ffffff;
+    border: 1.5px solid #bfdbfe;
+    border-radius: 9px;
+    outline: none;
+    cursor: pointer;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+    box-shadow: 0 1px 6px rgba(37, 99, 235, 0.07);
+    margin-left: 5px;
+}
+
+.branding {
+  position: fixed;
+  bottom: 56px; /* height of your nav bar */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 400px;
+  display: flex;
+  justify-content: center;
+  padding: 6px 0;
+}
+
+.bracket-frame {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 8px 24px;
+  position: relative;
+  margin-bottom: 25px;
+}
+
+/* Left bracket */
+.bracket-frame::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 12px; height: 100%;
+  border: 2px solid #6b7280;
+  border-right: none;
+  border-radius: 3px 0 0 3px;
+}
+
+/* Right bracket */
+.bracket-frame::after {
+  content: '';
+  position: absolute;
+  top: 0; right: 0;
+  width: 12px; height: 100%;
+  border: 2px solid #6b7280;
+  border-left: none;
+  border-radius: 0 3px 3px 0;
+}
+
+.brand-name {
+  font-size: 14px;
+  font-weight: 800;
+  color: #6b7280;
+  letter-spacing: 2px;
+}
+
+.brand-version {
+  font-size: 11px;
+  color: #6b7280;
+  letter-spacing: 1px;
+}
+
+html {
+    background: linear-gradient(to top left, #cff3ff, white);
 }

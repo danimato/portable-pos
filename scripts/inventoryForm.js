@@ -13,7 +13,8 @@ async function showInventoryForm(productId = '') {
     if (productId) {
         // Editing existing product
         isEditingExistingProduct = true;
-        currentEditingProductId = productId; 
+        currentEditingProductId = productId;
+        document.getElementById('inventoryFormTitle').textContent = t('form_edit_item');
         
         // Make stock input readonly
         document.getElementById('stock').readOnly = true;
@@ -31,7 +32,8 @@ async function showInventoryForm(productId = '') {
     } else {
         // New product
         isEditingExistingProduct = false;
-        currentEditingProductId = null; 
+        currentEditingProductId = null;
+        document.getElementById('inventoryFormTitle').textContent = t('form_add_item');
         
         // Make stock input editable
         document.getElementById('stock').readOnly = false;
@@ -80,7 +82,8 @@ function updateEntries(productId) {
             db.get("inventory", productId).then(inventory => {
                 if (inventory) {
                     getActualStock(productId).then(actualStock => {
-                        document.getElementById('price').value = inventory.price;
+                        const rate = currencyParameters.rates[currencyParameters.currency] || 1;
+                        document.getElementById('price').value = (Number(inventory.price) * rate).toFixed(2);
                         document.getElementById('stock').value = actualStock;
                     });
                 }
@@ -141,11 +144,13 @@ async function confirmForm() {
 
 // Get all form data
 function getFormData(callback) {
+    const rate = currencyParameters.rates[currencyParameters.currency] || 1;
+    const enteredPrice = Number(document.getElementById('price').value);
     const data = {
         sku: document.getElementById('sku').value,
         productName: document.getElementById('productName').value,
         description: document.getElementById('description').value,
-        price: document.getElementById('price').value,
+        price: (enteredPrice / rate).toFixed(4),
         stock: document.getElementById('stock').value,
         date: document.getElementById('date').value
     };
@@ -170,7 +175,7 @@ function updateHistoryTable() {
     const tbody = document.getElementById('historyTable');
 
     if (inventoryHistory.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="2" style="text-align: center; color: #999;">No history available</td></tr>';
+        tbody.innerHTML = `<tr><td colspan="2" style="text-align: center; color: #999;">${t('form_no_history')}</td></tr>`;
         return;
     }
 

@@ -48,9 +48,9 @@ async function tableRowTemplate(item, inventory) {
 async function refreshInventoryList() {
   inventoryListTbody.innerHTML = `
     <tr>
-      <th>Item Name</th>
-      <th>Stock</th>
-      <th>Cost</th>
+      <th>${t('inv_col_name')}</th>
+      <th>${t('inv_col_stock')}</th>
+      <th>${t('inv_col_cost')}</th>
       <th class="inventoryCheckbox"><!--Select--></th>
     </tr>`;
 
@@ -117,10 +117,10 @@ if (inventoryListTbody) {
       var count = inventoryListTbody.rows.length - 1;
       if (selectedRows.length === 0) {
         document.getElementById('inventoryActionBar').style.display = 'none';
-        document.getElementById('selectedCount').textContent = '0 selected';
+        document.getElementById('selectedCount').textContent = `0 ${t('action_selected')}`;
       }
       else if (selectedRows.length == 1) {
-        document.getElementById('selectedCount').textContent = `1 selected`;
+        document.getElementById('selectedCount').textContent = `1 ${t('action_selected')}`;
         document.getElementById('inventoryActionBar').style.display = 'flex';
         document.getElementById('resetBtn').style.display = 'flex';
         document.getElementById('selectAllBtn').style.display = 'flex';
@@ -130,7 +130,7 @@ if (inventoryListTbody) {
       }
       else if (selectedRows.length === count) {
         document.getElementById('inventoryActionBar').style.display = 'flex';
-        document.getElementById('selectedCount').textContent = `All ${selectedRows.length} selected`;
+        document.getElementById('selectedCount').textContent = `${t('action_all')} ${selectedRows.length} ${t('action_selected')}`;
         document.getElementById('resetBtn').style.display = 'flex';
         document.getElementById('selectAllBtn').style.display = 'none';
         document.getElementById('deleteSelectedBtn').style.display = 'flex';
@@ -139,7 +139,7 @@ if (inventoryListTbody) {
       }
       else if (selectedRows.length > 0) {
         document.getElementById('inventoryActionBar').style.display = 'flex';
-        document.getElementById('selectedCount').textContent = `${selectedRows.length} selected`;
+        document.getElementById('selectedCount').textContent = `${selectedRows.length} ${t('action_selected')}`;
         document.getElementById('resetBtn').style.display = 'flex';
         document.getElementById('selectAllBtn').style.display = 'flex';
         document.getElementById('deleteSelectedBtn').style.display = 'flex';
@@ -286,7 +286,7 @@ function selectAllItems() {
     row.style.backgroundColor = 'lightblue';
   });
   document.getElementById('inventoryActionBar').style.display = 'flex';
-  document.getElementById('selectedCount').textContent = `${selectedRows.length} selected`;
+  document.getElementById('selectedCount').textContent = `${selectedRows.length} ${t('action_selected')}`;
   document.getElementById('selectAllBtn').style.display = 'none';
   document.getElementById('editBtn').style.display = 'none';
 }
@@ -300,7 +300,7 @@ function resetSelected() {
     row.style.backgroundColor = '';
   });
   document.getElementById('inventoryActionBar').style.display = 'none';
-  document.getElementById('selectedCount').textContent = `0 selected`;
+  document.getElementById('selectedCount').textContent = `0 ${t('action_selected')}`;
 }
 
 let isSelecting = false;
@@ -352,10 +352,10 @@ function deleteSelectedItems() {
   }
   document.getElementById('deleter').classList.add('active');
   document.getElementById('overlay').classList.add('active');
-  const countItemsElements = document.querySelectorAll('.countItems');
-  countItemsElements.forEach(el => { el.textContent = selectedRows.length; });
-  const countItemsPluralElements = document.querySelectorAll('.countItemsPlural');
-  countItemsPluralElements.forEach(el => { el.textContent = selectedRows.length > 1 ? 's' : ''; });
+  const n = selectedRows.length;
+  const itemWord = n === 1 ? t('delete_item_singular') : t('delete_item_plural');
+  document.getElementById('deletePromptTitle').textContent = `${t('delete_title')} ${n} ${itemWord}?`;
+  document.getElementById('deletePromptMsg').innerHTML = `${t('delete_msg')} ${n} ${itemWord}. ${t('delete_confirm_q')} <b>${t('delete_irreversible')}</b>`;
 }
 
 async function deleteSelectedInventoryItems() {
@@ -463,11 +463,11 @@ document.querySelector('.inventoryEdit').addEventListener('click', function() {
   
   if (isEditModeEnabled) {
     this.style.backgroundColor = 'lightblue';
-    this.textContent = 'Done Editing';
+    this.textContent = t('inv_done_editing');
     tableContainer.classList.add('edit-mode-active');
   } else {
     this.style.backgroundColor = '';
-    this.textContent = 'Edit';
+    this.textContent = t('inv_edit');
     tableContainer.classList.remove('edit-mode-active');
     resetSelected();
   }

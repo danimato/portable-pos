@@ -46,18 +46,18 @@
         <div id="focusBoxContent">
           <div id="focusBoxTabContainerParent">
             <div class="focus-box-tab-container">
-              <button id="week" class="focus-box-tab-button" onclick="setActive(this)">This week</button>
-              <button id="month" class="focus-box-tab-button active" onclick="setActive(this)">This month</button>
-              <button id="lifetime" class="focus-box-tab-button" onclick="setActive(this)">Lifetime</button>
+              <button id="week" class="focus-box-tab-button" onclick="setActive(this)" data-i18n="home_this_week">This week</button>
+              <button id="month" class="focus-box-tab-button active" onclick="setActive(this)" data-i18n="home_this_month">This month</button>
+              <button id="lifetime" class="focus-box-tab-button" onclick="setActive(this)" data-i18n="home_lifetime">Lifetime</button>
             </div>
           </div>
-          <p id="totalSalesText">Total Sales</p>
+          <p id="totalSalesText" data-i18n="home_total_sales">Total Sales</p>
           <p id="totalSalesValue">0.00</p>
         </div>
       </div>
     </div>
     <div id="homeTransactionsParent">
-      <h4>Recent Transactions</h4>
+      <h4 data-i18n="home_recent_transactions">Recent Transactions</h4>
       <div id="homeTransactions">
         <div class="transactionItem">
           <div class="transactionleft">
@@ -69,7 +69,7 @@
       </div>
     </div>
     <div id="bestSellerParent">
-      <h4>Best Sellers</h4>
+      <h4 data-i18n="home_best_sellers">Best Sellers</h4>
       <div id="bestSeller">
         <div class="transactionItem">
           <div class="transactionleft">
@@ -86,20 +86,20 @@
   </div>
   <div id="qr" class="tabcontent">
     <div id="paymentDueBox" class="hidden">
-      <h3 id="paymentCheckout"> Checkout </h3>
+      <h3 id="paymentCheckout" data-i18n="qr_checkout">Checkout</h3>
       <div id="paymentDueBoxChild">
         <span id="totalPaymentDue"></span>
-        <span id="paymentDueText">Total Amount Due</span>
+        <span id="paymentDueText" data-i18n="qr_total_due">Total Amount Due</span>
       </div>
       <div id="transactionIdBox">
-        <span id="transactionIdText">Transaction ID: </span> <span id="transactionId"></span>
+        <span id="transactionIdText" data-i18n="qr_transaction_id">Transaction ID: </span><span id="transactionId"></span>
       </div>
       <div id="modeOfPaymentBox">
-        <span id="modeOfPaymentText">Mode of Payment: </span>
+        <span id="modeOfPaymentText" data-i18n="qr_mode_of_payment">Mode of Payment: </span>
         <div class="select-wrapper">
         <select name="modeOfPaymentChoice" id="modeOfPaymentChoice">
-          <option value="InstaPay">InstaPay</option>
           <option value="Cash">Cash</option>
+          <option value="InstaPay">InstaPay</option>
           <option value="PayPal">PayPal</option>
         </select>
         </div>
@@ -107,27 +107,25 @@
     </div>
     <div id="qrScreen">
       <div id="reader"></div>
-      <div class="qrSearch">Search Items</div>
+      <div class="qrSearch" data-i18n="qr_search_items">Search Items</div>
       <input type="text" id="qrInput">
       <div id="searchElements"></div>
     </div>
-    <div class="qrCart">Cart</div>
+    <div class="qrCart" data-i18n="qr_cart">Cart</div>
     <div id="cart">
 
     </div>
-    <button id="qrNextScreen" class="hidden" onclick="qrStage2()">Next</button>
-    <button id="qrFinishButton" class="hidden" onclick="qrFinish()">Finish</button>
-    <button id="qrBackButton" class="hidden" onclick="qrBack()">Back</button>
+    <button id="qrNextScreen" class="hidden" onclick="qrStage2()" data-i18n="qr_next">Next</button>
+    <button id="qrFinishButton" class="hidden" onclick="qrFinish()" data-i18n="qr_finish">Finish</button>
+    <button id="qrBackButton" class="hidden" onclick="qrBack()" data-i18n="qr_back">Back</button>
     </ul>
   </div>
   <div id="inventory" class="tabcontent">
-    <h3 style="
-    margin-top: 0px;
-">Inventory</h3>
+    <h3 style="margin-top: 0px;" data-i18n="inv_title">Inventory</h3>
     <div class="inventoryTable">
       <button id="inventoryAdd" onclick="showInventoryForm()">+</button>
-      <span class="inventoryTableText">Add Items</span>
-      <button class="inventoryEdit">Edit</button>
+      <span class="inventoryTableText" data-i18n="inv_add_items">Add Items</span>
+      <button class="inventoryEdit">Select</button>
     </div>
     <div class="tableContainer">
      <table id="inventoryList">
@@ -153,18 +151,23 @@
     </div>
   </div>
   <div id="activity" class="tabcontent">
-    <h3>Activity</h3>
+    <h3 data-i18n="activity_title">Activity</h3>
     <div id="listOfTransactions">
     </div>
   </div>
   <div id="settings" class="tabcontent">
-    <h3>Settings</h3>
+    <h3 data-i18n="settings_title">Settings</h3>
+    <div class="settingsGeneral">
+    <h5 class="settingsHeader" data-i18n="settings_general">General</h5>
+    </div>
+<!--
     <div id="version" class="settings-item">
       <div class="text-only">
         <span class="title">Version</span><br>
         <span class="data" id="version-text"></span>
       </div>
     </div>
+-->
     <div id="tests" class="settings-item hidden">
       <div class="text-only">
         <span class="title">Tests</span><br>
@@ -177,6 +180,7 @@
         <button onclick="processTest()"></button>
       </div>
     </div>
+<!--
     <div id="deleteDontAskAgainEl" class="settings-item">
       <div class="text-only">
         <span class="title">Delete confirmation</span><br>
@@ -187,6 +191,7 @@
           onchange="toggleDeleteDontAskAgain(event)">
       </div>
     </div>
+
     <div id="scalingEl" class="settings-item">
       <div class="text-only">
         <span class="title">Scaling</span><br>
@@ -196,34 +201,98 @@
         <input type="range" min="80" max="120" value="100" step="10" id="zoom-input">
       </div>
     </div>
-    <ul>
+  -->
+    <div class="setting-row">
+      <div>
+        <span class="title" data-i18n="settings_currency">Currency</span>
+        <span class="data" data-i18n="settings_currency_desc">Sets the currency used in the app.</span>
+      </div>
+        <select id="currency-select" class="settingsChoices" onchange="setCurrency(this.value)">
+          <option value="PHP">PHP (₱)</option>
+          <option value="USD">USD ($)</option>
+          <option value="IDR">IDR (Rp)</option>
+          <option value="MYR">MYR (RM)</option>
+<option value="THB">THB (฿)</option>
+        </select>
+    </div>
+      <div class="setting-row">
+        <div>
+        <span class="title" data-i18n="settings_language">Language</span>
+        <span class="data" data-i18n="settings_language_desc">Changes the app language.</span>
+        </div>
+        <select id="language-select" class="settingsChoices" onchange="setLanguage(this.value)">
+          <option value="en">English</option>
+          <option value="fil">Filipino</option>
+<option value="id">Bahasa Indonesia</option>
+          <option value="ms">Bahasa Melayu</option>
+<option value="th">ภาษาไทย</option>
+        </select>
+      </div>
+
+      <div class="settingsGeneral">
+    <h5 class="settingsHeader" data-i18n="settings_cart">Cart</h5>
+      </div>
+      <div id="deleteDontAskAgainEl" class="settings-item">
+        <div class="text-only">
+        <span class="title" data-i18n="settings_delete_confirm">Delete confirmation</span>
+        <span class="data" id="deleteDontAskAgain-text" data-i18n="settings_delete_confirm_desc">Disables confirmation of deleting items.</span>
+        </div>
+        <div class="actions">
+        <input type="checkbox" id="deleteDontAskAgain-settings" name="deleteDontAskAgainCheckbox"
+          onchange="toggleDeleteDontAskAgain(event)">
+        </div>
+      </div>
+
+    <div class="settingsGeneral">
+      <h5 class="settingsHeader" data-i18n="settings_ui">UI</h5>
+    </div>
+    <div id="scalingEl" class="settings-item">
+      <div class="text-only">
+        <span class="title" data-i18n="settings_scaling">Scaling</span>
+        <span class="data" id="zoom-text" data-i18n="settings_scaling_desc">Adjusts the scaling of the app.</span>
+      </div>
+      <div class="actions">
+        <input type="range" min="80" max="120" value="100" step="10" id="zoom-input">
+      </div>
+    </div>
+    <!--
+      <ul>
       <li>currency</li>
       <li>language</li>
       <li>behavior after scanning</li>
       <li></li>
     </ul>
+    -->
+
+    <div class="branding">
+      <div class="bracket-frame">
+        <span class="brand-name">QuickTrack</span>
+        <span class="brand-version">version 1.0</span>
+      </div>
+    </div>
+
   </div>
 
   <div class="tab">
     <button class="tablinks" onclick="openTab(event, 'home')">
       <span class="material-symbols-outlined">home</span>
-      <span id="home-text">Home</span>
+      <span id="home-text" data-i18n="nav_home">Home</span>
     </button>
     <button class="tablinks" onclick="openTab(event, 'inventory')">
       <span class="material-symbols-outlined">inventory_2</span>
-      <span id="inventory-text"></span>Inventory
+      <span id="inventory-text" data-i18n="nav_inventory">Inventory</span>
     </button>
     <button class="tablinks" onclick="openTab(event, 'qr')">
       <span class="material-symbols-outlined">barcode_scanner</span>
-      <span id="qr-text">QR</span>
+      <span id="qr-text" data-i18n="nav_qr">QR</span>
     </button>
     <button class="tablinks" onclick="openTab(event, 'activity')">
       <span class="material-symbols-outlined">receipt</span>
-      <span id="transactions-text"></span>Activity
+      <span id="transactions-text" data-i18n="nav_activity">Activity</span>
     </button>
     <button class="tablinks" onclick="openTab(event, 'settings')">
       <span class="material-symbols-outlined">settings</span>
-      <span id="settings-text"></span>Settings
+      <span id="settings-text" data-i18n="nav_settings">Settings</span>
     </button>
   </div>
 
@@ -236,7 +305,7 @@
   </div>
   <div class="form-container" id="inventoryForm">
     <div class="header-with-close">
-      <h2>Add Item</h2>
+      <h2 id="inventoryFormTitle" data-i18n="form_add_item">Add Item</h2>
       <button class="close" onclick="hideInventoryForm()">
         <span class="material-symbols-outlined">
           close
@@ -245,7 +314,7 @@
     </div>
 
     <div class="form-group">
-      <label for="sku">SKU:</label>
+      <label for="sku" data-i18n="form_sku">SKU:</label>
       <div id="sku-parent">
         <input type="text" id="sku" name="sku" style="
     border-color: #0A7FAA;">
@@ -258,7 +327,7 @@
     </div>
 
     <div class="form-group">
-      <label for="productName">Product Name:</label>
+      <label for="productName" data-i18n="form_product_name">Product Name:</label>
       <input type="text" id="productName" name="productName" style="
     border-color: #0A7FAA;">
     </div>
@@ -271,19 +340,19 @@
     -->
     
     <div class="form-group">
-      <label for="description">Description:</label>
+      <label for="description" data-i18n="form_description">Description:</label>
       <textarea id="description" name="description" style="
     border-color: #0A7FAA;"></textarea>
     </div>
 
     <div class="form-group">
-      <label for="price">Price:</label>
+      <label for="price" id="price-label">Price:</label>
       <input type="number" id="price" name="price" step="0.01" min="0" style="
     border-color: #0A7FAA;">
     </div>
 
     <div class="form-group" id="stockField">
-  <label for="stock">Stock:</label>
+  <label for="stock" data-i18n="form_stock">Stock:</label>
   <div id="stock-parent">
     <input type="number" id="stock" name="stock" min="0" style="border-color: #0A7FAA;">
     <button id="editStockBtn" type="button" style="display: none;">
@@ -293,24 +362,24 @@
 </div>
 
 <div class="form-group" id="stockAdjustmentField" style="display: none;">
-  <label for="stockAdjustment">Adjust Stock:</label>
+  <label for="stockAdjustment" data-i18n="form_adjust_stock">Adjust Stock:</label>
   <input type="number" id="stockAdjustment" name="stockAdjustment" placeholder="e.g., +10 or -5" style="border-color: #0A7FAA;">
-  <span class="stock-adjustment-hint">Enter positive to add, negative to remove</span>
+  <span class="stock-adjustment-hint" data-i18n="form_adjust_hint">Enter positive to add, negative to remove</span>
 </div>
 
     <div class="form-group">
-      <label for="date">Date:</label>
+      <label for="date" data-i18n="form_date">Date:</label>
       <input type="date" id="date" name="date" style="
     border-color: #0A7FAA;">
     </div>
 
     <div class="form-group">
-      <label>Inventory History:</label>
+      <label data-i18n="form_history">Inventory History:</label>
       <table class="inventory-table">
         <thead>
           <tr>
-            <th>Date</th>
-            <th>Product + Qty</th>
+            <th data-i18n="form_history_date">Date</th>
+            <th data-i18n="form_history_qty">Product + Qty</th>
           </tr>
         </thead>
         <tbody id="historyTable">
@@ -322,32 +391,32 @@
     </div>
 
     <div class="button-group">
-      <button class="btn-clear" onclick="clearEntries()">Clear Entries</button>
-      <button class="btn-confirm" onclick="confirmForm()">Confirm</button>
+      <button class="btn-clear" onclick="clearEntries()" data-i18n="form_clear">Clear Entries</button>
+      <button class="btn-confirm" onclick="confirmForm()" data-i18n="form_confirm">Confirm</button>
     </div>
   </div>
   <div class="form-container for-prompts" id="deleter">
     <div class="header-with-close">
-      <h2>Delete <span class="countItems"></span> item<span class="countItemsPlural"></span>?</h2>
+      <h2 id="deletePromptTitle">Delete <span class="countItems"></span> item<span class="countItemsPlural"></span>?</h2>
       <button class="close" onclick="hideDeletePrompt()">
         <span class="material-symbols-outlined">
           close
         </span>
       </button>
     </div>
-    <p>You are about to delete the selected <span class="countItems"></span> item<span class="countItemsPlural"></span>.
+    <p id="deletePromptMsg">You are about to delete the selected <span class="countItems"></span> item<span class="countItemsPlural"></span>.
       Are you sure? <b>This action is irreversible.</b></p>
     <p><input type="checkbox" id="deleteDontAskAgain-prompt" name="deleteDontAskAgainCheckbox"
-        onchange="toggleDeleteDontAskAgain(event)"> Don't ask me again.</p>
+        onchange="toggleDeleteDontAskAgain(event)"> <span data-i18n="delete_dont_ask">Don't ask me again.</span></p>
     <div class="button-group">
-      <button class="btn-clear" onclick="cancelDelete('inventory')">Cancel</button>
-      <button class="btn-confirm-red" onclick="confirmDelete('inventory')">Delete</button>
+      <button class="btn-clear" onclick="cancelDelete('inventory')" data-i18n="delete_cancel">Cancel</button>
+      <button class="btn-confirm-red" onclick="confirmDelete('inventory')" data-i18n="delete_confirm">Delete</button>
     </div>
   </div>
 
   <div class="form-container" id="transacHistoryForm">
     <div class="header-with-close">
-      <h2>Sales Receipt</h2>
+      <h2 data-i18n="receipt_title">Sales Receipt</h2>
       <button class="close" onclick="hideTransacHistoryForm()">
         <span class="material-symbols-outlined">
           close
@@ -357,7 +426,7 @@
     <span id="transactionId"></span>
     <div id="orderItems"></div>
     <div id="amountDueParent">
-      <span id="totalRevenueStr">Amount Due</span>
+      <span id="totalRevenueStr" data-i18n="receipt_amount_due">Amount Due</span>
       <span id="totalRevenue"></span>
     </div>
   </div>
@@ -374,11 +443,11 @@
       <div id="overflowMenu">
         <button id="overflowMenuImg" onclick="saveBarcodesAsPng()">
           <span class="material-symbols-outlined">image</span>
-          Save as PNG
+          <span data-i18n="action_save_png">Save as PNG</span>
         </button>
         <button id="overflowMenuPdf" onclick="printBarcodesToPdf()">
           <span class="material-symbols-outlined">print</span>
-          Print to PDF
+          <span data-i18n="action_print_pdf">Print to PDF</span>
         </button>
       </div>
       <button id="editBtn" onclick="editSelected()"><span class="material-symbols-outlined">edit</span></button>
@@ -395,6 +464,7 @@
   <script src="scripts/libs/JsBarcode.all.min.js"></script>
 
   <script src="scripts/algorithms.js"></script>
+  <script src="scripts/i18n.js"></script>
   <script src="scripts/formatters.js"></script>
   <script src="scripts/barcodePrinter.js"></script>
   <script src="scripts/cartManager.js"></script>

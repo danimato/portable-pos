@@ -23,16 +23,25 @@ function formatDateTime(dateStr) {
 
 var currencyParameters = {
     currency: "PHP",
-    decimals: 2
+    decimals: 2,
+    rates: { PHP: 1, USD: 1, IDR: 1, MYR: 1, THB: 1 }
 }
 
+const currencyLocales = {
+    PHP: 'en-PH',
+    USD: 'en-US',
+    IDR: 'id-ID',
+    MYR: 'ms-MY',
+    THB: 'th-TH'
+};
+
 function cF(strint) {
-    var money = Number(strint);
-    return new Intl.NumberFormat('en-PH', {
+    var money = Number(strint) * (currencyParameters.rates[currencyParameters.currency] || 1);
+    var locale = currencyLocales[currencyParameters.currency] || 'en-US';
+    return new Intl.NumberFormat(locale, {
         style: 'currency',
         currency: currencyParameters.currency,
         minimumFractionDigits: currencyParameters.decimals,
         maximumFractionDigits: currencyParameters.decimals
-
      }).format(money);
 }

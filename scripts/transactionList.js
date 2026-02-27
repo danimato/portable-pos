@@ -12,6 +12,16 @@ function formatDate(dateStr) {
     return formatted;
 }
 
+// Function to format time as HH:MM (24h, no seconds)
+function formatTimeOnly(dateStr) {
+    const date = new Date(dateStr);
+    return date.toLocaleTimeString('en-US', {
+        hour12: false,
+        hour: '2-digit',
+        minute: '2-digit'
+    });
+}
+
 
 // Function to group orders by date
 function groupOrdersByDate(orders) {
@@ -40,23 +50,33 @@ function createTransactionItem(order) {
     // Create title span
     const titleSpan = document.createElement('span');
     titleSpan.className = 'title';
-    titleSpan.textContent = formatDateTime(order.order_date);
+    titleSpan.textContent = formatTimeOnly(order.order_date);
 
     // Create status span
     const statusSpan = document.createElement('span');
     statusSpan.className = 'status';
-    statusSpan.textContent = `TID: ${order.order_id} - ${order.status}`;
+    statusSpan.textContent = `TID: ${order.order_id}`;
 
     transactionLeft.appendChild(titleSpan);
     transactionLeft.appendChild(statusSpan);
 
-    // Create price span
+    // Create right section with price and payment method
+    const transactionRight = document.createElement('div');
+    transactionRight.className = 'transactionRight';
+
     const priceSpan = document.createElement('span');
     priceSpan.className = 'price';
     priceSpan.textContent = cF(order.total_amount);
 
+    const paymentSpan = document.createElement('span');
+    paymentSpan.className = 'status';
+    paymentSpan.textContent = order.payment_method || '';
+
+    transactionRight.appendChild(priceSpan);
+    transactionRight.appendChild(paymentSpan);
+
     transactionItem.appendChild(transactionLeft);
-    transactionItem.appendChild(priceSpan);
+    transactionItem.appendChild(transactionRight);
 
     transactionItem.dataset.order_id = order.order_id;
     transactionItem.addEventListener('click', showTransacHistoryForm);
