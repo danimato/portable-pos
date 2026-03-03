@@ -24,9 +24,33 @@
   <!-- Place your OG tags beneath this line -->
 
   <!-- Place your OG tags above this line -->
+
+  <script>
+    if (localStorage.getItem('qt_showLandingPage') === 'false') {
+      document.documentElement.setAttribute('data-hide-landing', '');
+    }
+  </script>
 </head>
 
 <body>
+
+  <!-- Landing Page -->
+  <div id="landingPage">
+    <div class="landing-pills-top">
+      <div class="landing-pill" style="width:160px"></div>
+      <div class="landing-pill" style="width:120px"></div>
+      <div class="landing-pill" style="width:80px"></div>
+    </div>
+    <div class="landing-content">
+      <p class="landing-tagline">Track sales seamlessly with</p>
+      <img src="images/qt-landingpage.png" alt="QuickTrack" class="landing-brand-img">
+    </div>
+    <button id="landingGetStarted" onclick="hideLandingPage()">Get Started</button>
+    <div class="landing-pills-bottom">
+      <div class="landing-pill" style="width:130px"></div>
+      <div class="landing-pill" style="width:90px"></div>
+    </div>
+  </div>
 
   <!--Flow-->
   <!--Home -> QR -> Payment options -> Cash         -> finish/print -> log activity -> scan (loop) -->
@@ -100,7 +124,6 @@
         <select name="modeOfPaymentChoice" id="modeOfPaymentChoice">
           <option value="Cash">Cash</option>
           <option value="InstaPay">InstaPay</option>
-          <option value="PayPal">PayPal</option>
         </select>
         </div>
       </div>
@@ -159,6 +182,16 @@
     <h3 data-i18n="settings_title">Settings</h3>
     <div class="settingsGeneral">
     <h5 class="settingsHeader" data-i18n="settings_general">General</h5>
+    </div>
+    <div id="landingPageToggleEl" class="settings-item">
+      <div class="text-only">
+        <span class="title" data-i18n="settings_landing_page">Landing Page</span>
+        <span class="data" data-i18n="settings_landing_page_desc">Show landing page on startup.</span>
+      </div>
+      <div class="actions">
+        <input type="checkbox" id="showLandingPage-settings" name="showLandingPageCheckbox"
+          onchange="toggleShowLandingPage(event)" checked>
+      </div>
     </div>
 <!--
     <div id="version" class="settings-item">
@@ -284,7 +317,7 @@
     </button>
     <button class="tablinks" onclick="openTab(event, 'qr')">
       <span class="material-symbols-outlined">barcode_scanner</span>
-      <span id="qr-text" data-i18n="nav_qr">QR</span>
+      <span id="qr-text" data-i18n="nav_qr">SCAN</span>
     </button>
     <button class="tablinks" onclick="openTab(event, 'activity')">
       <span class="material-symbols-outlined">receipt</span>
@@ -539,5 +572,4 @@
     });
   </script>
 </body>
-
 </html>

@@ -1,6 +1,26 @@
 const versionString = "v0.0.0-alpha.1-home";
 var deleteDontAskAgain = false;
 var zoom = 100;
+var showLandingPage = true;
+
+function hideLandingPage() {
+    const lp = document.getElementById('landingPage');
+    if (!lp) return;
+    lp.classList.add('fade-out');
+    setTimeout(() => lp.classList.add('hidden'), 400);
+}
+
+async function toggleShowLandingPage(event) {
+    await toggleSetting(
+        'showLandingPage',
+        ['showLandingPage-settings'],
+        (val) => {
+            showLandingPage = val;
+            localStorage.setItem('qt_showLandingPage', val);
+        },
+        event
+    );
+}
 // Sync all checkboxes with matching IDs to a value
 function syncCheckboxes(ids, value) {
     ids.forEach(id => {
@@ -165,10 +185,30 @@ document.addEventListener('DOMContentLoaded', async () => {
         console.error('Error loading deleteDontAskAgain setting:', error);
     }
 
+    // Load showLandingPage setting
+    try {
+        const lpSetting = await db.get('settings', 'showLandingPage');
+        if (lpSetting) {
+            showLandingPage = lpSetting.setting_value;
+            syncCheckboxes(['showLandingPage-settings'], showLandingPage);
+            localStorage.setItem('qt_showLandingPage', showLandingPage);
+        }
+        if (!showLandingPage) {
+            const lp = document.getElementById('landingPage');
+            if (lp) lp.classList.add('hidden');
+        }
+    } catch (error) {
+        console.error('Error loading showLandingPage setting:', error);
+    }
+
     // Setup checkbox toggles
     setupCheckboxToggle(
         document.getElementById('deleteDontAskAgainEl'),
         document.getElementById('deleteDontAskAgain-settings')
+    );
+    setupCheckboxToggle(
+        document.getElementById('landingPageToggleEl'),
+        document.getElementById('showLandingPage-settings')
     );
 
     zoomInput.addEventListener("change", async () => {

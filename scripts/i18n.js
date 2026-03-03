@@ -4,7 +4,7 @@ const translations = {
   en: {
     nav_home: 'Home',
     nav_inventory: 'Inventory',
-    nav_qr: 'QR',
+    nav_qr: 'SCAN',
     nav_activity: 'Activity',
     nav_settings: 'Settings',
 
@@ -37,6 +37,8 @@ const translations = {
 
     settings_title: 'Settings',
     settings_general: 'General',
+    settings_landing_page: 'Landing Page',
+    settings_landing_page_desc: 'Show landing page on startup.',
     settings_currency: 'Currency',
     settings_currency_desc: 'Sets the currency used in the app.',
     settings_language: 'Language',
@@ -87,7 +89,7 @@ const translations = {
   fil: {
     nav_home: 'Home',
     nav_inventory: 'Imbentaryo',
-    nav_qr: 'QR',
+    nav_qr: 'SCAN',
     nav_activity: 'Aktibidad',
     nav_settings: 'Mga Setting',
 
@@ -120,6 +122,8 @@ const translations = {
 
     settings_title: 'Mga Setting',
     settings_general: 'Pangkalahatan',
+    settings_landing_page: 'Landing Page',
+    settings_landing_page_desc: 'Ipakita ang landing page sa pagsisimula.',
     settings_currency: 'Pera',
     settings_currency_desc: 'Itakda ang pera na gagamitin sa app.',
     settings_language: 'Wika',
@@ -170,7 +174,7 @@ const translations = {
   id: {
     nav_home: 'Beranda',
     nav_inventory: 'Inventaris',
-    nav_qr: 'QR',
+    nav_qr: 'SCAN',
     nav_activity: 'Aktivitas',
     nav_settings: 'Pengaturan',
 
@@ -203,6 +207,8 @@ const translations = {
 
     settings_title: 'Pengaturan',
     settings_general: 'Umum',
+    settings_landing_page: 'Halaman Pembuka',
+    settings_landing_page_desc: 'Tampilkan halaman pembuka saat memulai.',
     settings_currency: 'Mata Uang',
     settings_currency_desc: 'Mengatur mata uang yang digunakan.',
     settings_language: 'Bahasa',
@@ -253,7 +259,7 @@ const translations = {
   ms: {
     nav_home: 'Utama',
     nav_inventory: 'Inventori',
-    nav_qr: 'QR',
+    nav_qr: 'SCAN',
     nav_activity: 'Aktiviti',
     nav_settings: 'Tetapan',
 
@@ -286,6 +292,8 @@ const translations = {
 
     settings_title: 'Tetapan',
     settings_general: 'Umum',
+    settings_landing_page: 'Halaman Pembuka',
+    settings_landing_page_desc: 'Tunjukkan halaman pembuka semasa permulaan.',
     settings_currency: 'Mata Wang',
     settings_currency_desc: 'Tetapkan mata wang yang digunakan dalam app.',
     settings_language: 'Bahasa',
@@ -336,7 +344,7 @@ const translations = {
   th: {
     nav_home: 'หน้าหลัก',
     nav_inventory: 'คลังสินค้า',
-    nav_qr: 'QR',
+    nav_qr: 'SCAN',
     nav_activity: 'กิจกรรม',
     nav_settings: 'การตั้งค่า',
 
@@ -369,6 +377,8 @@ const translations = {
 
     settings_title: 'การตั้งค่า',
     settings_general: 'ทั่วไป',
+    settings_landing_page: 'หน้าเปิดตัว',
+    settings_landing_page_desc: 'แสดงหน้าเปิดตัวเมื่อเริ่มต้น',
     settings_currency: 'สกุลเงิน',
     settings_currency_desc: 'ตั้งค่าสกุลเงินที่ใช้ในแอป',
     settings_language: 'ภาษา',
