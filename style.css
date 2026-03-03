@@ -977,8 +977,39 @@ button {
 #modeOfPaymentBox {
     margin-top: var(--space-4);
     display: flex;
-    justify-content: center; 
+    justify-content: center;
     align-items: center;
+}
+
+#cashPaidBox {
+    margin-top: var(--space-3);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 50px;
+}
+
+#cashPaidText {
+    color: #0A7FAA;
+}
+
+#cashPaidInput {
+    width: 130px;
+    padding: 9px 13px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #0A7FAA;
+    background: #ffffff;
+    border: 1.5px solid #bfdbfe;
+    border-radius: 9px;
+    outline: none;
+    text-align: right;
+    box-shadow: 0 1px 6px rgba(37, 99, 235, 0.07);
+}
+
+#cashPaidInput:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
 }
 
 #amountDueParent {
@@ -1540,6 +1571,25 @@ appearance: none;
     margin-left: 5px;
 }
 
+button.settingsBtn {
+    padding: 5px 15px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #0A7FAA;
+    background: #ffffff;
+    border: 1.5px solid #bfdbfe;
+    border-radius: 9px;
+    outline: none;
+    cursor: pointer;
+    box-shadow: 0 1px 6px rgba(37, 99, 235, 0.07);
+    white-space: nowrap;
+}
+
+button.settingsBtn:hover {
+    background: #eff6ff;
+    border-color: #2563eb;
+}
+
 .branding {
   position: fixed;
   bottom: 56px; /* height of your nav bar */
@@ -1680,4 +1730,163 @@ appearance: none;
 
 html {
     background: linear-gradient(to top left, #cff3ff, white);
+}
+
+/* ========================================
+   RECEIPT PAGE
+   ======================================== */
+#receiptPaidValue {
+    font-size: 22px;
+}
+
+
+#receiptPage {
+    position: fixed;
+    inset: 0;
+    z-index: 2000;
+    background: var(--bg-body);
+    background-attachment: fixed;
+    overflow-y: auto;
+    scrollbar-width: none;
+    padding-top: 40px;
+    padding-bottom: 160px;
+    color: #0A7FAA;
+}
+
+#receiptPage::-webkit-scrollbar {
+    display: none;
+}
+
+#receiptPage h3 {
+    margin-top: 0px;
+}
+
+#receiptTidBox {
+    padding: 6px 20px;
+    font-size: 13px;
+    color: var(--color-primary);
+}
+
+#receiptItemsList {
+    margin: 4px 20px;
+    padding: 4px 0;
+    max-height: 30vh;
+    overflow-y: auto;
+    scrollbar-width: none;
+}
+
+#receiptItemsList::-webkit-scrollbar {
+    display: none;
+}
+
+#receiptChange {
+    padding-top: 10px;
+}
+
+.receipt-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 0;
+    gap: 8px;
+    font-size: 13px;
+}
+
+.receipt-item:last-child {
+    border-bottom: none;
+}
+
+.receipt-item-left {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.receipt-item-name {
+    font-weight: 500;
+    font-size: 16px;
+}
+
+.receipt-item-sku {
+    font-size: 12px;
+    color: var(--color-primary);
+}
+
+.receipt-item-price {
+    font-weight: 500;
+    color: var(--color-primary);
+    font-size: 13px;
+    white-space: nowrap;
+}
+
+/* Totals: right-aligned group, label + large value side by side */
+#receiptTotalsBox {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    padding: 14px 20px;
+    gap: 8px;
+}
+
+.receipt-total-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.receipt-label {
+    font-size: 14px;
+    color: var(--color-primary);
+    font-weight: 500;
+}
+
+.receipt-big-val {
+    font-size: 30px;
+    font-weight: var(--font-weight-bold);
+    color: var(--color-primary);
+}
+
+
+#receiptBtnPair {
+    display: flex;
+    gap: 10px;
+    position: fixed;
+    bottom: 130px;
+    left: 20px;
+    right: 20px;
+}
+
+#receiptBackBtn,
+#receiptHomeBtn {
+    flex: 1;
+    background: var(--color-primary);
+    color: white;
+    border-radius: var(--radius-md);
+    padding: var(--space-4) var(--space-8);
+    font-size: var(--font-size-md);
+    font-weight: var(--font-weight-medium);
+    box-shadow: var(--shadow-md);
+}
+
+#receiptBackBtn:hover,
+#receiptHomeBtn:hover {
+    background: #086a8e;
+}
+
+#receiptNewTxnBtn {
+    position: fixed;
+    bottom: 80px;
+    left: 20px;
+    right: 20px;
+    background: var(--color-success);
+    color: white;
+    border-radius: var(--radius-md);
+    padding: var(--space-4) var(--space-8);
+    font-size: var(--font-size-md);
+    font-weight: var(--font-weight-medium);
+    box-shadow: var(--shadow-md);
+}
+
+#receiptNewTxnBtn:hover {
+    background: var(--color-success-hover);
 }

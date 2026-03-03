@@ -315,35 +315,140 @@ function qrStage2() {
 
 async function qrFinish() {
     try {
-        console.log(transactionIdNum);
-        console.log(transactionDateNum);
         var sum = 0;
         for (product_id of Object.keys(cartList)) {
             sum += cartList[product_id].count * cartList[product_id].price;
         }
-        var discountAmount = 0;
-        var taxAmount = 0;
-        var notes = '';
-        total = sum - discountAmount + taxAmount;
         var paymentMethod = document.getElementById("modeOfPaymentChoice").value;
+        var total = sum;
 
-        cartListForDb = [];
-        for (product_id of Object.keys(cartList)) {
-            cartListForDb.push({
-                product_id: product_id,
-                quantity: cartList[product_id].count,
-                price: cartList[product_id].price
-            });
+        const rate = currencyParameters.rates[currencyParameters.currency] || 1;
+        const displayTotal = total * rate;
+        const paidDisplay = parseFloat(document.getElementById('cashPaidInput').value) || 0;
+
+        if (paidDisplay === 0) {
+            showToast('Amount Required', 'Please enter the amount paid before proceeding.', 3000);
+            return;
         }
-        console.table(transactionIdNum, transactionDateNum, paymentMethod, sum, discountAmount, total, cartListForDb, notes, taxAmount);
-        await db.createOrder(transactionIdNum, transactionDateNum, paymentMethod, sum, discountAmount, total, cartListForDb, notes, taxAmount);
-        showToast('Transaction Added', `The transaction successfully completed.`, 5000);
-        resetQrForm();
+        if (paidDisplay < displayTotal) {
+            showToast('Insufficient Amount', `Amount paid is less than the total due of ${cF(total)}.`, 3000);
+            return;
+        }
+
+        showReceiptPage(transactionIdNum, transactionDateNum, total, paymentMethod);
     }
     catch (e) {
-        showToast('Transaction Error', `An error occured while finishing transaction: ${e}`, 5000)
+        showToast('Transaction Error', `An error occured while finishing transaction: ${e}`, 5000);
     }
 }
+
+// ---- Receipt page ----
+var _receiptTotal = 0;
+var _receiptTransId = null;
+var _receiptTransDate = null;
+var _receiptPaymentMethod = null;
+var _receiptCartSnapshot = null;
+
+function showReceiptPage(transId, transDate, total, paymentMethod) {
+    _receiptTransId = transId;
+    _receiptTransDate = transDate;
+    _receiptTotal = total;
+    _receiptPaymentMethod = paymentMethod;
+
+    // Snapshot cart before any reset
+    _receiptCartSnapshot = {};
+    for (var pid of Object.keys(cartList)) {
+        _receiptCartSnapshot[pid] = { ...cartList[pid] };
+    }
+
+    // Transaction ID
+    document.getElementById('receiptTidValue').textContent = transId;
+
+    // Items from cart
+    const list = document.getElementById('receiptItemsList');
+    list.innerHTML = '';
+    document.querySelectorAll('#cart .cart-item').forEach(item => {
+        const pid = item.getAttribute('data-product');
+        const name = item.querySelector('.cart-item-name')?.textContent || '';
+        const sku = item.querySelector('.cart-item-sku')?.textContent?.trim() || '';
+        const qty = cartList[pid]?.count || 1;
+        const itemTotal = (cartList[pid]?.price || 0) * qty;
+
+        const row = document.createElement('div');
+        row.className = 'receipt-item';
+
+        const left = document.createElement('div');
+        left.className = 'receipt-item-left';
+
+        const nameEl = document.createElement('span');
+        nameEl.className = 'receipt-item-name';
+        nameEl.textContent = `x${qty} ${name}`;
+
+        const skuEl = document.createElement('span');
+        skuEl.className = 'receipt-item-sku';
+        skuEl.textContent = sku;
+
+        left.appendChild(nameEl);
+        left.appendChild(skuEl);
+
+        const priceEl = document.createElement('span');
+        priceEl.className = 'receipt-item-price';
+        priceEl.textContent = cF(itemTotal);
+
+        row.appendChild(left);
+        row.appendChild(priceEl);
+        list.appendChild(row);
+    });
+
+    // Totals
+    document.getElementById('receiptAmountDue').textContent = cF(total);
+
+    const rate = currencyParameters.rates[currencyParameters.currency] || 1;
+    const displayTotal = total * rate;
+    const paidDisplay = parseFloat(document.getElementById('cashPaidInput').value) || 0;
+    const changeDisplay = paidDisplay - displayTotal;
+
+    document.getElementById('receiptPaidValue').textContent = paidDisplay > 0 ? cF(paidDisplay / rate) : '—';
+    document.getElementById('receiptChangeValue').textContent = changeDisplay >= 0 ? cF(changeDisplay / rate) : '—';
+
+    document.getElementById('receiptPage').classList.remove('hidden');
+}
+
+async function _saveReceiptOrder() {
+    const cartListForDb = Object.keys(_receiptCartSnapshot).map(pid => ({
+        product_id: pid,
+        quantity: _receiptCartSnapshot[pid].count,
+        price: _receiptCartSnapshot[pid].price
+    }));
+    await db.createOrder(
+        _receiptTransId, _receiptTransDate, _receiptPaymentMethod,
+        _receiptTotal, 0, _receiptTotal, cartListForDb, '', 0
+    );
+}
+
+document.getElementById('receiptBackBtn').addEventListener('click', function () {
+    document.getElementById('receiptPage').classList.add('hidden');
+});
+
+document.getElementById('receiptHomeBtn').addEventListener('click', async function () {
+    try {
+        await _saveReceiptOrder();
+        document.getElementById('receiptPage').classList.add('hidden');
+        document.querySelector('.tablinks[onclick*="home"]').click();
+    } catch (e) {
+        showToast('Error', `Failed to save order: ${e}`, 5000);
+    }
+});
+
+document.getElementById('receiptNewTxnBtn').addEventListener('click', async function () {
+    try {
+        await _saveReceiptOrder();
+        document.getElementById('receiptPage').classList.add('hidden');
+        document.querySelector('.tablinks[onclick*="\'qr\'"]').click();
+    } catch (e) {
+        showToast('Error', `Failed to save order: ${e}`, 5000);
+    }
+});
 
 function qrBack() {
     nextButton.classList.remove("hidden");
@@ -363,6 +468,7 @@ function resetQrForm() {
     cartList = [];
     updateCheckoutButton();
 
+    document.getElementById('cashPaidInput').value = '';
     const input = document.getElementById('qrInput');
     input.value = '';
     input.dispatchEvent(new Event('input', { bubbles: true }));

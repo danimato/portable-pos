@@ -127,6 +127,10 @@
         </select>
         </div>
       </div>
+      <div id="cashPaidBox">
+        <span id="cashPaidText">Amount Paid: </span>
+        <input type="number" id="cashPaidInput" step="0.01" min="0" placeholder="0.00">
+      </div>
     </div>
     <div id="qrScreen">
       <div id="reader"></div>
@@ -297,6 +301,25 @@
     </ul>
     -->
 
+    <div class="settingsGeneral">
+      <h5 class="settingsHeader">Data</h5>
+    </div>
+    <div class="setting-row">
+      <div>
+        <span class="title">Export Backup</span>
+        <span class="data">Save all data to a JSON file.</span>
+      </div>
+      <button class="settingsBtn" onclick="exportBackup()">Export</button>
+    </div>
+    <div class="setting-row">
+      <div>
+        <span class="title">Restore Backup</span>
+        <span class="data">Restore data from a JSON backup file.</span>
+      </div>
+      <button class="settingsBtn" onclick="document.getElementById('backupFileInput').click()">Restore</button>
+      <input type="file" id="backupFileInput" accept=".json" style="display:none" onchange="importBackup(this.files[0]); this.value='';">
+    </div>
+
     <div class="branding">
       <div class="bracket-frame">
         <span class="brand-name">QuickTrack</span>
@@ -463,6 +486,34 @@
       <span id="totalRevenue"></span>
     </div>
   </div>
+  <!-- Receipt Page -->
+  <div id="receiptPage" class="hidden">
+    <h3>Sales Receipt</h3>
+    <div id="receiptTidBox">
+      Transaction ID: <span id="receiptTidValue"></span>
+    </div>
+    <div id="receiptItemsList"></div>
+    <div id="receiptTotalsBox">
+      <div class="receipt-total-row">
+        <span class="receipt-label">Amount Due</span>
+        <span class="receipt-big-val" id="receiptAmountDue"></span>
+      </div>
+      <div class="receipt-total-row">
+        <span class="receipt-label">Paid</span>
+        <span class="receipt-big-val" id="receiptPaidValue">—</span>
+      </div>
+      <div class="receipt-total-row" id="receiptChange">
+        <span class="receipt-label">Change</span>
+        <span class="receipt-big-val" id="receiptChangeValue">—</span>
+      </div>
+    </div>
+    <div id="receiptBtnPair">
+      <button id="receiptBackBtn">Back</button>
+      <button id="receiptHomeBtn">Back to Home</button>
+    </div>
+    <button id="receiptNewTxnBtn">Start Another Transaction</button>
+  </div>
+
   <div id="inventoryActionBarParent">
     <div id="inventoryActionBar" style="display: none;">
       <span id="selectedCount">1 selected</span>
@@ -508,6 +559,7 @@
   <script src="scripts/inventoryList.js"></script>
   <script src="scripts/qrReading.js"></script>
   <script src="scripts/searchProducts.js"></script>
+  <script src="scripts/backup.js"></script>
   <script src="scripts/settings.js"></script>
   <script src="scripts/snowflakeGenerator.js"></script>
   <script src="scripts/svgToPng.js"></script>
