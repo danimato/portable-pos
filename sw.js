@@ -41,6 +41,8 @@ const LIBRARIES = [
   './scripts/libs/fuse.min.js',
   './scripts/libs/JsBarcode.all.min.js',
   './scripts/libs/flakeid.min.js'
+  './scripts/libs/loc-i18next.min.js'
+  './scripts/libs/i18next.min.js'
 ];
 
 // Media and resources
